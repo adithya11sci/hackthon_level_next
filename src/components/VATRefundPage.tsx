@@ -285,16 +285,29 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
       if (result.success) {
         setTransactionHash(result.txHash);
 
-        // Record the payment
+        // Update pending refund record to completed, or create new one
         try {
-          await createPayment({
-            employee_id: 'vat-refund', // Special ID for VAT refunds
-            amount: refundAmount,
-            token: selectedToken,
-            transaction_hash: result.txHash,
-            status: 'completed',
-            payment_date: new Date().toISOString()
-          });
+          if (pendingRefundId) {
+            await supabase
+              .from('payments')
+              .update({
+                transaction_hash: result.txHash,
+                status: 'completed',
+                payment_date: new Date().toISOString()
+              })
+              .eq('id', pendingRefundId);
+            console.log('✅ Updated pending VAT refund to completed:', pendingRefundId);
+          } else {
+            await createPayment({
+              employee_id: 'vat-refund',
+              amount: refundAmount,
+              token: selectedToken,
+              transaction_hash: result.txHash,
+              status: 'completed',
+              payment_date: new Date().toISOString()
+            });
+            console.log('✅ Created completed VAT refund record');
+          }
         } catch (dbError) {
           console.error('Failed to record VAT refund payment in database:', dbError);
         }
