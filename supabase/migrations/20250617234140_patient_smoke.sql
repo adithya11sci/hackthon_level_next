@@ -86,6 +86,18 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE employees ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist (for idempotency)
+DROP POLICY IF EXISTS "Users can read own data" ON users;
+DROP POLICY IF EXISTS "Users can update own data" ON users;
+DROP POLICY IF EXISTS "Users can insert own data" ON users;
+DROP POLICY IF EXISTS "Users can read own employees" ON employees;
+DROP POLICY IF EXISTS "Users can insert own employees" ON employees;
+DROP POLICY IF EXISTS "Users can update own employees" ON employees;
+DROP POLICY IF EXISTS "Users can delete own employees" ON employees;
+DROP POLICY IF EXISTS "Users can read payments for own employees" ON payments;
+DROP POLICY IF EXISTS "Users can insert payments for own employees" ON payments;
+DROP POLICY IF EXISTS "Users can update payments for own employees" ON payments;
+
 -- Create policies for users table
 CREATE POLICY "Users can read own data"
   ON users
@@ -177,6 +189,10 @@ BEGIN
   RETURN NEW;
 END;
 $$ language 'plpgsql';
+
+-- Drop existing triggers if they exist (for idempotency)
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+DROP TRIGGER IF EXISTS update_employees_updated_at ON employees;
 
 -- Create triggers for updated_at
 CREATE TRIGGER update_users_updated_at
