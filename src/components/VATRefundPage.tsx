@@ -365,7 +365,14 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
         return (
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Submit VAT Refund</h2>
+              <div className="flex items-center gap-3 mb-2">
+                <img
+                  src="/mnee.png"
+                  alt="MNEE logo"
+                  className="h-6 w-6 object-contain"
+                />
+                <h2 className="text-xl font-bold text-gray-900">Submit VAT Refund</h2>
+              </div>
               <div className="flex border border-gray-300 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setEntryMode('upload')}
@@ -656,7 +663,14 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
       case 'review':
         return (
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Review VAT Refund Details</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src="/mnee.png"
+                alt="MNEE logo"
+                className="h-6 w-6 object-contain"
+              />
+              <h2 className="text-xl font-bold text-gray-900">Review VAT Refund Details</h2>
+            </div>
 
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
               {entryMode === 'upload' ? (
@@ -809,7 +823,14 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
       case 'sign':
         return (
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Sign with EVM Wallet</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src="/mnee.png"
+                alt="MNEE logo"
+                className="h-6 w-6 object-contain"
+              />
+              <h2 className="text-xl font-bold text-gray-900">Sign with EVM Wallet</h2>
+            </div>
 
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 flex flex-col items-center justify-center mb-6">
               {transactionStatus === 'waiting' ? (
@@ -853,25 +874,47 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
                 <div className="text-center">
                   {transactionStatus === 'confirmed' ? (
                     <>
-                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle className="w-8 h-8 text-green-500" />
+                      <div className="relative mb-6">
+                        <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                          <CheckCircle className="w-10 h-10 text-white" />
+                        </div>
+                        <div className="absolute inset-0 w-20 h-20 bg-green-400 rounded-full mx-auto animate-ping opacity-20"></div>
                       </div>
-                      <h3 className="font-semibold text-gray-900 mb-2">Transaction Confirmed!</h3>
-                      <p className="text-gray-600 mb-4">
-                        Your transaction has been confirmed on the Ethereum blockchain
-                      </p>
-                      <div className="bg-green-50 border border-green-100 rounded-lg p-3 mb-4">
-                        <div className="flex justify-between items-center text-sm">
-                          <span className="text-green-700">Transaction Hash:</span>
+                      <div className="mb-4">
+                        <div className="flex items-center justify-center gap-2 mb-3">
+                          <img
+                            src="/mnee.png"
+                            alt="MNEE logo"
+                            className="h-5 w-5 object-contain"
+                          />
+                          <h3 className="text-2xl font-bold text-gray-900">Transaction Confirmed!</h3>
+                        </div>
+                        <p className="text-gray-600 text-base">
+                          Your transaction has been confirmed on the Ethereum blockchain
+                        </p>
+                      </div>
+                      <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-4 mb-6 shadow-sm">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                          <span className="text-green-800 font-medium text-sm">Transaction Hash:</span>
                           <a
                             href={`https://etherscan.io/tx/${transactionHash || qrValue.slice(-16)}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-green-900 font-mono flex items-center hover:text-blue-600 hover:underline"
+                            className="text-green-900 font-mono text-sm flex items-center justify-center sm:justify-end gap-2 hover:text-blue-600 hover:underline bg-white/60 px-3 py-1.5 rounded-lg transition-all"
                           >
-                            <span className="truncate max-w-32">{(transactionHash || qrValue.slice(-16)).slice(0, 16)}...</span>
-                            <ExternalLink className="w-3 h-3 ml-1" />
+                            <span className="truncate max-w-40">{transactionHash ? `${transactionHash.slice(0, 10)}...${transactionHash.slice(-8)}` : (qrValue.slice(-16).slice(0, 16) + '...')}</span>
+                            <ExternalLink className="w-4 h-4 flex-shrink-0" />
                           </a>
+                        </div>
+                      </div>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <div className="flex items-center justify-center gap-2 text-sm text-blue-800">
+                          <img
+                            src="/ethereum.png"
+                            alt="Ethereum"
+                            className="h-4 w-4 object-contain"
+                          />
+                          <span>Secured by Ethereum • Powered by MNEE</span>
                         </div>
                       </div>
                     </>
@@ -928,88 +971,112 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
 
       case 'confirmation':
         return (
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-500" />
+          <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-8">
+            <div className="text-center mb-8">
+              <div className="relative mb-6">
+                <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
+                  <CheckCircle className="w-12 h-12 text-white" />
+                </div>
+                <div className="absolute inset-0 w-24 h-24 bg-green-400 rounded-full mx-auto animate-ping opacity-20"></div>
               </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">VAT Refund Submitted Successfully</h2>
-              <p className="text-gray-600">
-                Your VAT refund request has been successfully submitted and is being processed
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <img
+                  src="/mnee.png"
+                  alt="MNEE logo"
+                  className="h-7 w-7 object-contain"
+                />
+                <h2 className="text-2xl font-bold text-gray-900">VAT Refund Submitted Successfully</h2>
+              </div>
+              <p className="text-gray-600 text-base max-w-md mx-auto">
+                Your VAT refund request has been successfully submitted and is being processed on the Ethereum blockchain
               </p>
             </div>
 
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl p-6 mb-8 shadow-inner">
               <div className="space-y-4">
-                <div className="flex justify-between border-b border-gray-200 pb-2">
-                  <span className="text-gray-600">Refund ID:</span>
-                  <span className="text-gray-900 font-medium">VAT-{Date.now().toString().slice(-7)}</span>
+                <div className="flex justify-between items-center border-b border-gray-300 pb-3">
+                  <span className="text-gray-700 font-medium">Refund ID:</span>
+                  <span className="text-gray-900 font-semibold text-lg">VAT-{Date.now().toString().slice(-7)}</span>
                 </div>
-                <div className="flex justify-between border-b border-gray-200 pb-2">
-                  <span className="text-gray-600">Submission Type:</span>
-                  <span className="text-gray-900 font-medium">
+                <div className="flex justify-between items-center border-b border-gray-300 pb-3">
+                  <span className="text-gray-700 font-medium">Submission Type:</span>
+                  <span className="text-gray-900 font-semibold">
                     {entryMode === 'upload' ? 'Document Upload' : 'Manual Entry'}
                   </span>
                 </div>
                 {entryMode === 'upload' && selectedFile && (
-                  <div className="flex justify-between border-b border-gray-200 pb-2">
-                    <span className="text-gray-600">Document:</span>
-                    <span className="text-gray-900 font-medium">{selectedFile.name}</span>
+                  <div className="flex justify-between items-center border-b border-gray-300 pb-3">
+                    <span className="text-gray-700 font-medium">Document:</span>
+                    <span className="text-gray-900 font-semibold truncate max-w-xs">{selectedFile.name}</span>
                   </div>
                 )}
                 {entryMode === 'manual' && (
                   <>
-                    <div className="flex justify-between border-b border-gray-200 pb-2">
-                      <span className="text-gray-600">VAT Registration No:</span>
-                      <span className="text-gray-900 font-medium">{formData.vatRegNo}</span>
+                    <div className="flex justify-between items-center border-b border-gray-300 pb-3">
+                      <span className="text-gray-700 font-medium">VAT Registration No:</span>
+                      <span className="text-gray-900 font-semibold">{formData.vatRegNo}</span>
                     </div>
-                    <div className="flex justify-between border-b border-gray-200 pb-2">
-                      <span className="text-gray-600">Receipt No:</span>
-                      <span className="text-gray-900 font-medium">{formData.receiptNo}</span>
+                    <div className="flex justify-between items-center border-b border-gray-300 pb-3">
+                      <span className="text-gray-700 font-medium">Receipt No:</span>
+                      <span className="text-gray-900 font-semibold">{formData.receiptNo}</span>
                     </div>
-                    <div className="flex justify-between border-b border-gray-200 pb-2">
-                      <span className="text-gray-600">Passport No:</span>
-                      <span className="text-gray-900 font-medium">{formData.passportNo}</span>
+                    <div className="flex justify-between items-center border-b border-gray-300 pb-3">
+                      <span className="text-gray-700 font-medium">Passport No:</span>
+                      <span className="text-gray-900 font-semibold">{formData.passportNo}</span>
                     </div>
                   </>
                 )}
-                <div className="flex justify-between border-b border-gray-200 pb-2">
-                  <span className="text-gray-600">Refund Amount:</span>
-                  <span className="text-green-600 font-semibold">{selectedToken} {refundAmount.toFixed(2)}</span>
+                <div className="flex justify-between items-center border-b border-gray-300 pb-3">
+                  <span className="text-gray-700 font-medium">Refund Amount:</span>
+                  <div className="flex items-center gap-2">
+                    <img
+                      src="/mnee.png"
+                      alt="MNEE"
+                      className="h-5 w-5 object-contain"
+                    />
+                    <span className="text-green-600 font-bold text-lg">{selectedToken} {refundAmount.toFixed(2)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between border-b border-gray-200 pb-2">
-                  <span className="text-gray-600">Submission Date:</span>
-                  <span className="text-gray-900 font-medium">{new Date().toLocaleDateString()}</span>
+                <div className="flex justify-between items-center border-b border-gray-300 pb-3">
+                  <span className="text-gray-700 font-medium">Submission Date:</span>
+                  <span className="text-gray-900 font-semibold">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
                 {transactionHash && (
-                  <div className="flex justify-between items-center border-b border-gray-200 pb-2">
-                    <span className="text-gray-600">Transaction Hash:</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-300 pb-3">
+                    <span className="text-gray-700 font-medium">Transaction Hash:</span>
                     <a
                       href={`https://etherscan.io/tx/${transactionHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-900 font-mono text-xs flex items-center hover:text-blue-600 hover:underline"
+                      className="text-blue-600 font-mono text-sm flex items-center gap-2 hover:text-blue-800 hover:underline bg-white px-3 py-1.5 rounded-lg border border-blue-200 transition-all"
                     >
-                      <span className="truncate max-w-32">{transactionHash.slice(0, 10)}...</span>
-                      <ExternalLink className="w-3 h-3 ml-1" />
+                      <span className="truncate max-w-40">{transactionHash.slice(0, 10)}...{transactionHash.slice(-8)}</span>
+                      <ExternalLink className="w-4 h-4 flex-shrink-0" />
                     </a>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Status:</span>
-                  <span className="text-green-600 font-medium">
+                <div className="flex justify-between items-center pt-2">
+                  <span className="text-gray-700 font-medium">Status:</span>
+                  <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 font-semibold px-4 py-1.5 rounded-full">
+                    <CheckCircle className="w-4 h-4" />
                     Completed
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
               <button
                 onClick={handleReset}
-                className="bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 px-6 rounded-lg transition-all duration-200"
+                className="bg-gradient-to-r from-gray-900 to-gray-800 hover:from-gray-800 hover:to-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
                 Submit Another Refund
+              </button>
+              <button
+                onClick={() => setActiveTab('history')}
+                className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-semibold py-3 px-8 rounded-lg transition-all duration-200 bg-white hover:bg-gray-50"
+              >
+                View History
               </button>
             </div>
           </div>
