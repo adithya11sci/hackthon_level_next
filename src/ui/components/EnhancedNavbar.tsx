@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import * as SubframeUtils from "../utils";
 import { Button } from "./Button";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Wallet } from "lucide-react";
 import ConnectButton from "../../utils/connect-wallet";
 
 interface NavItemProps extends React.HTMLAttributes<HTMLDivElement> {
