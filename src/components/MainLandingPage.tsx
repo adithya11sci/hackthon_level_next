@@ -1111,8 +1111,19 @@ function GemetraLandingPage() {
 
 
       {/* Resources Section */}
-      <div className="flex w-full flex-col items-center justify-center gap-12 bg-neutral-100 px-6 py-32">
-        <div className="flex w-full flex-col items-center justify-center gap-6">
+      <div className="flex w-full flex-col items-center justify-center gap-12 bg-default-background px-6 py-32 relative overflow-hidden">
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
+
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
+        <div className="flex w-full flex-col items-center justify-center gap-6 relative z-10">
           <div className="flex w-full max-w-[1280px] flex-wrap items-center justify-center gap-6 mobile:flex-col mobile:flex-wrap mobile:gap-6">
             <div className="flex min-h-[384px] min-w-[240px] max-w-[384px] grow shrink-0 basis-0 flex-col items-start justify-end gap-8 self-stretch rounded-[32px] bg-default-background px-8 py-8 mobile:min-h-[384px] mobile:w-full mobile:min-w-[240px] mobile:grow mobile:shrink-0 mobile:basis-0">
               <div className="flex w-full flex-col items-start justify-center gap-4">
