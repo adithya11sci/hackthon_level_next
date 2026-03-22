@@ -12,10 +12,11 @@ Wallet-native. AI-powered. Borderless. Built on Ethereum with MNEE stablecoin.
 Using **MNEE**, a USD-backed stablecoin on Ethereum (Contract: `0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`), this platform enables:
 
 1. **VAT Refunds** – Tourists submit refund requests → receive instant MNEE stablecoin payments on Ethereum.
-2. **Payroll Automation** – Employers upload CSV → AI computes salaries → employees receive MNEE payments instantly.
-3. **Scheduled Payments** – Automate recurring and one-time payments with calendar view and pre-approval system.
-4. **Points & Rewards** – Earn points for transactions and convert to MNEE tokens.
-5. **AI Assistant** – Get instant answers about payroll, payments, and blockchain technology.
+2. **VAT Admin Panel** – Government VAT employees can view, filter, and export all VAT refund claims with complete details (receipt info, personal info, merchant info, payment details).
+3. **Payroll Automation** – Employers upload CSV → AI computes salaries → employees receive MNEE payments instantly.
+4. **Scheduled Payments** – Automate recurring and one-time payments with calendar view and pre-approval system.
+5. **Points & Rewards** – Earn points for transactions and convert to MNEE tokens.
+6. **AI Assistant** – Get instant answers about payroll, payments, and blockchain technology.
 
 ---
 
@@ -384,6 +385,44 @@ flowchart LR
     MINIMUM -->|No| ERROR[Error: Minimum 100 points]
     TRANSFER --> UPDATE[Update Balance]
     UPDATE --> DB
+```
+
+---
+
+## 🏛️ VAT Admin Panel Flow
+
+```mermaid
+flowchart TD
+    ADMIN[Government VAT Employee]
+    WALLET[Connect Wallet]
+    AUTH{Wallet Address<br/>Authorized?}
+    PANEL[VAT Admin Panel]
+    FILTER[Filter & Search]
+    EXPORT[Export CSV]
+    DETAILS[View Details Modal]
+    
+    ADMIN --> WALLET
+    WALLET --> AUTH
+    AUTH -->|No| DENIED[Access Denied]
+    AUTH -->|Yes| PANEL
+    
+    PANEL --> FETCH[Fetch All VAT Refunds<br/>from Supabase]
+    FETCH --> DISPLAY[Display Statistics<br/>Total, Completed, Pending, Failed]
+    DISPLAY --> TABLE[Show Refunds Table]
+    
+    TABLE --> FILTER
+    FILTER --> SEARCH[Search by Address/ID/Tx]
+    FILTER --> STATUS[Filter by Status]
+    FILTER --> DATE[Filter by Date Range]
+    
+    TABLE --> DETAILS
+    DETAILS --> MODAL[Show Complete Details<br/>Receipt Info<br/>Personal Info<br/>Merchant Info<br/>Payment Info]
+    
+    TABLE --> EXPORT
+    EXPORT --> CSV[Download CSV<br/>with All Fields]
+    
+    PANEL --> AUTO[Auto-Refresh<br/>Every 5 Seconds]
+    AUTO --> FETCH
 ```
 
 ---
