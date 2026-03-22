@@ -24,7 +24,10 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ companyName: initialCompanyName }) => {
-  const { address } = useAccount();
+  const { employees, refetch: refreshEmployees } = useEmployees();
+  const { addNotification } = useNotifications();
+  const { address, isConnected } = useAccount();
+  
   const [companyName, setCompanyName] = useState(() => {
     // Try to load from localStorage first
     if (address) {
@@ -50,9 +53,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ companyName: initialC
       }
     }
   }, [address]);
-  const { employees, refetch: refreshEmployees } = useEmployees();
-  const { addNotification } = useNotifications();
-  const {address, isConnected} = useAccount();
   // Get activeTab from localStorage to maintain persistence
   const [activeTab, setActiveTab] = useState(() => {
     const savedTab = localStorage.getItem('gemetra_active_tab');
