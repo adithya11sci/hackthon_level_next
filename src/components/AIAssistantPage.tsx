@@ -286,15 +286,38 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
     replaceQuestion(question);
   };
 
-  // Replace question when it's sent
+  // Replace question when it's sent via input field
   useEffect(() => {
-    if (messages.length > 0) {
-      const lastMessage = messages[messages.length - 1];
-      if (lastMessage.type === 'user' && displayedQuestions.includes(lastMessage.content)) {
-        replaceQuestion(lastMessage.content);
+    if (messages.length > 1) {
+      const lastUserMessage = [...messages].reverse().find(msg => msg.type === 'user');
+      if (lastUserMessage && displayedQuestions.includes(lastUserMessage.content)) {
+        // Use functional update to avoid stale closure
+        setUsedQuestions(prev => {
+          const newUsed = new Set(prev).add(lastUserMessage.content);
+          
+          // Get available questions that haven't been used
+          const available = allAvailableQuestions.filter(q => 
+            !newUsed.has(q) && !displayedQuestions.includes(q)
+          );
+          
+          if (available.length > 0) {
+            // Replace the used question with a random new one
+            const newQuestion = available[Math.floor(Math.random() * available.length)];
+            setDisplayedQuestions(prevQuestions => 
+              prevQuestions.map(q => q === lastUserMessage.content ? newQuestion : q)
+            );
+          } else {
+            // If no more questions available, just remove the used one
+            setDisplayedQuestions(prevQuestions => 
+              prevQuestions.filter(q => q !== lastUserMessage.content)
+            );
+          }
+          
+          return newUsed;
+        });
       }
     }
-  }, [messages]);
+  }, [messages.length, displayedQuestions]);
 
   const quickQuestions = displayedQuestions;
 
