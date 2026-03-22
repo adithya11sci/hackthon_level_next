@@ -1,32 +1,62 @@
 /*
-  # Fix Notifications Table for Wallet-Based Authentication
+  # Create/Fix Notifications Table for Wallet-Based Authentication
 
   1. Problem
-    - notifications table uses user_id uuid that references users table
+    - notifications table may not exist yet
+    - If it exists, it uses user_id uuid that references users table
     - App uses wallet addresses (text) as user IDs, not Supabase Auth UUIDs
     - RLS policies use auth.uid() which doesn't work with wallet-based auth
     - Notifications won't work with wallet addresses
 
   2. Solution
-    - Change user_id from uuid to text to support wallet addresses
+    - Create notifications table if it doesn't exist (with text user_id)
+    - If it exists, change user_id from uuid to text to support wallet addresses
     - Remove foreign key constraint to users table
     - Update RLS policies to allow wallet-based access
-    - Keep backward compatibility where possible
 */
 
--- Drop foreign key constraint
+-- Create notifications table if it doesn't exist
+CREATE TABLE IF NOT EXISTS public.notifications (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id text NOT NULL, -- Use text for wallet addresses
+    message text NOT NULL,
+    is_read boolean DEFAULT FALSE,
+    created_at timestamp with time zone DEFAULT now()
+);
+
+-- Enable Row Level Security (RLS) for the notifications table
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+
+-- Drop foreign key constraint if it exists (in case table was created with UUID user_id)
 ALTER TABLE public.notifications
 DROP CONSTRAINT IF EXISTS notifications_user_id_fkey;
 
--- Change user_id from UUID to TEXT to support wallet addresses
-ALTER TABLE public.notifications
-ALTER COLUMN user_id TYPE text USING user_id::text;
+-- Change user_id from UUID to TEXT if it's currently UUID
+-- This will only run if the column is UUID type
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 
+        FROM information_schema.columns 
+        WHERE table_schema = 'public' 
+        AND table_name = 'notifications' 
+        AND column_name = 'user_id' 
+        AND data_type = 'uuid'
+    ) THEN
+        ALTER TABLE public.notifications
+        ALTER COLUMN user_id TYPE text USING user_id::text;
+    END IF;
+END $$;
 
--- Drop all existing RLS policies on notifications
+-- Drop all existing RLS policies on notifications (if any)
 DROP POLICY IF EXISTS "Users can read their own notifications" ON public.notifications;
 DROP POLICY IF EXISTS "Users can insert their own notifications" ON public.notifications;
 DROP POLICY IF EXISTS "Users can update their own notifications" ON public.notifications;
 DROP POLICY IF EXISTS "Users can delete their own notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Anyone can read notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Anyone can insert notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Anyone can update notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Anyone can delete notifications" ON public.notifications;
 
 -- New RLS policies for wallet-based authentication
 -- Allow reading notifications for wallet address (application will filter by wallet)
@@ -52,6 +82,9 @@ USING (true); -- Application validates wallet address
 -- Update the index to work with text
 DROP INDEX IF EXISTS idx_notifications_user_id;
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON public.notifications(user_id);
+
+-- Create index on created_at for ordering
+CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON public.notifications(created_at DESC);
 
 -- Note: The application layer (useNotifications hook) filters by wallet address
 -- RLS policies allow access, but the app ensures users only see their own notifications
