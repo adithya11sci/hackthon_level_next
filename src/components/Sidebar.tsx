@@ -84,6 +84,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
+  const ADMIN_ADDRESS = '0xF7249B507F1f89Eaea5d694cEf5cb96F245Bc5b6';
+  const isAdmin = walletAddress.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
+
   const navigationItems = [
     {
       id: 'dashboard',
@@ -115,13 +118,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Receipt,
       description: 'Process VAT Refunds'
     },
-    {
+    ...(isAdmin ? [{
       id: 'vat-admin',
       label: 'VAT Admin',
       icon: Shield,
-      description: 'Admin Panel (Dubai Gov)',
-      adminOnly: true
-    },
+      description: 'Admin Panel (Dubai Gov)'
+    }] : []),
     {
       id: 'ai-assistant',
       label: 'AI Assistant',
@@ -388,8 +390,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     </AnimatePresence>
                   )}
                 </div>
-              );
-              })}
+              ))}
             </div>
           </nav>
 
