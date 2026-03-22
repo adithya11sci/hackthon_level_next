@@ -48,6 +48,8 @@ export const VATAdminPage: React.FC = () => {
     pendingRefunds: 0,
     failedRefunds: 0,
   });
+  const [selectedRefund, setSelectedRefund] = useState<VATRefundAdmin | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   // Check authorization
   useEffect(() => {
@@ -363,6 +365,9 @@ export const VATAdminPage: React.FC = () => {
                   <th className="px-4 sm:px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                     Date
                   </th>
+                  <th className="px-4 sm:px-6 py-3.5 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Details
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -461,6 +466,35 @@ export const VATAdminPage: React.FC = () => {
                         </div>
                       </div>
                     </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {refund.vat_refund_details && (
+                      <button
+                        onClick={() => {
+                          const details = refund.vat_refund_details;
+                          alert(`VAT Refund Details:\n\n` +
+                            `Receipt Info:\n` +
+                            `- VAT Reg No: ${details.vatRegNo || 'N/A'}\n` +
+                            `- Receipt No: ${details.receiptNo || 'N/A'}\n` +
+                            `- Bill Amount: ${details.billAmount || 'N/A'}\n` +
+                            `- VAT Amount: ${details.vatAmount || 'N/A'}\n` +
+                            `- Purchase Date: ${details.purchaseDate || 'N/A'}\n\n` +
+                            `Personal Info:\n` +
+                            `- Passport: ${details.passportNo || 'N/A'}\n` +
+                            `- Flight: ${details.flightNo || 'N/A'}\n` +
+                            `- Nationality: ${details.nationality || 'N/A'}\n` +
+                            `- DOB: ${details.dob || 'N/A'}\n\n` +
+                            `Merchant:\n` +
+                            `- Name: ${details.merchantName || 'N/A'}\n` +
+                            `- Address: ${details.merchantAddress || 'N/A'}\n\n` +
+                            `Wallet: ${details.receiverWalletAddress || 'N/A'}`
+                          );
+                        }}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        View Details
+                      </button>
+                    )}
+                  </td>
                   </tr>
                 ))}
               </tbody>
@@ -468,6 +502,157 @@ export const VATAdminPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Details Modal */}
+      {showDetailsModal && selectedRefund && selectedRefund.vat_refund_details && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowDetailsModal(false)}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-xl flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold">VAT Refund Details</h2>
+                <p className="text-blue-100 text-sm mt-1">ID: {selectedRefund.id.slice(0, 8)}...</p>
+              </div>
+              <button
+                onClick={() => setShowDetailsModal(false)}
+                className="text-white hover:text-gray-200 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              {/* Receipt Information */}
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-blue-600" />
+                  Receipt Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">VAT Registration No.</label>
+                    <p className="text-gray-900 font-mono">{selectedRefund.vat_refund_details.vatRegNo || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Receipt/Invoice No.</label>
+                    <p className="text-gray-900 font-mono">{selectedRefund.vat_refund_details.receiptNo || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Total Bill Amount</label>
+                    <p className="text-gray-900 font-semibold">{selectedRefund.vat_refund_details.billAmount || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">VAT Amount</label>
+                    <p className="text-gray-900 font-semibold text-green-600">{selectedRefund.vat_refund_details.vatAmount || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Purchase Date</label>
+                    <p className="text-gray-900">{selectedRefund.vat_refund_details.purchaseDate || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Personal Information */}
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <User className="w-5 h-5 text-blue-600" />
+                  Personal Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Passport Number</label>
+                    <p className="text-gray-900 font-mono">{selectedRefund.vat_refund_details.passportNo || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Flight Number</label>
+                    <p className="text-gray-900">{selectedRefund.vat_refund_details.flightNo || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Country of Nationality</label>
+                    <p className="text-gray-900">{selectedRefund.vat_refund_details.nationality || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Date of Birth</label>
+                    <p className="text-gray-900">{selectedRefund.vat_refund_details.dob || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Merchant Information */}
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-blue-600" />
+                  Merchant Information
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Merchant Name</label>
+                    <p className="text-gray-900">{selectedRefund.vat_refund_details.merchantName || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Merchant Address</label>
+                    <p className="text-gray-900">{selectedRefund.vat_refund_details.merchantAddress || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Information */}
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-blue-600" />
+                  Payment Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Receiver Wallet Address</label>
+                    <p className="text-gray-900 font-mono text-xs break-all">{selectedRefund.vat_refund_details.receiverWalletAddress || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Refund Amount</label>
+                    <p className="text-gray-900 font-semibold text-lg">{selectedRefund.amount.toFixed(2)} {selectedRefund.token}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Status</label>
+                    <p className="text-gray-900">
+                      {selectedRefund.status === 'completed' ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          Completed
+                        </span>
+                      ) : selectedRefund.status === 'pending' ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
+                          <Clock className="w-3.5 h-3.5" />
+                          Pending
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          Failed
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                  {selectedRefund.transaction_hash && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-600">Transaction Hash</label>
+                      <a
+                        href={`https://etherscan.io/tx/${selectedRefund.transaction_hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 font-mono text-xs flex items-center gap-1"
+                      >
+                        {selectedRefund.transaction_hash.slice(0, 10)}...{selectedRefund.transaction_hash.slice(-8)}
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer Info */}
       <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
