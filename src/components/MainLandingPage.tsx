@@ -325,8 +325,6 @@ function GemetraLandingPage() {
                   </div>
                 </div>
               </div>
-
-              <ConnectButton />
             </div>
           </div>
 
@@ -1099,12 +1097,6 @@ function GemetraLandingPage() {
             {
               "Combining Web3 speed with AI-driven financial intelligence for VAT refunds and global payroll on a single trustless platform."
             }
-          </span>
-        </div>
-        <div className="flex flex-col items-center justify-center gap-6">
-
-          <span className="max-w-[768px] whitespace-pre-wrap font-['Montserrat'] text-[20px] font-[600] leading-[28px] text-brand-900 underline text-center -tracking-[0.015em]">
-            <ConnectButton />
           </span>
         </div>
       </div>
