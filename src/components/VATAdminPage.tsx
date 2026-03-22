@@ -592,23 +592,23 @@ export const VATAdminPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">VAT Registration No.</label>
-                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.vatRegNo || 'N/A'}</p>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.vatRegNo || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Receipt/Invoice No.</label>
-                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.receiptNo || 'N/A'}</p>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.receiptNo || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Total Bill Amount</label>
-                    <p className="text-gray-900 text-base font-bold mt-1">{selectedRefund.vat_refund_details.billAmount || 'N/A'}</p>
+                    <p className="text-gray-900 text-base font-bold mt-1">{selectedRefund.vat_refund_details.billAmount || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">VAT Amount</label>
-                    <p className="text-gray-900 font-semibold text-green-600">{selectedRefund.vat_refund_details.vatAmount || 'N/A'}</p>
+                    <p className="text-gray-900 font-semibold text-green-600">{selectedRefund.vat_refund_details.vatAmount || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Purchase Date</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.purchaseDate || 'N/A'}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.purchaseDate || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                 </div>
               </div>
@@ -626,19 +626,19 @@ export const VATAdminPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Passport Number</label>
-                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.passportNo || 'N/A'}</p>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.passportNo || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Flight Number</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.flightNo || 'N/A'}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.flightNo || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Country of Nationality</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.nationality || 'N/A'}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.nationality || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Date of Birth</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.dob || 'N/A'}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.dob || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                 </div>
               </div>
@@ -656,11 +656,11 @@ export const VATAdminPage: React.FC = () => {
                 <div className="space-y-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Merchant Name</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantName || 'N/A'}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantName || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Merchant Address</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantAddress || 'N/A'}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantAddress || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                 </div>
               </div>
@@ -678,7 +678,7 @@ export const VATAdminPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Receiver Wallet Address</label>
-                    <p className="text-gray-900 font-mono text-xs break-all">{selectedRefund.vat_refund_details.receiverWalletAddress || 'N/A'}</p>
+                    <p className="text-gray-900 font-mono text-xs break-all">{selectedRefund.vat_refund_details.receiverWalletAddress || <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Refund Amount</label>
