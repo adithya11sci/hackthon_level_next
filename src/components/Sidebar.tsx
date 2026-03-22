@@ -91,12 +91,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       description: 'Overview & Analytics'
     },
     {
-      id: 'vat-refund',
-      label: 'VAT Refund',
-      icon: Receipt,
-      description: 'Process VAT Refunds'
-    },
-    {
       id: 'employees',
       label: 'Employees',
       icon: Users,
@@ -113,6 +107,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Scheduled',
       icon: Calendar,
       description: 'Automatic Payments'
+    },
+    {
+      id: 'vat-refund',
+      label: 'VAT Refund',
+      icon: Receipt,
+      description: 'Process VAT Refunds'
     },
     {
       id: 'ai-assistant',
