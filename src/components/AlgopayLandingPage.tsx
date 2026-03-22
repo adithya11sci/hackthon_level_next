@@ -83,115 +83,143 @@ function GemetraLandingPage() {
         </div>
       </div>
 
-      {/* Core Components Section */}
-      <div id="features-section" className="flex w-full flex-col items-center justify-center gap-16 bg-neutral-100 px-6 py-32">
+      {/* Core Technology Stack Section */}
+      <div id="features-section" className="flex w-full flex-col items-center justify-center gap-16 bg-gradient-to-b from-neutral-100 to-white px-6 py-32">
         <div className="flex w-full max-w-[1280px] flex-col items-center gap-4">
-          <span className="inline-block px-4 py-1 bg-brand-50 rounded-full mb-2">
-            <span className="font-['Montserrat'] text-[12px] font-[700] text-brand-800">POWERED BY</span>
+          <span className="inline-block px-4 py-1 bg-gradient-to-r from-brand-50 to-purple-50 rounded-full mb-2 border border-brand-200">
+            <span className="font-['Montserrat'] text-[12px] font-[700] text-brand-800">MNEE HACKATHON 2025</span>
           </span>
           <span className="w-full font-['Montserrat'] text-[48px] font-[800] leading-[52px] text-default-font text-center -tracking-[0.02em]">
-            Core Technology Stack
+            Programmable Money Infrastructure
           </span>
           <p className="max-w-[768px] text-center text-subtext-color font-['Montserrat'] text-[18px] leading-[28px]">
-            Our infrastructure combines blockchain reliability with AI intelligence to deliver a seamless financial experience
+            Built for automated finance, commerce, and agent payments. Combining Ethereum's programmable money with AI intelligence to revolutionize global remittance.
           </p>
         </div>
 
         <div className="w-full max-w-[1280px] grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Blockchain Layer */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col gap-6">
+          {/* Programmable Money Layer */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col gap-6 border border-brand-100 hover:border-brand-300 group">
             <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-brand-50 to-purple-50 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <img
-                  className="h-8 object-cover"
+                  className="h-10 object-cover"
                   src="https://ethereum.org/static/eth-diamond-rainbow.png"
                   alt="Ethereum logo"
                 />
               </div>
-              <h3 className="font-['Montserrat'] text-[24px] font-[700]">Blockchain Layer</h3>
+              <div>
+                <h3 className="font-['Montserrat'] text-[24px] font-[700] text-brand-900">Programmable Money</h3>
+                <p className="text-xs text-brand-600 font-medium">MNEE Stablecoin on Ethereum</p>
+              </div>
             </div>
             <p className="text-subtext-color font-['Montserrat'] text-[16px] leading-[24px]">
-              Built on Ethereum blockchain with MNEE stablecoin for programmable money, secure transactions, and transparent payroll automation.
+              Instant payroll automation, scheduled payments, and VAT refunds powered by MNEE stablecoin. Settlement &lt;1s, fees &lt;1¢, fully backed & regulated.
             </p>
             <div className="flex flex-wrap gap-2 mt-auto">
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Ethereum Network</span>
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">MNEE Stablecoin</span>
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">ERC-20 Standard</span>
+              <span className="px-3 py-1.5 bg-gradient-to-r from-brand-50 to-brand-100 rounded-full text-sm font-semibold text-brand-800 border border-brand-200">MNEE Stablecoin</span>
+              <span className="px-3 py-1.5 bg-gradient-to-r from-brand-50 to-brand-100 rounded-full text-sm font-semibold text-brand-800 border border-brand-200">ERC-20 Standard</span>
+              <span className="px-3 py-1.5 bg-gradient-to-r from-brand-50 to-brand-100 rounded-full text-sm font-semibold text-brand-800 border border-brand-200">Points & Rewards</span>
             </div>
-            <div className="flex items-center gap-4 mt-4">
-              <img
-                className="h-8 object-contain"
-                src="/metmask.png"
-                alt="MetaMask logo"
-              />
-              <img
-                className="h-8 object-contain"
-                alt="WalletConnect logo"
-                src="/walletconnect.png"
-              />
-              <img
-                className="h-8 object-contain"
-                alt="Coinbase Wallet logo"
-                src="/coinbase.svg"
-              />
-            </div>
-          </div>
-
-          {/* AI Intelligence Layer */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col gap-6">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">
-                <Bot size={24} className="text-brand-800" />
+            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg">
+                <img className="h-5 object-contain" src="/metmask.png" alt="MetaMask" />
+                <span className="text-xs font-medium text-gray-700">MetaMask</span>
               </div>
-              <h3 className="font-['Montserrat'] text-[24px] font-[700]">AI Intelligence</h3>
-            </div>
-            <p className="text-subtext-color font-['Montserrat'] text-[16px] leading-[24px]">
-              AI-driven orchestration for parsing, compliance reasoning, and automation across multiple jurisdictions, powered by Bolt and Gemini.
-            </p>
-            <div className="flex flex-wrap gap-2 mt-auto">
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Tax Compliance</span>
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Automated Parsing</span>
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Smart Reasoning</span>
-            </div>
-            <div className="flex items-center gap-4 mt-4">
-              <div className="flex items-center gap-2">
-                <Bolt />
-                <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-default-font">Bolt AI</span>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg">
+                <img className="h-5 object-contain" src="/walletconnect.png" alt="WalletConnect" />
+                <span className="text-xs font-medium text-gray-700">WalletConnect</span>
               </div>
-              <div className="flex items-center gap-2 ml-4">
-                <Bot size={20} />
-                <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-default-font">Gemini AI</span>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg">
+                <img className="h-5 object-contain" src="/coinbase.svg" alt="Coinbase" />
+                <span className="text-xs font-medium text-gray-700">Coinbase</span>
               </div>
             </div>
           </div>
 
-          {/* Data & Storage Layer */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col gap-6">
+          {/* AI & Automation Layer */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col gap-6 border border-brand-100 hover:border-brand-300 group">
             <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Bot size={28} className="text-brand-800" />
+              </div>
+              <div>
+                <h3 className="font-['Montserrat'] text-[24px] font-[700] text-brand-900">AI & Automation</h3>
+                <p className="text-xs text-brand-600 font-medium">Intelligent Financial Orchestration</p>
+              </div>
+            </div>
+            <p className="text-subtext-color font-['Montserrat'] text-[16px] leading-[24px]">
+              AI-powered payroll parsing, VAT validation, scheduled payments automation, and financial insights. Powered by Google Gemini for intelligent decision-making.
+            </p>
+            <div className="flex flex-wrap gap-2 mt-auto">
+              <span className="px-3 py-1.5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-full text-sm font-semibold text-purple-800 border border-purple-200">Payroll Parsing</span>
+              <span className="px-3 py-1.5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-full text-sm font-semibold text-purple-800 border border-purple-200">Scheduled Payments</span>
+              <span className="px-3 py-1.5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-full text-sm font-semibold text-purple-800 border border-purple-200">Smart Insights</span>
+            </div>
+            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
+                <Bolt size={16} className="text-brand-800" />
+                <span className="text-xs font-semibold text-gray-800">Bolt.new</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
+                <Bot size={16} className="text-purple-600" />
+                <span className="text-xs font-semibold text-gray-800">Gemini AI</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Infrastructure & Storage Layer */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col gap-6 border border-brand-100 hover:border-brand-300 group">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <img
-                  className="h-6 object-contain"
+                  className="h-8 object-contain"
                   alt="Supabase logo"
                   src="/supabase.webp"
                 />
               </div>
-              <h3 className="font-['Montserrat'] text-[24px] font-[700]">Data & Storage</h3>
+              <div>
+                <h3 className="font-['Montserrat'] text-[24px] font-[700] text-brand-900">Infrastructure</h3>
+                <p className="text-xs text-brand-600 font-medium">Secure & Scalable Backend</p>
+              </div>
             </div>
             <p className="text-subtext-color font-['Montserrat'] text-[16px] leading-[24px]">
-              Secure persistence for receipts, payruns, claims metadata, KYC profiles, and audit logs with Supabase backend and Oracle integration.
+              Enterprise-grade data persistence for employees, payments, scheduled transactions, points system, and audit trails. Built on Supabase with React + Vite frontend.
             </p>
             <div className="flex flex-wrap gap-2 mt-auto">
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Audit Logs</span>
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">KYC Profiles</span>
-              <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Oracle Layer</span>
+              <span className="px-3 py-1.5 bg-gradient-to-r from-green-50 to-emerald-100 rounded-full text-sm font-semibold text-green-800 border border-green-200">Payment History</span>
+              <span className="px-3 py-1.5 bg-gradient-to-r from-green-50 to-emerald-100 rounded-full text-sm font-semibold text-green-800 border border-green-200">Points System</span>
+              <span className="px-3 py-1.5 bg-gradient-to-r from-green-50 to-emerald-100 rounded-full text-sm font-semibold text-green-800 border border-green-200">Audit Logs</span>
             </div>
-            <div className="flex items-center gap-4 mt-4">
-              <img
-                className="h-8 object-contain"
-                alt="Supabase logo"
-                src="/supabase.webp"
-              />
+            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
+                <img className="h-5 object-contain" alt="Supabase" src="/supabase.webp" />
+                <span className="text-xs font-semibold text-gray-800">Supabase</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
+                <span className="text-xs font-semibold text-gray-800">React + Vite</span>
+              </div>
             </div>
+          </div>
+        </div>
+
+        {/* Key Metrics Bar */}
+        <div className="w-full max-w-[1280px] mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-gradient-to-br from-brand-50 to-white rounded-xl p-6 text-center border border-brand-100">
+            <div className="text-3xl font-['Montserrat'] font-[900] text-brand-800 mb-1">&lt;1s</div>
+            <div className="text-sm font-['Montserrat'] font-[600] text-brand-600">Settlement Time</div>
+          </div>
+          <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 text-center border border-purple-100">
+            <div className="text-3xl font-['Montserrat'] font-[900] text-purple-800 mb-1">&lt;1¢</div>
+            <div className="text-sm font-['Montserrat'] font-[600] text-purple-600">Transaction Cost</div>
+          </div>
+          <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 text-center border border-green-100">
+            <div className="text-3xl font-['Montserrat'] font-[900] text-green-800 mb-1">$101.9M</div>
+            <div className="text-sm font-['Montserrat'] font-[600] text-green-600">FDV</div>
+          </div>
+          <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 text-center border border-blue-100">
+            <div className="text-3xl font-['Montserrat'] font-[900] text-blue-800 mb-1">190+</div>
+            <div className="text-sm font-['Montserrat'] font-[600] text-blue-600">Countries</div>
           </div>
         </div>
       </div>
