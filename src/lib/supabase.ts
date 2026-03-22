@@ -71,6 +71,17 @@ export interface VATRefundDetails {
 }
 
 export interface Payment {
+  id: string;
+  employee_id: string;
+  user_id: string;
+  amount: number;
+  token: string;
+  transaction_hash?: string;
+  status: 'pending' | 'completed' | 'failed';
+  payment_date: string;
+  created_at: string;
+  vat_refund_details?: VATRefundDetails; // JSONB field for VAT refund form data
+}
 
 // Scheduled Payment Interface
 export interface ScheduledPayment {
