@@ -48,13 +48,27 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
       const result = await convertPointsToMnee(points);
       
       // Show success message with details
-      const successMessage = `✅ Successfully converted ${points} points to ${result.mneeAmount.toFixed(6)} MNEE!\n\n` +
+      let successMessage = `✅ Successfully converted ${points} points to ${result.mneeAmount.toFixed(6)} MNEE!\n\n` +
         `📊 Conversion Details:\n` +
         `• Points Converted: ${points}\n` +
-        `• MNEE Received: ${result.mneeAmount.toFixed(6)} MNEE\n` +
-        `• Remaining Points: ${result.remainingPoints}\n\n` +
-        `💡 Note: In production, MNEE tokens would be automatically sent to your wallet address.\n` +
-        `For this demo, the conversion has been recorded in the system.`;
+        `• MNEE Amount: ${result.mneeAmount.toFixed(6)} MNEE\n` +
+        `• Remaining Points: ${result.remainingPoints}\n`;
+      
+      if (result.transactionHash && result.transactionHash.startsWith('0x')) {
+        // Real blockchain transaction
+        successMessage += `\n🔗 Transaction Hash: ${result.transactionHash}\n` +
+          `✅ MNEE tokens have been sent to your wallet!\n` +
+          `Check your wallet balance to see the tokens.`;
+      } else if (result.transactionHash?.includes('pending')) {
+        // Pending conversion (requires treasury wallet)
+        successMessage += `\n⏳ Status: Pending\n` +
+          `💡 Note: In production, a treasury wallet would send ${result.mneeAmount.toFixed(6)} MNEE to your wallet.\n` +
+          `For this demo, the conversion has been recorded and will be processed.`;
+      } else {
+        // Conversion recorded but no transfer
+        successMessage += `\n📝 Conversion recorded in system.\n` +
+          `💡 In production, MNEE tokens would be automatically sent to your wallet.`;
+      }
       
       alert(successMessage);
       setShowConversionModal(false);

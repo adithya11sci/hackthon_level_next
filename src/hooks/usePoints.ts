@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import type { UserPoints, PointTransaction, PointConversion } from '../lib/supabase';
 import { useAccount } from 'wagmi';
-import { sendMneePayment } from '../utils/ethereum';
+import { sendMneePayment, getMneeBalance } from '../utils/ethereum';
 
 // Helper function to generate a UUID
 function generateUUID() {
@@ -224,9 +224,48 @@ export const usePoints = () => {
         created_at: new Date().toISOString(),
       };
 
-      // For MVP: We'll create a conversion record and mark it as pending
-      // In production, this would trigger a smart contract or treasury transfer
-      // For now, we'll simulate it by creating the conversion and updating points
+      // Attempt to send MNEE tokens to user's wallet
+      // NOTE: This requires the user's wallet to have MNEE tokens OR a treasury wallet
+      // For demo: We'll try to send from user's wallet if they have MNEE
+      // In production: This would be handled by a backend treasury wallet
+      let actualTxHash: string | undefined;
+      let conversionStatus: 'pending' | 'completed' | 'failed' = 'pending';
+      
+      try {
+        // Check if user has MNEE balance (for demo/testing)
+        // In production, this would check treasury wallet balance
+        const userBalance = await getMneeBalance(walletAddress);
+        
+        if (userBalance >= mneeAmount) {
+          // For demo: User can send tokens to themselves if they have balance
+          // In production, this would be a treasury wallet sending to user
+          console.log(`💰 Sending ${mneeAmount} MNEE to ${walletAddress}...`);
+          
+          const transferResult = await sendMneePayment(walletAddress as `0x${string}`, mneeAmount);
+          
+          if (transferResult.success && transferResult.txHash) {
+            actualTxHash = transferResult.txHash;
+            conversionStatus = 'completed';
+            console.log(`✅ MNEE tokens sent! Transaction: ${actualTxHash}`);
+          } else {
+            conversionStatus = 'failed';
+            console.error('Failed to send MNEE tokens:', transferResult.error);
+          }
+        } else {
+          // User doesn't have enough MNEE - this is expected in production
+          // In production, treasury wallet would send tokens
+          console.log('⚠️ User wallet does not have sufficient MNEE balance.');
+          console.log('💡 In production, a treasury wallet would send tokens here.');
+          console.log('📝 Recording conversion as pending (requires treasury wallet in production)');
+          
+          // Mark as pending - would be completed by backend/treasury in production
+          conversionStatus = 'pending';
+        }
+      } catch (transferError) {
+        console.error('Error attempting MNEE transfer:', transferError);
+        // Still record the conversion, but mark as pending
+        conversionStatus = 'pending';
+      }
       
       // Deduct points
       setUserPoints(prevPoints => {
@@ -262,19 +301,11 @@ export const usePoints = () => {
         return updatedTransactions;
       });
 
-      // NOTE: In production, this would trigger an actual MNEE token transfer
-      // Options for production implementation:
-      // 1. Backend API that uses a treasury wallet to send MNEE tokens
-      // 2. Smart contract that mints/releases MNEE tokens from a treasury
-      // 3. Manual process where admins batch-process conversions
-      // 
-      // For MVP/demo: We record the conversion and mark it as completed
-      // The actual token transfer would happen via one of the above methods
+      // Update conversion with actual status and transaction hash
       try {
-        conversion.status = 'completed';
-        conversion.completed_at = new Date().toISOString();
-        // In production, this would be the actual blockchain transaction hash
-        conversion.transaction_hash = `pending_${generateUUID()}`; // Placeholder for production tx hash
+        conversion.status = conversionStatus;
+        conversion.completed_at = conversionStatus === 'completed' ? new Date().toISOString() : undefined;
+        conversion.transaction_hash = actualTxHash || (conversionStatus === 'pending' ? `pending_treasury_${generateUUID()}` : `error_${generateUUID()}`);
 
         // Save to Supabase
         await supabase
@@ -298,12 +329,14 @@ export const usePoints = () => {
         console.error('Failed to save conversion to Supabase:', supabaseError);
       }
 
-      console.log(`✅ Converted ${pointsToConvert} points to ${mneeAmount.toFixed(6)} MNEE`);
+      console.log(`✅ Converted ${pointsToConvert} points to ${mneeAmount.toFixed(6)} MNEE (Status: ${conversionStatus})`);
       
       return {
         conversion,
         mneeAmount,
         remainingPoints: (userPoints.total_points - pointsToConvert),
+        transactionHash: actualTxHash || conversion.transaction_hash,
+        status: conversionStatus,
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to convert points';
