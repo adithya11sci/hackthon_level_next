@@ -41,14 +41,13 @@ function GemetraLandingPage() {
               alt="Ethereum logo"
               className="h-5 w-5 object-contain"
             />
-            <span className="font-['Montserrat'] text-[14px] font-[700] text-brand-800">BUILT ON ETHEREUM</span>
-            <span className="text-brand-600">WITH</span>
+            <span className="font-['Montserrat'] text-[14px] font-[700] text-brand-800">Built on ETHEREUM</span>
             <img
               src="/mnee.png"
               alt="MNEE logo"
               className="h-5 w-5 object-contain"
             />
-            <span className="font-['Montserrat'] text-[14px] font-[700] text-brand-800">MNEE</span>
+            <span className="font-['Montserrat'] text-[14px] font-[700] text-brand-800">Powered by MNEE</span>
           </div>
           <span className="w-full max-w-[1024px] whitespace-pre-wrap font-['Montserrat'] text-[96px] font-[900] leading-[84px] text-brand-800 text-center -tracking-[0.04em] mobile:font-['Montserrat'] mobile:text-[52px] mobile:font-[900] mobile:leading-[68px] mobile:tracking-normal">
             {"Global Remittance"} <br /> <span className="bg-gradient-to-r from-brand-800 to-brand-600 bg-clip-text text-transparent">Infrastructure</span>
@@ -342,32 +341,6 @@ function GemetraLandingPage() {
             </div>
           </div>
 
-          {/* Feature Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-brand-50 rounded-2xl p-8 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 shadow-md">
-                <Clock size={32} className="text-brand-800" />
-              </div>
-              <h3 className="font-['Montserrat'] text-[24px] font-[700] text-brand-900">Instant Transactions</h3>
-              <p className="text-subtext-color mt-2">Secure and transparent transactions on Ethereum with MNEE stablecoin</p>
-            </div>
-
-            <div className="bg-brand-50 rounded-2xl p-8 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 shadow-md">
-                <Shield size={32} className="text-brand-800" />
-              </div>
-              <h3 className="font-['Montserrat'] text-[24px] font-[700] text-brand-900">Military-Grade Security</h3>
-              <p className="text-subtext-color mt-2">Multi-sig treasury and oracle signature verification for maximum protection</p>
-            </div>
-
-            <div className="bg-brand-50 rounded-2xl p-8 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 shadow-md">
-                <DollarSign size={32} className="text-brand-800" />
-              </div>
-              <h3 className="font-['Montserrat'] text-[24px] font-[700] text-brand-900">95% Lower Fees</h3>
-              <p className="text-subtext-color mt-2">Save up to 95% on transaction costs compared to traditional banking systems</p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -1116,74 +1089,6 @@ function GemetraLandingPage() {
       </div>
 
 
-      {/* Resources Section */}
-      <div className="flex w-full flex-col items-center justify-center gap-12 bg-default-background px-6 py-32 relative overflow-hidden">
-        {/* Squares Background */}
-        <Squares
-          speed={0.5}
-          squareSize={40}
-          direction='diagonal'
-          borderColor="#f1f1f1"
-          hoverFillColor="#F1F1F1"
-        />
-
-        {/* Animated Gradient Overlay */}
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
-        <div className="flex w-full flex-col items-center justify-center gap-6 relative z-10">
-          <div className="flex w-full max-w-[1280px] flex-wrap items-center justify-center gap-6 mobile:flex-col mobile:flex-wrap mobile:gap-6">
-            <div className="flex min-h-[384px] min-w-[240px] max-w-[384px] grow shrink-0 basis-0 flex-col items-start justify-end gap-8 self-stretch rounded-[32px] bg-default-background px-8 py-8 mobile:min-h-[384px] mobile:w-full mobile:min-w-[240px] mobile:grow mobile:shrink-0 mobile:basis-0">
-              <div className="flex w-full flex-col items-start justify-center gap-4">
-                <span className="max-w-[384px] whitespace-pre-wrap font-['Montserrat'] text-[30px] font-[700] leading-[34px] text-brand-900 -tracking-[0.025em]">
-                  {"Stay up to date with Gemetra\n"}
-                </span>
-                <span className="w-full max-w-[576px] whitespace-pre-wrap font-['Montserrat'] text-[18px] font-[400] leading-[26px] text-default-font -tracking-[0.01em]">
-                  {
-                    "Get the latest updates and news from our blockchain payroll platform.\n"
-                  }
-                </span>
-              </div>
-            </div>
-            <div className="flex min-h-[384px] min-w-[320px] max-w-[1280px] grow shrink-0 basis-0 flex-col items-start justify-end gap-8 self-stretch rounded-[32px] bg-neutral-900 px-8 py-8">
-              <div className="flex w-full flex-col items-start justify-center gap-4">
-                <span className="max-w-[384px] whitespace-pre-wrap font-['Montserrat'] text-[30px] font-[700] leading-[34px] text-white -tracking-[0.025em]">
-                  {"Be a part of something revolutionary"}
-                </span>
-                <span className="w-full max-w-[576px] whitespace-pre-wrap font-['Montserrat'] text-[18px] font-[400] leading-[26px] text-white -tracking-[0.01em]">
-                  {
-                    "Our flagship blockchain payroll platform offers the best and seamless way to way employees of all sizes."
-                  }
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-full max-w-[1280px] flex-wrap items-center justify-center gap-6 mobile:flex-col mobile:flex-wrap mobile:gap-6">
-            <div className="flex min-h-[384px] min-w-[240px] max-w-[384px] grow shrink-0 basis-0 flex-col items-start justify-end gap-8 self-stretch rounded-[32px] bg-default-background px-8 py-8 mobile:min-h-[384px] mobile:w-full mobile:min-w-[240px] mobile:grow mobile:shrink-0 mobile:basis-0">
-              <div className="flex w-full flex-col items-start justify-center gap-4">
-                <span className="max-w-[384px] whitespace-pre-wrap font-['Montserrat'] text-[30px] font-[700] leading-[34px] text-brand-900 -tracking-[0.025em]">
-                  {"The trusted payroll system on the Blockchain"}
-                </span>
-                <span className="w-full max-w-[576px] whitespace-pre-wrap font-['Montserrat'] text-[18px] font-[400] leading-[26px] text-default-font -tracking-[0.01em]">
-                  {
-                    "Experience the ease with payment on Ethereum using MNEE stablecoin for your global payroll solution.\n"
-                  }
-                </span>
-              </div>
-            </div>
-            <div className="flex min-h-[384px] min-w-[320px] max-w-[1280px] grow shrink-0 basis-0 flex-col items-start justify-end gap-8 self-stretch rounded-[32px] bg-brand-900 px-8 py-8">
-              <div className="flex w-full flex-col items-start justify-center gap-4">
-                <span className="max-w-[384px] whitespace-pre-wrap font-['Montserrat'] text-[30px] font-[700] leading-[34px] text-white -tracking-[0.025em]">
-                  {"Gemetra:\nPayroll Solution"}
-                </span>
-                <span className="w-full max-w-[576px] whitespace-pre-wrap font-['Montserrat'] text-[18px] font-[400] leading-[26px] text-white -tracking-[0.01em]">
-                  {
-                    "Discover how we aim to revolutionize global payroll, and make paying your employees seamless."
-                  }
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* CTA Section */}
       <div id="pricing-section" className="flex w-full flex-col items-center justify-center gap-6 bg-default-background px-6 py-32 mobile:flex relative overflow-hidden">
