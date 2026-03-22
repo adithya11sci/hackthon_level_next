@@ -183,17 +183,37 @@ export const VATAdminPage: React.FC = () => {
   };
 
   const exportToCSV = () => {
-    const headers = ['ID', 'User Address', 'Amount', 'Token', 'Status', 'Transaction Hash', 'Payment Date', 'Created At'];
-    const rows = filteredRefunds.map(refund => [
-      refund.id,
-      refund.user_id,
-      refund.amount.toFixed(2),
-      refund.token,
-      refund.status,
-      refund.transaction_hash || 'N/A',
-      refund.payment_date,
-      refund.created_at,
-    ]);
+    const headers = [
+      'ID', 'User Address', 'Amount', 'Token', 'Status', 'Transaction Hash', 'Payment Date', 'Created At',
+      'VAT Reg No', 'Receipt No', 'Bill Amount', 'VAT Amount', 'Purchase Date',
+      'Passport No', 'Flight No', 'Nationality', 'Date of Birth',
+      'Merchant Name', 'Merchant Address', 'Receiver Wallet Address'
+    ];
+    const rows = filteredRefunds.map(refund => {
+      const details = refund.vat_refund_details || {};
+      return [
+        refund.id,
+        refund.user_id,
+        refund.amount.toFixed(2),
+        refund.token,
+        refund.status,
+        refund.transaction_hash || 'N/A',
+        refund.payment_date,
+        refund.created_at,
+        details.vatRegNo || 'N/A',
+        details.receiptNo || 'N/A',
+        details.billAmount || 'N/A',
+        details.vatAmount || 'N/A',
+        details.purchaseDate || 'N/A',
+        details.passportNo || 'N/A',
+        details.flightNo || 'N/A',
+        details.nationality || 'N/A',
+        details.dob || 'N/A',
+        details.merchantName || 'N/A',
+        details.merchantAddress || 'N/A',
+        details.receiverWalletAddress || 'N/A',
+      ];
+    });
 
     const csvContent = [
       headers.join(','),
