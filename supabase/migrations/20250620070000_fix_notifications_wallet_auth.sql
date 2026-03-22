@@ -27,12 +27,24 @@ CREATE TABLE IF NOT EXISTS public.notifications (
 -- Enable Row Level Security (RLS) for the notifications table
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 
+-- IMPORTANT: Drop all existing RLS policies FIRST before altering column type
+-- Policies must be dropped before we can change the column type
+DROP POLICY IF EXISTS "Users can read their own notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Users can insert their own notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Users can update their own notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Users can delete their own notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Anyone can read notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Anyone can insert notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Anyone can update notifications" ON public.notifications;
+DROP POLICY IF EXISTS "Anyone can delete notifications" ON public.notifications;
+
 -- Drop foreign key constraint if it exists (in case table was created with UUID user_id)
 ALTER TABLE public.notifications
 DROP CONSTRAINT IF EXISTS notifications_user_id_fkey;
 
 -- Change user_id from UUID to TEXT if it's currently UUID
 -- This will only run if the column is UUID type
+-- NOTE: Policies must be dropped first (done above)
 DO $$
 BEGIN
     IF EXISTS (
@@ -47,16 +59,6 @@ BEGIN
         ALTER COLUMN user_id TYPE text USING user_id::text;
     END IF;
 END $$;
-
--- Drop all existing RLS policies on notifications (if any)
-DROP POLICY IF EXISTS "Users can read their own notifications" ON public.notifications;
-DROP POLICY IF EXISTS "Users can insert their own notifications" ON public.notifications;
-DROP POLICY IF EXISTS "Users can update their own notifications" ON public.notifications;
-DROP POLICY IF EXISTS "Users can delete their own notifications" ON public.notifications;
-DROP POLICY IF EXISTS "Anyone can read notifications" ON public.notifications;
-DROP POLICY IF EXISTS "Anyone can insert notifications" ON public.notifications;
-DROP POLICY IF EXISTS "Anyone can update notifications" ON public.notifications;
-DROP POLICY IF EXISTS "Anyone can delete notifications" ON public.notifications;
 
 -- New RLS policies for wallet-based authentication
 -- Allow reading notifications for wallet address (application will filter by wallet)
