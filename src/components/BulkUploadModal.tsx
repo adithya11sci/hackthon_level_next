@@ -146,18 +146,25 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
           status: (values[headers.indexOf('status')] as 'active' | 'inactive') || 'active'
         };
 
-        if (!employee.name) errors.push(`Row ${i + 1}: Name is required`);
+        // Track errors for this specific row
+        const rowErrors: string[] = [];
+
+        if (!employee.name) rowErrors.push(`Row ${i + 1}: Name is required`);
         if (!employee.email || !/\S+@\S+\.\S+/.test(employee.email)) {
-          errors.push(`Row ${i + 1}: Valid email is required`);
+          rowErrors.push(`Row ${i + 1}: Valid email is required`);
         }
         if (!employee.wallet_address || !isValidEthereumAddress(employee.wallet_address)) {
-          errors.push(`Row ${i + 1}: Valid Ethereum address is required`);
+          rowErrors.push(`Row ${i + 1}: Valid Ethereum address is required`);
         }
         if (employee.salary <= 0) {
-          errors.push(`Row ${i + 1}: Valid salary is required`);
+          rowErrors.push(`Row ${i + 1}: Valid salary is required`);
         }
 
-        if (errors.length === 0 || errors.filter(e => e.includes(`Row ${i + 1}`)).length === 0) {
+        // Add row errors to the main errors array
+        errors.push(...rowErrors);
+
+        // Only add to data if this row has no errors
+        if (rowErrors.length === 0) {
           data.push(employee);
         }
       } catch (error) {
