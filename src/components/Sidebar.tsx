@@ -16,7 +16,8 @@ import {
   Wallet,
   Copy,
   Check,
-  Calendar
+  Calendar,
+  Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
@@ -113,6 +114,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'VAT Refund',
       icon: Receipt,
       description: 'Process VAT Refunds'
+    },
+    {
+      id: 'vat-admin',
+      label: 'VAT Admin',
+      icon: Shield,
+      description: 'Admin Panel (Dubai Gov)',
+      adminOnly: true
     },
     {
       id: 'ai-assistant',
@@ -380,7 +388,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     </AnimatePresence>
                   )}
                 </div>
-              ))}
+              );
+              })}
             </div>
           </nav>
 

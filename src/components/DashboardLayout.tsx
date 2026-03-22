@@ -9,6 +9,7 @@ import { AIAssistantPage } from './AIAssistantPage';
 import { ChatHistoryPage } from './ChatHistoryPage';
 import { EmployeePaymentHistoryModal } from './EmployeePaymentHistoryModal';
 import { VATRefundPage } from './VATRefundPage';
+import { VATAdminPage } from './VATAdminPage';
 import { ScheduledPayments } from './ScheduledPayments';
 // Wallet connection is handled by wagmi - no need for separate functions
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,7 +30,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ companyName }) => {
   // Get activeTab from localStorage to maintain persistence
   const [activeTab, setActiveTab] = useState(() => {
     const savedTab = localStorage.getItem('gemetra_active_tab');
-    return savedTab && ['dashboard', 'employees', 'bulk-transfer', 'scheduled-payments', 'vat-refund', 'ai-assistant-chat', 'ai-assistant-history', 'settings'].includes(savedTab) 
+    return savedTab && ['dashboard', 'employees', 'bulk-transfer', 'scheduled-payments', 'vat-refund', 'vat-admin', 'ai-assistant-chat', 'ai-assistant-history', 'settings'].includes(savedTab) 
       ? savedTab 
       : 'dashboard';
   });
@@ -203,6 +204,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ companyName }) => {
         );
       case 'vat-refund':
         return <VATRefundPage onBack={() => setActiveTab('dashboard')} />;
+      case 'vat-admin':
+        return <VATAdminPage />;
       case 'ai-assistant-chat':
         return <AIAssistantPage companyName={companyName} sessionId={selectedChatSessionId} onSessionCreated={handleNewChatSessionCreated} />;
       case 'ai-assistant-history':
