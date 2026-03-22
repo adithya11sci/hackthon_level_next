@@ -699,6 +699,7 @@ flowchart LR
 - ✅ **Scheduled Payments**: Calendar view, recurring payments, and pre-approval system.
 - ✅ **Points System**: Earn points for transactions, convert to MNEE.
 - ✅ **AI Assistant**: Natural language interface for payroll and crypto questions.
+- ✅ **VAT Admin Panel**: Government dashboard for viewing, filtering, and exporting all VAT refund claims with complete details.
 - 🔄 **Next**: Multi-country VAT support + AI-driven tax compliance engine.
 - 🔄 **Later**: Enterprise integrations, PDF-based compliance exports, multi-signature approvals.
 - 🌐 **Future**: Gemetra-MNEE DAO + full protocol governance.
