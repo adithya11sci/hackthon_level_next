@@ -1193,19 +1193,8 @@ function GemetraLandingPage() {
         {/* Animated Gradient Overlay */}
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
 
-        <div className="flex w-full max-w-[1280px] flex-col items-center justify-center gap-8 rounded-[32px] bg-default-background px-6 pt-24 pb-16 shadow-2xl relative z-10 overflow-hidden">
-          {/* Squares Background */}
-          <Squares
-            speed={0.5}
-            squareSize={40}
-            direction='diagonal'
-            borderColor="#f1f1f1"
-            hoverFillColor="#F1F1F1"
-          />
-
-          {/* Animated Gradient Overlay */}
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
-          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-brand-900 text-white px-8 py-4 rounded-full shadow-lg z-20">
+        <div className="flex w-full max-w-[1280px] flex-col items-center justify-center gap-8 rounded-[32px] bg-white px-6 pt-24 pb-16 shadow-2xl relative z-10">
+          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-brand-800 text-white px-8 py-4 rounded-full shadow-lg z-20">
             <span className="font-['Montserrat'] text-[18px] font-[700]">Ready to Transform Your Financial Operations?</span>
           </div>
 
