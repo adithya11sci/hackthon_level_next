@@ -301,25 +301,26 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
     const isNewChat = messages.length <= 1;
     
     if (isNewChat && displayedQuestions.length === 0) {
-      // Initialize with a mix of questions from all categories
+      // Initialize with 70% company questions
       const initialQuestions = isMobile 
         ? [
-            allAvailableQuestions[0], // MNEE question
-            allAvailableQuestions[20], // Ethereum question
-            allAvailableQuestions[35], // Company question
-          ]
-        : [
-            // Mix of MNEE, Ethereum, Company, and Payment questions
-            allAvailableQuestions[0], // "What is MNEE?"
-            allAvailableQuestions[2], // "What is the current price of Ethereum"
+            // 2 company questions (67%), 1 other
             allAvailableQuestions[35], // "How many employees do we have?"
             allAvailableQuestions[36], // "Who is our highest paid employee?"
-            allAvailableQuestions[52], // "When was the last payment made?"
-            allAvailableQuestions[1], // "Tell me about MNEE token"
+            allAvailableQuestions[0], // "What is MNEE?"
+          ]
+        : [
+            // 7 company questions (70%), 3 other questions (30%)
+            allAvailableQuestions[35], // "How many employees do we have?"
+            allAvailableQuestions[36], // "Who is our highest paid employee?"
             allAvailableQuestions[37], // "List all employees"
             allAvailableQuestions[38], // "Company overview please"
-            allAvailableQuestions[53], // "Show me payment statistics"
-            allAvailableQuestions[20], // "What is Ethereum?"
+            allAvailableQuestions[39], // "Employee salary breakdown"
+            allAvailableQuestions[40], // "What is the total payroll amount?"
+            allAvailableQuestions[41], // "Show me employee statistics"
+            allAvailableQuestions[0], // "What is MNEE?"
+            allAvailableQuestions[2], // "What is the current price of Ethereum"
+            allAvailableQuestions[52], // "When was the last payment made?"
           ];
       setDisplayedQuestions(initialQuestions);
       setUsedQuestions(new Set());
@@ -429,8 +430,42 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
             );
             
             if (available.length > 0) {
-              // Replace the used question with a random new one
-              const newQuestion = available[Math.floor(Math.random() * available.length)];
+              // Count current category distribution
+              const currentCategories = {
+                company: prevDisplayed.filter(q => {
+                  const idx = allAvailableQuestions.indexOf(q);
+                  return idx >= 35 && idx < 50;
+                }).length,
+              };
+              
+              const totalDisplayed = prevDisplayed.length;
+              const targetCompanyCount = Math.ceil(totalDisplayed * 0.7); // 70% target
+              
+              // Prioritize company questions to maintain 70% ratio
+              let preferredQuestions = available;
+              if (currentCategories.company < targetCompanyCount) {
+                // Need more company questions - prioritize them
+                const companyQuestions = available.filter(q => {
+                  const idx = allAvailableQuestions.indexOf(q);
+                  return idx >= 35 && idx < 50;
+                });
+                if (companyQuestions.length > 0) {
+                  preferredQuestions = companyQuestions;
+                }
+              } else {
+                // Company questions are at or above target - prefer other categories
+                const otherQuestions = available.filter(q => {
+                  const idx = allAvailableQuestions.indexOf(q);
+                  return idx < 35 || idx >= 50; // MNEE, Ethereum, or Payment
+                });
+                if (otherQuestions.length > 0) {
+                  preferredQuestions = otherQuestions;
+                }
+              }
+              
+              // Use preferred questions if available, otherwise use all available
+              const questionsToChooseFrom = preferredQuestions.length > 0 ? preferredQuestions : available;
+              const newQuestion = questionsToChooseFrom[Math.floor(Math.random() * questionsToChooseFrom.length)];
               return prevDisplayed.map(q => q === lastUserMessage.content ? newQuestion : q);
             } else {
               // If no more questions available, just remove the used one
