@@ -312,23 +312,27 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
 
   // Function to replace a used question with a new one
   const replaceQuestion = (usedQuestion: string) => {
-    setUsedQuestions(prev => new Set(prev).add(usedQuestion));
-    
-    // Get available questions that haven't been used
-    const available = allAvailableQuestions.filter(q => 
-      !usedQuestions.has(q) && !displayedQuestions.includes(q)
-    );
-    
-    if (available.length > 0) {
-      // Replace the used question with a random new one
-      const newQuestion = available[Math.floor(Math.random() * available.length)];
-      setDisplayedQuestions(prev => 
-        prev.map(q => q === usedQuestion ? newQuestion : q)
-      );
-    } else {
-      // If no more questions available, just remove the used one
-      setDisplayedQuestions(prev => prev.filter(q => q !== usedQuestion));
-    }
+    setUsedQuestions(prevUsed => {
+      const newUsed = new Set(prevUsed).add(usedQuestion);
+      
+      setDisplayedQuestions(prevDisplayed => {
+        // Get available questions that haven't been used and aren't currently displayed
+        const available = allAvailableQuestions.filter(q => 
+          !newUsed.has(q) && !prevDisplayed.includes(q)
+        );
+        
+        if (available.length > 0) {
+          // Replace the used question with a random new one
+          const newQuestion = available[Math.floor(Math.random() * available.length)];
+          return prevDisplayed.map(q => q === usedQuestion ? newQuestion : q);
+        } else {
+          // If no more questions available, just remove the used one
+          return prevDisplayed.filter(q => q !== usedQuestion);
+        }
+      });
+      
+      return newUsed;
+    });
   };
 
   // Handle question click
