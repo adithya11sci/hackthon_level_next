@@ -576,21 +576,28 @@ Created Ethereum as a decentralized platform for smart contracts and decentraliz
         return founderResponse;
         
       case 'price':
+        // Re-analyze message to get entities (analysis might not be in scope here)
+        const priceAnalysis = analyzeMessage(message);
+        
         // Check if user is asking about MNEE specifically
         // Also extract crypto from message if not in entities
-        let requestedCrypto = analysis.entities.find(e => ['mnee', 'ethereum', 'eth', 'bitcoin', 'btc', 'cardano', 'solana'].includes(e));
+        let requestedCrypto = priceAnalysis.entities.find(e => ['mnee', 'ethereum', 'eth', 'bitcoin', 'btc', 'cardano', 'solana'].includes(e));
         
-        // If not found in entities, try to extract from message
+        // If not found in entities, try to extract from message directly
         if (!requestedCrypto) {
           const cryptoMatch = message.match(/(ethereum|eth|bitcoin|btc|mnee|cardano|solana)/i);
           if (cryptoMatch) {
             requestedCrypto = cryptoMatch[0].toLowerCase();
+            // Normalize 'eth' to 'ethereum'
             if (requestedCrypto === 'eth') requestedCrypto = 'ethereum';
           }
         }
         
-        requestedCrypto = requestedCrypto || thinkingContext.primaryCrypto;
+        // Default to ethereum if in Ethereum/MNEE app context
+        requestedCrypto = requestedCrypto || thinkingContext.primaryCrypto || 'ethereum';
         const priceCrypto = requestedCrypto === 'mnee' ? 'ethereum' : requestedCrypto; // Use Ethereum price as proxy for MNEE (stablecoin)
+        
+        console.log('💰 Fetching price for:', { requestedCrypto, priceCrypto, message });
         
         const priceData = await fetchCryptoPrice(priceCrypto);
         if (priceData) {
