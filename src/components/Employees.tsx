@@ -62,7 +62,14 @@ export const Employees: React.FC<EmployeesProps> = ({
   };
 
   const handleBulkUpload = async (newEmployeesData: Omit<Employee, 'id' | 'user_id' | 'created_at' | 'updated_at'>[]) => {
-    const promises = newEmployeesData.map(employeeData => addEmployee(employeeData));
+    console.log(`📤 Starting bulk upload of ${newEmployeesData.length} employees`);
+    
+    const promises = newEmployeesData.map((employeeData, index) => 
+      addEmployee(employeeData).catch(error => {
+        console.error(`❌ Failed to add employee ${index + 1} (${employeeData.name || employeeData.email}):`, error);
+        throw { index, employee: employeeData, error };
+      })
+    );
     
     try {
       const results = await Promise.allSettled(promises);
@@ -71,21 +78,26 @@ export const Employees: React.FC<EmployeesProps> = ({
       const failed = results.filter(result => result.status === 'rejected');
       
       if (successful > 0) {
-        console.log(`Successfully uploaded ${successful} employees`);
+        console.log(`✅ Successfully uploaded ${successful} employees`);
       }
       
       if (failed.length > 0) {
-        console.error(`Failed to upload ${failed.length} employees:`, failed);
-        failed.forEach((failedResult, index) => {
+        console.error(`❌ Failed to upload ${failed.length} employees:`);
+        failed.forEach((failedResult, idx) => {
           if (failedResult.status === 'rejected') {
-            console.error(`Employee ${index + 1} failed:`, failedResult.reason);
+            const errorInfo = failedResult.reason;
+            if (errorInfo && errorInfo.employee) {
+              console.error(`  - Employee ${errorInfo.index + 1}: ${errorInfo.employee.name || errorInfo.employee.email} - ${errorInfo.error?.message || errorInfo.error}`);
+            } else {
+              console.error(`  - Employee ${idx + 1}:`, failedResult.reason);
+            }
           }
         });
       }
 
       return { successful, failed: failed.length };
     } catch (error) {
-      console.error('Failed to bulk upload employees:', error);
+      console.error('❌ Failed to bulk upload employees:', error);
       return { successful: 0, failed: newEmployeesData.length };
     }
   };

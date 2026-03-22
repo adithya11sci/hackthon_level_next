@@ -112,7 +112,7 @@ Save this as `employees.csv`:
 
 ```csv
 name,email,designation,department,salary,wallet_address,join_date,status
-John Doe,john.doe@company.com,Senior Developer,Engineering,5000,0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb,2025-01-15,active
+John Doe,john.doe@company.com,Senior ,Engineering,5000,0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb,2025-01-15,active
 Jane Smith,jane.smith@company.com,Product Manager,Product,7500,0x8ba1f109551bD432803012645Hac136c22C19e0,2025-01-20,active
 Bob Johnson,bob.johnson@company.com,UI Designer,Design,4500,0x1234567890123456789012345678901234567890,2025-02-01,active
 Alice Williams,alice.williams@company.com,Marketing Manager,Marketing,6000,0xabcdef1234567890abcdef1234567890abcdef12,2025-02-10,active

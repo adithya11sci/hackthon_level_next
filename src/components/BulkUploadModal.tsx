@@ -149,15 +149,26 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
         // Track errors for this specific row
         const rowErrors: string[] = [];
 
-        if (!employee.name) rowErrors.push(`Row ${i + 1}: Name is required`);
-        if (!employee.email || !/\S+@\S+\.\S+/.test(employee.email)) {
-          rowErrors.push(`Row ${i + 1}: Valid email is required`);
+        if (!employee.name || employee.name.trim() === '') {
+          rowErrors.push(`Row ${i + 1}: Name is required`);
         }
+        
+        // Stricter email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!employee.email || !emailRegex.test(employee.email.trim())) {
+          rowErrors.push(`Row ${i + 1}: Valid email is required (got: "${employee.email}")`);
+        }
+        
         if (!employee.wallet_address || !isValidEthereumAddress(employee.wallet_address)) {
-          rowErrors.push(`Row ${i + 1}: Valid Ethereum address is required`);
+          rowErrors.push(`Row ${i + 1}: Valid Ethereum address is required (got: "${employee.wallet_address}")`);
         }
-        if (employee.salary <= 0) {
-          rowErrors.push(`Row ${i + 1}: Valid salary is required`);
+        
+        if (employee.salary <= 0 || isNaN(employee.salary)) {
+          rowErrors.push(`Row ${i + 1}: Valid salary is required (got: "${values[headers.indexOf('salary')]}")`);
+        }
+        
+        if (!employee.designation || employee.designation.trim() === '') {
+          rowErrors.push(`Row ${i + 1}: Designation is required`);
         }
 
         // Add row errors to the main errors array
