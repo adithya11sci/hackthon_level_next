@@ -122,15 +122,30 @@ export const useEmployees = () => {
 
       console.log(`✅ Adding employee: ${newEmployee.name} (${newEmployee.email})`);
 
-      // Add to state
-      const updatedEmployees = [newEmployee, ...employees];
-      setEmployees(updatedEmployees);
+      // Use functional state update to avoid race conditions with parallel adds
+      setEmployees(prevEmployees => {
+        // Check for duplicate email in current state
+        const existingEmployee = prevEmployees.find(
+          emp => emp.email.toLowerCase() === newEmployee.email.toLowerCase()
+        );
+        
+        if (existingEmployee) {
+          console.warn(`⚠️ Employee with email ${newEmployee.email} already exists in state`);
+          throw new Error(`Employee with email ${newEmployee.email} already exists`);
+        }
 
-      // Save to localStorage
-      const localStorageKey = `gemetra_employees_${walletAddress}`;
-      localStorage.setItem(localStorageKey, JSON.stringify(updatedEmployees));
+        const updatedEmployees = [newEmployee, ...prevEmployees];
+        
+        // Save to localStorage
+        const localStorageKey = `gemetra_employees_${walletAddress}`;
+        localStorage.setItem(localStorageKey, JSON.stringify(updatedEmployees));
+        
+        console.log(`✅ Updated employees state: ${updatedEmployees.length} total employees`);
+        
+        return updatedEmployees;
+      });
 
-      console.log('✅ Added employee to localStorage:', newEmployee.name);
+      // Note: localStorage is now saved inside the state update function
 
       // Try to also save to Supabase for backward compatibility
       try {

@@ -15,7 +15,7 @@ export const Employees: React.FC<EmployeesProps> = ({
   setActiveTab,
   setSelectedEmployee 
 }) => {
-  const { employees, loading, addEmployee, updateEmployee, deleteEmployee } = useEmployees();
+  const { employees, loading, addEmployee, updateEmployee, deleteEmployee, refetch: refreshEmployees } = useEmployees();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
@@ -105,6 +105,9 @@ export const Employees: React.FC<EmployeesProps> = ({
   const handleUploadSuccess = (successful: number, failed: number) => {
     setUploadResults({ successful, failed });
     setShowUploadSuccessModal(true);
+    // Refresh the employees list to show newly added employees
+    console.log('🔄 Refreshing employees list after bulk upload...');
+    refreshEmployees();
   };
 
   const handleEditEmployee = (employee: Employee) => {
