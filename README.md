@@ -14,13 +14,15 @@ Using **MNEE**, a USD-backed stablecoin on Ethereum (Contract: `0x8ccedbAe4916b7
 1. **VAT Refunds** – Tourists submit refund requests → receive instant MNEE stablecoin payments on Ethereum.
 2. **Payroll Automation** – Employers upload CSV → AI computes salaries → employees receive MNEE payments instantly.
 3. **Scheduled Payments** – Automate recurring and one-time payments with calendar view and pre-approval system.
+4. **Points & Rewards** – Earn points for transactions and convert to MNEE tokens.
+5. **AI Assistant** – Get instant answers about payroll, payments, and blockchain technology.
 
 ---
 
 ## 🛑 Problem
 
-- **Tourist VAT Refunds** are slow, manual, and often unclaimed due to airport delays.
-- **Global Payroll** is plagued by high fees, delayed wires, hidden FX costs, and compliance overhead.
+- **Tourist VAT Refunds** are slow, manual, and often unclaimed due to airport delays ($50B+ lost annually).
+- **Global Payroll** is plagued by high fees (2-5%), delayed wires (3-5 days), hidden FX costs, and compliance overhead.
 - Both processes rely on **centralized, fragmented rails** that fail in a borderless world.
 
 ---
@@ -31,34 +33,523 @@ Using **MNEE**, a USD-backed stablecoin on Ethereum (Contract: `0x8ccedbAe4916b7
 - Tourists **receive VAT refunds** instantly in MNEE stablecoin on Ethereum.
 - Employers **disburse payroll globally** with a single transaction.
 - **Automated scheduled payments** for recurring payroll and one-time future payments.
+- **Points system** rewards users for transactions and converts to MNEE.
 - Ethereum blockchain ensures **transparency** and **programmable money** capabilities.
 
 ---
 
-## ⚙️ How It Works
+## ⚡ System Architecture
 
-### VAT Refund Flow
-1. Tourist uploads invoice + VAT claim details or enters manually.
-2. System validates eligibility and calculates refund amount.
-3. Tourist connects Ethereum wallet (MetaMask, WalletConnect, etc.).
-4. Refund delivered instantly in **MNEE stablecoin** on Ethereum.
-5. Transaction recorded on-chain for transparency and audit.
+```mermaid
+flowchart TB
+    subgraph "Client Layer"
+        WEB["🌐 Web App<br/>(React + Vite)"]
+        MOBILE["📱 Mobile<br/>(Responsive)"]
+        WALLET["💼 Wallets<br/>(MetaMask/WalletConnect)"]
+    end
 
-### Payroll Flow
-1. Employer uploads payroll CSV with employee details and salaries.
-2. AI parses salaries, taxes, and generates payment plan.
-3. Dashboard displays preview → CFO/HR approves.
-4. Treasury wallet sends **MNEE payments** to employees via Ethereum.
-5. Employees receive stablecoin salaries instantly.
+    subgraph "Application Layer"
+        UI["🎨 UI Components<br/>(Dashboard, Forms, Modals)"]
+        HOOKS["🪝 React Hooks<br/>(usePayments, useEmployees, usePoints)"]
+        SERVICES["⚙️ Services<br/>(AI, Payment, Price)"]
+    end
 
-### Scheduled Payments Flow
-1. Employer schedules one-time or recurring payments for employees.
-2. Set payment date, amount, and recurrence frequency (if recurring).
-3. Optionally set pre-approval spending limit for automatic processing.
-4. System checks for due payments every minute.
-5. Payments within pre-approval limit process automatically.
-6. Payments exceeding limit require manual approval via MetaMask.
-7. All payments recorded on-chain with transaction hashes.
+    subgraph "Backend Services"
+        SUPABASE["🗄️ Supabase<br/>(PostgreSQL + Storage)"]
+        AI["🤖 AI Service<br/>(Google Gemini)"]
+        EMAIL["📧 Email Service<br/>(EmailJS)"]
+    end
+
+    subgraph "Blockchain Layer"
+        ETH["⛓️ Ethereum Network<br/>(Mainnet/Sepolia)"]
+        MNEE["💰 MNEE Contract<br/>0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF"]
+        WAGMI["🔌 Wagmi<br/>(Wallet Integration)"]
+    end
+
+    subgraph "External Services"
+        ETHERSCAN["🔍 Etherscan<br/>(Tx Verification)"]
+        PRICE["💵 Price API<br/>(Crypto Prices)"]
+    end
+
+    WEB --> UI
+    MOBILE --> UI
+    UI --> HOOKS
+    HOOKS --> SERVICES
+    SERVICES --> SUPABASE
+    SERVICES --> AI
+    SERVICES --> EMAIL
+    HOOKS --> WAGMI
+    WAGMI --> WALLET
+    WALLET --> ETH
+    ETH --> MNEE
+    ETH --> ETHERSCAN
+    SERVICES --> PRICE
+    ETHERSCAN --> UI
+```
+
+---
+
+## 📊 Database Schema
+
+```mermaid
+erDiagram
+    USERS ||--o{ EMPLOYEES : has
+    USERS ||--o{ CHAT_SESSIONS : has
+    EMPLOYEES ||--o{ PAYMENTS : receives
+    EMPLOYEES ||--o{ SCHEDULED_PAYMENTS : has
+    CHAT_SESSIONS ||--o{ CHAT_MESSAGES : contains
+    USER_POINTS ||--o{ POINT_TRANSACTIONS : tracks
+    USER_POINTS ||--o{ POINT_CONVERSIONS : converts
+
+    USERS {
+        uuid id PK
+        text email UK
+        text company_name
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    EMPLOYEES {
+        uuid id PK
+        uuid user_id FK
+        text name
+        text email
+        text designation
+        text department
+        decimal salary
+        text wallet_address
+        date join_date
+        text status
+        timestamptz created_at
+    }
+
+    PAYMENTS {
+        uuid id PK
+        uuid employee_id FK
+        decimal amount
+        text token
+        text transaction_hash
+        text status
+        timestamptz payment_date
+        timestamptz created_at
+    }
+
+    SCHEDULED_PAYMENTS {
+        uuid id PK
+        uuid employee_id FK
+        decimal amount
+        text token
+        date scheduled_date
+        text frequency
+        date end_date
+        boolean is_recurring
+        text status
+        timestamptz created_at
+    }
+
+    CHAT_SESSIONS {
+        uuid id PK
+        uuid user_id FK
+        text title
+        text last_message_content
+        timestamptz last_message_timestamp
+        timestamptz created_at
+    }
+
+    CHAT_MESSAGES {
+        uuid id PK
+        uuid session_id FK
+        uuid user_id FK
+        text type
+        text content
+        timestamptz created_at
+    }
+
+    USER_POINTS {
+        uuid id PK
+        text user_id UK
+        integer total_points
+        integer lifetime_points
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    POINT_TRANSACTIONS {
+        uuid id PK
+        text user_id
+        integer points
+        text transaction_type
+        text source
+        text source_id
+        text description
+        timestamptz created_at
+    }
+
+    POINT_CONVERSIONS {
+        uuid id PK
+        text user_id
+        integer points
+        decimal mnee_amount
+        decimal conversion_rate
+        text transaction_hash
+        text status
+        timestamptz created_at
+        timestamptz completed_at
+    }
+```
+
+---
+
+## 💸 Payment Flow (Bulk Payroll)
+
+```mermaid
+sequenceDiagram
+    participant Employer
+    participant Dashboard
+    participant CSV Parser
+    participant AI Service
+    participant Preview Modal
+    participant Wallet
+    participant Ethereum
+    participant Supabase
+    participant Points System
+
+    Employer->>Dashboard: Upload CSV File
+    Dashboard->>CSV Parser: Parse CSV Data
+    CSV Parser->>CSV Parser: Validate Data
+    CSV Parser->>AI Service: Analyze Salaries
+    AI Service-->>CSV Parser: Validated Data
+    CSV Parser-->>Dashboard: Employee List
+    
+    Employer->>Dashboard: Select Employees
+    Dashboard->>Preview Modal: Show Payment Preview
+    Preview Modal->>Preview Modal: Calculate Totals
+    
+    Employer->>Preview Modal: Approve Payments
+    Preview Modal->>Wallet: Request Transaction
+    Wallet->>Employer: Show MetaMask Popup
+    Employer->>Wallet: Confirm Transaction
+    Wallet->>Ethereum: Send MNEE Transfers
+    
+    loop For Each Employee
+        Ethereum->>Ethereum: Execute ERC20 Transfer
+        Ethereum-->>Supabase: Store Payment Record
+    end
+    
+    Ethereum-->>Preview Modal: Transaction Hashes
+    Preview Modal->>Points System: Award Points (5 per employee)
+    Points System->>Supabase: Store Point Transaction
+    Preview Modal-->>Employer: Payment Success
+```
+
+---
+
+## 🧾 VAT Refund Flow
+
+```mermaid
+sequenceDiagram
+    participant Tourist
+    participant VAT Page
+    participant Document Processor
+    participant Review Step
+    participant Wallet
+    participant Ethereum
+    participant Supabase
+    participant Points System
+    participant QR Code
+
+    Tourist->>VAT Page: Upload Receipt (PDF/JPG/PNG)
+    VAT Page->>Document Processor: Process Document
+    Document Processor->>Document Processor: Extract VAT Info
+    Document Processor-->>VAT Page: Refund Amount
+    
+    alt Manual Entry
+        Tourist->>VAT Page: Enter Details Manually
+        VAT Page->>Document Processor: Validate Data
+    end
+    
+    Tourist->>VAT Page: Enter Wallet Address
+    VAT Page->>Review Step: Show Review Screen
+    Tourist->>Review Step: Approve Refund
+    
+    Review Step->>Supabase: Create Pending Record
+    Review Step->>QR Code: Generate Payment QR
+    Review Step->>Wallet: Request Transaction
+    Wallet->>Tourist: Show MetaMask Popup
+    Tourist->>Wallet: Confirm Transaction
+    Wallet->>Ethereum: Send MNEE Transfer
+    
+    Ethereum->>Ethereum: Execute ERC20 Transfer
+    Ethereum-->>Supabase: Update Record (completed)
+    Supabase-->>Review Step: Transaction Hash
+    Review Step->>Points System: Award 15 Points
+    Points System->>Supabase: Store Point Transaction
+    Review Step-->>Tourist: Refund Success + QR Code
+```
+
+---
+
+## 📅 Scheduled Payments Flow
+
+```mermaid
+flowchart TD
+    START([Employer Schedules Payment])
+    SETUP{Payment Type?}
+    ONETIME[One-Time Payment]
+    RECURRING[Recurring Payment]
+    
+    ONETIME --> SETDATE[Set Payment Date]
+    RECURRING --> SETFREQ[Set Frequency:<br/>Daily/Weekly/Monthly]
+    SETFREQ --> SETDATE
+    SETDATE --> SETAMOUNT[Set Amount]
+    SETAMOUNT --> PREAPPROVE{Set Pre-Approval?}
+    
+    PREAPPROVE -->|Yes| SETLIMIT[Set Spending Limit]
+    PREAPPROVE -->|No| SAVE[Save to Database]
+    SETLIMIT --> SAVE
+    
+    SAVE --> CALENDAR[Display in Calendar]
+    CALENDAR --> WAIT[Wait for Scheduled Date]
+    
+    WAIT --> CHECK[Check Due Payments<br/>Every Minute]
+    CHECK --> DUE{Payment Due?}
+    DUE -->|No| WAIT
+    DUE -->|Yes| CHECKLIMIT{Within<br/>Pre-Approval<br/>Limit?}
+    
+    CHECKLIMIT -->|Yes| AUTO[Auto-Process Payment]
+    CHECKLIMIT -->|No| MANUAL[Require Manual Approval]
+    
+    AUTO --> WALLET[Send via Wallet]
+    MANUAL --> POPUP[Show MetaMask Popup]
+    POPUP --> WALLET
+    
+    WALLET --> ETH[Execute on Ethereum]
+    ETH --> UPDATE[Update Status]
+    UPDATE --> POINTS[Award 3 Points]
+    POINTS --> NOTIFY[Notify Employee]
+    NOTIFY --> END([Payment Complete])
+    
+    RECURRING --> CHECKEND{End Date<br/>Reached?}
+    CHECKEND -->|No| WAIT
+    CHECKEND -->|Yes| END
+```
+
+---
+
+## 🎁 Points System Flow
+
+```mermaid
+flowchart LR
+    subgraph "Earning Points"
+        PAYMENT[Single Payment<br/>+10 points]
+        BULK[Bulk Payment<br/>+5 per employee]
+        SCHEDULED[Scheduled Payment<br/>+3 points]
+        VAT[VAT Refund<br/>+15 points]
+    end
+    
+    subgraph "Points Storage"
+        LOCAL[localStorage<br/>Fast Access]
+        DB[(Supabase<br/>Persistence)]
+    end
+    
+    subgraph "Points Display"
+        BADGE[Top Bar Badge<br/>Current Balance]
+        HISTORY[History Modal<br/>All Transactions]
+    end
+    
+    subgraph "Conversion"
+        CONVERT[Convert to MNEE<br/>100 points = 1 MNEE]
+        MINIMUM{Minimum<br/>100 points?}
+        TRANSFER[Send MNEE Tokens<br/>to Wallet]
+    end
+    
+    PAYMENT --> LOCAL
+    BULK --> LOCAL
+    SCHEDULED --> LOCAL
+    VAT --> LOCAL
+    
+    LOCAL --> DB
+    DB --> LOCAL
+    
+    LOCAL --> BADGE
+    LOCAL --> HISTORY
+    
+    BADGE --> CONVERT
+    CONVERT --> MINIMUM
+    MINIMUM -->|Yes| TRANSFER
+    MINIMUM -->|No| ERROR[Error: Minimum 100 points]
+    TRANSFER --> UPDATE[Update Balance]
+    UPDATE --> DB
+```
+
+---
+
+## 🤖 AI Assistant Flow
+
+```mermaid
+flowchart TD
+    USER[User Asks Question]
+    INPUT[AI Assistant Page]
+    
+    INPUT --> ANALYZE{Question Type?}
+    
+    ANALYZE -->|Company/Payroll| COMPANY[Company Context]
+    ANALYZE -->|MNEE/Ethereum| CRYPTO[Crypto Context]
+    ANALYZE -->|Price Query| PRICE[Price Service]
+    ANALYZE -->|General| GENERAL[General AI]
+    
+    COMPANY --> GEMINI[Google Gemini API]
+    CRYPTO --> GEMINI
+    PRICE --> PRICEAPI[Fetch Real-Time Price]
+    GENERAL --> GEMINI
+    
+    PRICEAPI --> FORMAT[Format Price Response]
+    GEMINI --> PROCESS[Process Response]
+    FORMAT --> PROCESS
+    
+    PROCESS --> MARKDOWN[Format as Markdown]
+    MARKDOWN --> RENDER[React Markdown Renderer]
+    RENDER --> DISPLAY[Display Response]
+    
+    DISPLAY --> SUGGEST[Show Suggested Questions]
+    SUGGEST --> REPLACE{Question Asked?}
+    REPLACE -->|Yes| NEWQ[Replace with New Question]
+    REPLACE -->|No| KEEP[Keep Current Questions]
+    
+    NEWQ --> POOL[Question Pool<br/>65+ Questions]
+    POOL --> BALANCE{70% Company<br/>Questions?}
+    BALANCE -->|Yes| SUGGEST
+    BALANCE -->|No| PRIORITIZE[Prioritize Company Questions]
+    PRIORITIZE --> SUGGEST
+    
+    DISPLAY --> SAVE[Save to Chat History]
+    SAVE --> SUPABASE[(Supabase)]
+```
+
+---
+
+## 👤 User Journey
+
+```mermaid
+journey
+    title User Journey: From Onboarding to Payment
+    section Onboarding
+      Visit Landing Page: 5: User
+      Connect Wallet: 5: User
+      View Dashboard: 4: User
+    section Employee Management
+      Add Employee: 4: User
+      Upload CSV: 5: User
+      Review Employees: 4: User
+    section Payment Processing
+      Select Employees: 4: User
+      Preview Payment: 5: User
+      Approve Transaction: 5: User
+      Confirm in MetaMask: 4: User
+      View Transaction: 5: User
+    section Scheduled Payments
+      Schedule Payment: 5: User
+      Set Pre-Approval: 4: User
+      View Calendar: 5: User
+      Auto-Process: 5: User
+    section VAT Refund
+      Upload Receipt: 4: User
+      Enter Details: 3: User
+      Review Refund: 4: User
+      Receive MNEE: 5: User
+    section Points & Rewards
+      Earn Points: 5: User
+      View Balance: 4: User
+      Convert to MNEE: 5: User
+    section AI Assistant
+      Ask Question: 5: User
+      Get Instant Answer: 5: User
+      View History: 4: User
+```
+
+---
+
+## 🏗️ Component Architecture
+
+```mermaid
+graph TB
+    subgraph "App Layer"
+        APP[App.tsx]
+        ROUTER[Router]
+    end
+    
+    subgraph "Layout Components"
+        LAYOUT[DashboardLayout]
+        SIDEBAR[Sidebar]
+        TOPBAR[TopBar]
+        HEADER[Header]
+    end
+    
+    subgraph "Feature Pages"
+        DASHBOARD[Dashboard]
+        EMPLOYEES[Employees]
+        PAYMENTS[BulkTransfer]
+        SCHEDULED[ScheduledPayments]
+        VAT[VATRefundPage]
+        AI[AIAssistantPage]
+        SETTINGS[SettingsPage]
+    end
+    
+    subgraph "Shared Components"
+        MODALS[PaymentPreviewModal<br/>AddEmployeeModal<br/>EditEmployeeModal]
+        CHARTS[Charts]
+        STATS[StatsOverview]
+        ACTIVITY[RecentActivity]
+        POINTS[PointsDisplay]
+    end
+    
+    subgraph "Hooks"
+        HOOKS[usePayments<br/>useEmployees<br/>usePoints<br/>useScheduledPayments<br/>useChat<br/>useNotifications]
+    end
+    
+    subgraph "Services"
+        SERVICES[aiService<br/>paymentScheduler<br/>priceService<br/>textProcessingService]
+    end
+    
+    subgraph "Utils"
+        ETH[ethereum.ts<br/>Wallet & Transaction Utils]
+        EMAIL[emailService.ts]
+    end
+    
+    APP --> ROUTER
+    ROUTER --> LAYOUT
+    LAYOUT --> SIDEBAR
+    LAYOUT --> TOPBAR
+    LAYOUT --> HEADER
+    LAYOUT --> DASHBOARD
+    LAYOUT --> EMPLOYEES
+    LAYOUT --> PAYMENTS
+    LAYOUT --> SCHEDULED
+    LAYOUT --> VAT
+    LAYOUT --> AI
+    LAYOUT --> SETTINGS
+    
+    DASHBOARD --> STATS
+    DASHBOARD --> CHARTS
+    DASHBOARD --> ACTIVITY
+    TOPBAR --> POINTS
+    
+    EMPLOYEES --> MODALS
+    PAYMENTS --> MODALS
+    SCHEDULED --> MODALS
+    
+    DASHBOARD --> HOOKS
+    EMPLOYEES --> HOOKS
+    PAYMENTS --> HOOKS
+    SCHEDULED --> HOOKS
+    VAT --> HOOKS
+    AI --> HOOKS
+    
+    HOOKS --> SERVICES
+    HOOKS --> ETH
+    SERVICES --> ETH
+    MODALS --> ETH
+```
 
 ---
 
@@ -72,49 +563,18 @@ Using **MNEE**, a USD-backed stablecoin on Ethereum (Contract: `0x8ccedbAe4916b7
   - Calendar view to visualize all scheduled payments
   - Pre-approval system for automatic processing without MetaMask popups
   - Auto-process payments within pre-approved spending limits
+- **Points & Rewards System**:
+  - Earn points for every transaction (10 points per payment, 15 for VAT refunds)
+  - Convert 100 points = 1 MNEE token
+  - Complete transaction history
+- **AI Assistant**:
+  - 65+ pre-loaded questions
+  - Real-time crypto price information
+  - Company and payroll insights
+  - Chat history persistence
 - **Transparency**: All transactions on Ethereum blockchain with public audit trail.
 - **Compliance Ready**: Supabase logs + JSON/CSV exports for regulators and finance teams.
 - **MNEE Integration**: Built specifically for MNEE stablecoin on Ethereum.
-
----
-
-## ⚡ High-Level System Architecture
-
-```mermaid
-flowchart LR
-  subgraph Client
-    T["Tourist App<br/>Web/Mobile"]
-    E["Employer Dashboard<br/>HR/Finance"]
-    W["Ethereum Wallet<br/>MetaMask/WalletConnect"]
-  end
-
-  subgraph Gemetra Backend
-    API["Gemetra API<br/>(REST/GraphQL)"]
-    AI["AI Orchestrator<br/>Bolt + Gemini"]
-    SB["Supabase<br/>DB + Storage"]
-    AUD["Audit & Export Service"]
-  end
-
-  subgraph Ethereum
-    ETH["Ethereum Network<br/>(MNEE transfers)"]
-    MNEE["MNEE Contract<br/>0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF"]
-    EXPL["Etherscan<br/>Tx verification"]
-  end
-
-  T -- "Refund Request" --> API
-  E -- "CSV Upload / Payrun Setup" --> API
-  T -- "Connect Wallet" --> W
-  E -- "Connect Wallet" --> W
-
-  API --> AI
-  API --> SB
-  API -- "Create Transfer" --> W
-  W -- "Signed Transaction" --> ETH
-  ETH -- "MNEE Transfer" --> MNEE
-  ETH -- "Tx Hashes" --> EXPL
-  API -- "Verify Transactions" --> EXPL
-  API -- "Reports / Exports" --> AUD
-```
 
 ---
 
@@ -129,14 +589,18 @@ flowchart LR
   - Mobile-first signing with QR scan/deep link support.
   - Custom wallet selection modal with filtering and ordering.
 
-- **AI Layer**: [Bolt.new](https://bolt.new) + Gemini
-  - Salary parsing, jurisdictional tax/FX reasoning, transfer instruction generation.
+- **AI Layer**: Google Gemini
+  - Natural language processing for payroll insights
+  - Real-time crypto price information
+  - Company financial analysis
 
 - **Backend**: [Supabase](https://supabase.com/)
   - Postgres DB, object storage, user audit logs, and compliance artifacts.
+  - Row Level Security (RLS) for data protection
 
 - **Frontend**: React + Vite
   - Modern UI with Tailwind CSS and Framer Motion.
+  - Responsive design for mobile and desktop
 
 - **Transaction Verification**: Etherscan API
   - Real-time transaction tracking and verification.
@@ -144,6 +608,18 @@ flowchart LR
 ---
 
 ## 📡 Data Flow
+
+```mermaid
+flowchart LR
+    INPUT[User Input] --> VALIDATE[Validation]
+    VALIDATE --> PROCESS[Processing]
+    PROCESS --> STORE[(Supabase)]
+    STORE --> BLOCKCHAIN[Ethereum]
+    BLOCKCHAIN --> VERIFY[Etherscan]
+    VERIFY --> UPDATE[Update UI]
+    UPDATE --> NOTIFY[Notifications]
+    NOTIFY --> EXPORT[Export Reports]
+```
 
 1. **Input**
    - VAT Refunds: Retailer receipts, passport/KYC snapshots.
@@ -172,12 +648,12 @@ flowchart LR
 
 ## 🔐 Security & Compliance
 
-- **Treasury Wallet**: Multisig or HSM-protected wallet for payroll disbursements.
-- **Dual Approval**: CFO + HR authorization required for bulk payruns.
-- **Oracle Verification**: Only validated refunds are processed.
-- **KYC/AML Hooks**: Wallet screening APIs integrated during onboarding.
-- **Immutable Audit Trail**: Supabase DB + Ethereum tx hashes provide verifiable record-keeping.
-- **Circuit Breakers**: Abort payruns if totals exceed configured treasury limits.
+- **Wallet-Based Auth**: No passwords, wallet addresses as user IDs
+- **Row Level Security**: Supabase RLS policies ensure data isolation
+- **Transaction Verification**: All transactions verified on Etherscan
+- **Immutable Audit Trail**: Supabase DB + Ethereum tx hashes provide verifiable record-keeping
+- **Circuit Breakers**: Pre-approval limits prevent unauthorized large payments
+- **Data Encryption**: All sensitive data encrypted at rest and in transit
 
 ---
 
@@ -210,6 +686,8 @@ flowchart LR
 
 - ✅ **MVP**: Wallet-native VAT refunds + CSV-based payroll automation with MNEE.
 - ✅ **Scheduled Payments**: Calendar view, recurring payments, and pre-approval system.
+- ✅ **Points System**: Earn points for transactions, convert to MNEE.
+- ✅ **AI Assistant**: Natural language interface for payroll and crypto questions.
 - 🔄 **Next**: Multi-country VAT support + AI-driven tax compliance engine.
 - 🔄 **Later**: Enterprise integrations, PDF-based compliance exports, multi-signature approvals.
 - 🌐 **Future**: Gemetra-MNEE DAO + full protocol governance.
@@ -226,6 +704,9 @@ Gemetra-MNEE leverages the unique advantages of MNEE stablecoin on Ethereum:
 - **Transparency**: All transactions publicly verifiable on Ethereum blockchain.
 - **Developer-Friendly**: Standard ERC20 interface simplifies integration.
 - **Global Reach**: Ethereum's network effects enable borderless payments.
+- **Low Transaction Costs**: <1¢ per transaction
+- **Fast Settlement**: <1s settlement time
+- **Fully Backed & Regulated**: USD-backed stablecoin with regulatory compliance
 
 ---
 
@@ -245,6 +726,8 @@ This project aligns with the **MNEE Hackathon** requirements:
 ```bash
 # Install dependencies
 npm install
+# or
+pnpm install
 
 # Set up environment variables
 cp .env.example .env
@@ -252,9 +735,13 @@ cp .env.example .env
 
 # Run development server
 npm run dev
+# or
+pnpm dev
 
 # Build for production
 npm run build
+# or
+pnpm build
 ```
 
 ---
@@ -311,4 +798,42 @@ The application uses the MNEE contract at:
 
 See `MNEE_SETUP.md` for detailed instructions on getting MNEE tokens.
 
+---
 
+## 📚 Documentation
+
+- **[Environment Setup](ENVIRONMENT_SETUP.md)** - Complete setup guide
+- **[MNEE Setup](MNEE_SETUP.md)** - Getting MNEE tokens for testing
+- **[Points System](POINTS_SYSTEM.md)** - Points and rewards documentation
+- **[CSV Format Guide](CSV_FORMAT_GUIDE.md)** - Employee CSV upload format
+- **[VAT Refund Sample Data](VAT_REFUND_SAMPLE_DATA.md)** - Sample VAT refund data
+- **[VAT Document Format Guide](VAT_REFUND_DOCUMENT_FORMAT_GUIDE.md)** - Document requirements
+- **[Devpost Submission](DEVPOST_SUBMISSION.md)** - Hackathon submission details
+- **[Troubleshooting](TROUBLESHOOTING.md)** - Common issues and solutions
+
+---
+
+## 🌐 Live Demo
+
+**Live Application**: https://gemetra-mnee.vercel.app/  
+**GitHub Repository**: https://github.com/AmaanSayyad/Gemetra-mnee  
+**Documentation**: https://docs.google.com/presentation/d/1CV3kaE1mY7rgmB9bTwZTBLGR6BdLryRtaHD4F3MK4M8/edit?usp=sharing
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👥 Contact
+
+- **Email**: amaansayyad2001@gmail.com
+- **GitHub**: [@AmaanSayyad](https://github.com/AmaanSayyad)
+
+---
+
+**Built with ❤️ for the MNEE Hackathon**
+
+*Transforming global payments, one transaction at a time.*
