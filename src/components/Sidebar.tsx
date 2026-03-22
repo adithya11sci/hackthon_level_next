@@ -441,10 +441,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <div className="relative">
                     <div className={`${
                       shouldShowExpanded ? 'w-10 h-10' : 'w-12 h-12'
-                    } bg-gradient-to-br from-brand-800 to-brand-600 rounded-lg flex items-center justify-center shadow-sm`}>
-                      <User className={`${
-                        shouldShowExpanded ? 'w-5 h-5' : 'w-6 h-6'
-                      } text-white`} />
+                    } rounded-lg overflow-hidden shadow-sm border-2 border-gray-200`}>
+                      <img
+                        src={`https://noun.pics/${walletAddress ? parseInt(walletAddress.slice(2, 10), 16) % 1000 : 1}.svg`}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to a default Nouns-style avatar
+                          (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${walletAddress || 'default'}`;
+                        }}
+                      />
                     </div>
                     <div className={`absolute -bottom-0.5 -right-0.5 ${
                       shouldShowExpanded ? 'w-3 h-3' : 'w-4 h-4'
@@ -481,8 +487,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       {/* Account Info */}
                       <div className="p-4 bg-gradient-to-br from-gray-50 to-white border-b border-gray-200">
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-12 h-12 bg-gradient-to-br from-brand-800 to-brand-600 rounded-lg flex items-center justify-center shadow-sm">
-                            <User className="w-6 h-6 text-white" />
+                          <div className="w-12 h-12 rounded-lg overflow-hidden shadow-sm border-2 border-gray-200">
+                            <img
+                              src={`https://noun.pics/${walletAddress ? parseInt(walletAddress.slice(2, 10), 16) % 1000 : 1}.svg`}
+                              alt="Profile"
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                // Fallback to a default Nouns-style avatar
+                                (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${walletAddress || 'default'}`;
+                              }}
+                            />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="text-sm font-semibold text-gray-900 truncate">
