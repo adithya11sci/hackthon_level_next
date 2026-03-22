@@ -606,42 +606,6 @@ export const VATAdminPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Status Badge at Top */}
-              <div className="flex items-center justify-between mb-4 hidden">
-                <div className="flex items-center gap-3">
-                  {selectedRefund.status === 'completed' ? (
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-200">
-                      <CheckCircle className="w-5 h-5" />
-                      Completed
-                    </span>
-                  ) : selectedRefund.status === 'pending' ? (
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200">
-                      <Clock className="w-5 h-5" />
-                      Pending
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-red-100 text-red-700 border border-red-200">
-                      <AlertCircle className="w-5 h-5" />
-                      Failed
-                    </span>
-                  )}
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium">Amount:</span> {selectedRefund.amount.toFixed(2)} {selectedRefund.token}
-                  </div>
-                </div>
-                {selectedRefund.transaction_hash && (
-                  <a
-                    href={`https://etherscan.io/tx/${selectedRefund.transaction_hash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all hover:shadow-sm"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View on Etherscan
-                  </a>
-                )}
-              </div>
-
               {/* Receipt Information */}
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200 shadow-sm">
                 <div className="flex items-center justify-between mb-6 pb-3 border-b-2 border-blue-200">
