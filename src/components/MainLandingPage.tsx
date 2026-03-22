@@ -152,22 +152,18 @@ function GemetraLandingPage() {
               <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Automated Parsing</span>
               <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Smart Reasoning</span>
             </div>
-            <div className="flex items-center gap-4 mt-4">
-              <img
-                className="h-8 object-contain"
-                src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg"
-                alt="Google Gemini logo"
-                onError={(e) => {
-                  // Fallback to emoji if image fails to load
-                  e.currentTarget.style.display = 'none';
-                  if (!e.currentTarget.nextElementSibling) {
-                    const fallback = document.createElement('span');
-                    fallback.className = 'text-2xl';
-                    fallback.textContent = '✨';
-                    e.currentTarget.parentElement?.appendChild(fallback);
-                  }
-                }}
-              />
+            <div className="flex items-center gap-3 mt-4">
+              <div className="flex items-center justify-center w-8 h-8">
+                <img
+                  className="h-8 w-8 object-contain"
+                  src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg"
+                  alt="Google Gemini logo"
+                  onError={(e) => {
+                    // Fallback to sparkle emoji if image fails
+                    e.currentTarget.outerHTML = '<span class="text-2xl">✨</span>';
+                  }}
+                />
+              </div>
               <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-default-font">Google Gemini</span>
             </div>
           </div>
