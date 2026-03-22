@@ -571,18 +571,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ) : (
               <div className="space-y-3">
                 <div className="bg-white rounded-lg border border-gray-200 p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <User className="w-4 h-4 text-gray-400" />
-                    <span className="text-xs font-medium text-gray-600">Account</span>
-                  </div>
-                  <div className="text-sm font-semibold text-gray-900 truncate">
-                    {companyName || 'My Company'}
-                  </div>
-                  {user?.email && (
-                    <div className="text-xs text-gray-600 truncate mt-0.5">
-                      {user.email}
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden border-2 border-gray-200 flex-shrink-0 bg-gray-100">
+                      <img
+                        src="https://api.dicebear.com/7.x/pixel-art/svg?seed=default"
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                  )}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-medium text-gray-600 mb-1">Account</div>
+                      <div className="text-sm font-semibold text-gray-900 truncate">
+                        {companyName || 'My Company'}
+                      </div>
+                      {user?.email && (
+                        <div className="text-xs text-gray-600 truncate mt-0.5">
+                          {user.email}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <ConnectButton />
                 {user && (
