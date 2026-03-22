@@ -121,6 +121,8 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
     }
   };
 
+  const [pendingRefundId, setPendingRefundId] = useState<string | null>(null);
+
   const handleApprove = async () => {
     setIsLoading(true);
     setErrorMessage(null);
@@ -150,6 +152,25 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
         token: "MNEE",
       });
 
+      // Create pending VAT refund record in database
+      let refundId: string | null = null;
+      try {
+        const pendingPayment = await createPayment({
+          employee_id: "vat-refund",
+          amount: refundAmount,
+          token: "MNEE",
+          transaction_hash: undefined,
+          status: "pending",
+          payment_date: new Date().toISOString(),
+        });
+        refundId = pendingPayment.id;
+        setPendingRefundId(refundId);
+        console.log('✅ Created pending VAT refund record:', refundId);
+      } catch (dbError) {
+        console.error("Failed to create pending VAT refund record:", dbError);
+        // Continue anyway - we'll try to create it later
+      }
+
       setStep("sign");
 
       // Generate QR code for payment using EIP-681 format for ERC-20 token transfer
@@ -168,16 +189,33 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
 
       console.log("Transaction sent:", tx);
 
-      // Record payment in local DB/storage
+      // Update pending refund record to completed, or create new one if pending wasn't created
       try {
-        await createPayment({
-          employee_id: "vat-refund",
-          amount: refundAmount,
-          token: "MNEE",
-          transaction_hash: tx,
-          status: "completed",
-          payment_date: new Date().toISOString(),
-        });
+        if (pendingRefundId) {
+          // Update the existing pending record
+          const { updatePaymentStatus } = usePayments();
+          // We need to update via Supabase directly since updatePaymentStatus might not be available
+          await supabase
+            .from('payments')
+            .update({
+              transaction_hash: tx,
+              status: 'completed',
+              payment_date: new Date().toISOString()
+            })
+            .eq('id', pendingRefundId);
+          console.log('✅ Updated pending VAT refund to completed:', pendingRefundId);
+        } else {
+          // Create new completed record if pending wasn't created
+          await createPayment({
+            employee_id: "vat-refund",
+            amount: refundAmount,
+            token: "MNEE",
+            transaction_hash: tx,
+            status: "completed",
+            payment_date: new Date().toISOString(),
+          });
+          console.log('✅ Created completed VAT refund record');
+        }
         
         // Award points for VAT refund (15 points)
         try {
@@ -187,7 +225,7 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
           console.error('Failed to award points (non-critical):', pointsError);
         }
       } catch (dbError) {
-        console.error("Failed to record VAT refund payment:", dbError);
+        console.error("Failed to update VAT refund payment:", dbError);
       }
 
       setTransactionHash(tx);
@@ -265,7 +303,20 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
         setTransactionStatus('confirmed');
         setQrValue(`ethereum://tx/${result.txHash}`);
       } else {
-        // Handle payment failure
+        // Handle payment failure - update pending refund to failed
+        if (pendingRefundId) {
+          try {
+            await supabase
+              .from('payments')
+              .update({
+                status: 'failed'
+              })
+              .eq('id', pendingRefundId);
+            console.log('❌ Updated pending VAT refund to failed:', pendingRefundId);
+          } catch (dbError) {
+            console.error('Failed to update VAT refund to failed:', dbError);
+          }
+        }
         setErrorMessage(result.error || 'Payment failed');
         setTransactionStatus('rejected');
       }
@@ -298,6 +349,7 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
     setTransactionStatus('waiting');
     setTransactionHash('');
     setRefundAmount(0);
+    setPendingRefundId(null);
     // Refresh history data
     setRefreshKey(prev => prev + 1);
     setFormData({

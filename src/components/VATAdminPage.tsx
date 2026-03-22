@@ -100,6 +100,15 @@ export const VATAdminPage: React.FC = () => {
     };
 
     fetchAllVATRefunds();
+    
+    // Refresh every 5 seconds to catch new refunds
+    const interval = setInterval(() => {
+      if (isAuthorized) {
+        fetchAllVATRefunds();
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, [isAuthorized]);
 
   // Apply filters
