@@ -65,12 +65,16 @@ function GemetraLandingPage() {
         {/* Stats Bar */}
         <div className="flex flex-wrap justify-center gap-12 mt-12 z-10 w-full max-w-[1024px]">
           <div className="flex flex-col items-center">
-            <span className="font-['Montserrat'] text-[36px] font-[900] text-brand-800">4s</span>
-            <span className="font-['Montserrat'] text-[14px] font-[600] text-brand-600">Transaction Finality</span>
+            <span className="font-['Montserrat'] text-[36px] font-[900] text-brand-800">&lt;1s</span>
+            <span className="font-['Montserrat'] text-[14px] font-[600] text-brand-600">Settlement Time</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="font-['Montserrat'] text-[36px] font-[900] text-brand-800">95%</span>
-            <span className="font-['Montserrat'] text-[14px] font-[600] text-brand-600">Lower Fees</span>
+            <span className="font-['Montserrat'] text-[36px] font-[900] text-brand-800">&lt;1¢</span>
+            <span className="font-['Montserrat'] text-[14px] font-[600] text-brand-600">Transaction Cost</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="font-['Montserrat'] text-[36px] font-[900] text-brand-800">$101.9M</span>
+            <span className="font-['Montserrat'] text-[14px] font-[600] text-brand-600">Fully Diluted Valuation</span>
           </div>
           <div className="flex flex-col items-center">
             <span className="font-['Montserrat'] text-[36px] font-[900] text-brand-800">190+</span>
@@ -351,14 +355,14 @@ function GemetraLandingPage() {
 
               <div className="p-8">
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">4 SECONDS</span>
-                  <span className="px-3 py-1 bg-green-50 rounded-full text-sm font-medium text-green-700">94% SUCCESS RATE</span>
+                  <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">&lt;1 SECOND</span>
+                  <span className="px-3 py-1 bg-green-50 rounded-full text-sm font-medium text-green-700">INSTANT CONFIRMATIONS</span>
                 </div>
                 <h3 className="font-['Montserrat'] text-[28px] font-[800] mb-4 text-default-font group-hover:text-brand-800 transition-colors">
-                  Near-Instant Finality
+                  Instant Settlement
                 </h3>
                 <p className="text-subtext-color font-['Montserrat'] text-[16px] leading-[24px] mb-6">
-                  Experience secure and transparent VAT refunds and payroll transactions with Ethereum blockchain and MNEE stablecoin.
+                  Experience secure and transparent VAT refunds and payroll transactions with Ethereum blockchain and MNEE stablecoin. Settlement time &lt;1 second with instant confirmations globally.
                 </p>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
