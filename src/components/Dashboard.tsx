@@ -15,9 +15,10 @@ interface DashboardProps {
   setActiveTab: (tab: string) => void;
   refreshKey?: number;
   onEmployeePayment?: (employee: Employee) => void;
+  onCompanyNameChange?: (newName: string) => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ companyName, employees, setActiveTab, refreshKey = 0, onEmployeePayment }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ companyName, employees, setActiveTab, refreshKey = 0, onEmployeePayment, onCompanyNameChange }) => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
   const [showAllActivity, setShowAllActivity] = useState(false);
@@ -69,7 +70,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ companyName, employees, se
         {/* Top section - Stack on mobile, grid on larger screens */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-8">
           <div className="lg:col-span-1">
-            <StatsOverview companyName={companyName} employees={employees} />
+            <StatsOverview 
+              companyName={companyName} 
+              employees={employees}
+              onCompanyNameChange={onCompanyNameChange}
+            />
           </div>
           <div className="lg:col-span-1">
             <PayrollOverview employees={employees} setActiveTab={setActiveTab} refreshKey={refreshKey} />
