@@ -359,12 +359,19 @@ MNEE enables programmable money for agents, commerce, and automated finance. The
 - **Transparency**: Regular audits to ensure stability and compliance
 
 **Key Features:**
-- **Instant Transactions**: Near-instantaneous payments globally with settlement times of less than one second
-- **Ultra-Low Fees**: Transactions cost less than one cent (under $10 cost almost nothing; above $10 is one cent per transaction)
+- **Instant Transactions**: Settlement time < 1 second with instant confirmations globally
+- **Ultra-Low Fees**: Transaction cost < 1¢ (less than one cent per transaction)
+- **Fully Backed & Regulated**: Fully collateralized with U.S. Treasury bills and cash equivalents, meeting U.S. stablecoin regulatory requirements (GENIUS Act compliant)
+- **Highly Scalable**: Built for enterprise-scale transactions and global adoption
 - **No Gas Token Required**: On 1Sat Ordinals protocol, MNEE transactions don't require additional gas tokens
-- **Regulatory Compliance**: Fully backed and regulated, meeting U.S. stablecoin regulatory requirements
 - **Multi-Chain**: Available on Ethereum and 1Sat Ordinals protocol
 - **Programmable**: Smart contract integration for automated finance and agent payments
+
+**Market Metrics:**
+- **Fully Diluted Valuation**: $101,895,598.68
+- **24 Hour Trading Volume**: $164,591.37
+- **Settlement Time**: < 1 second
+- **Transaction Cost**: < 1¢
 
 **Use Cases:**
 - Payroll automation and employee payments
@@ -443,12 +450,19 @@ MNEE enables programmable money for agents, commerce, and automated finance. The
 • **Transparency**: Regular audits to ensure stability and compliance
 
 **Key Features:**
-⚡ **Instant Transactions** - Near-instantaneous payments globally with settlement times of less than one second
-💰 **Ultra-Low Fees** - Transactions cost less than one cent (under $10 cost almost nothing; above $10 is one cent per transaction)
+⚡ **Instant Transactions** - Settlement time < 1 second with instant confirmations globally
+💰 **Ultra-Low Fees** - Transaction cost < 1¢ (less than one cent per transaction)
+✅ **Fully Backed & Regulated** - Fully collateralized with U.S. Treasury bills and cash equivalents, meeting U.S. stablecoin regulatory requirements (GENIUS Act compliant)
+📈 **Highly Scalable** - Built for enterprise-scale transactions and global adoption
 🚫 **No Gas Token Required** - On 1Sat Ordinals protocol, MNEE transactions don't require additional gas tokens
-✅ **Regulatory Compliance** - Fully backed and regulated, meeting U.S. stablecoin regulatory requirements
 🌐 **Multi-Chain** - Available on Ethereum and 1Sat Ordinals protocol
 🤖 **Programmable** - Smart contract integration for automated finance and agent payments
+
+**Market Metrics:**
+📊 **Fully Diluted Valuation**: $101,895,598.68
+💹 **24 Hour Trading Volume**: $164,591.37
+⚡ **Settlement Time**: < 1 second
+💵 **Transaction Cost**: < 1¢
 
 **Use Cases:**
 ✅ **Payroll Automation** - Pay employees globally with instant MNEE transfers
@@ -668,11 +682,17 @@ const getContextualFallback = (message: string): string => {
 MNEE is a USD-backed stablecoin company designed for instant, low-cost transactions. The MNEE token is an ERC-20 stablecoin on Ethereum (Contract: \`0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF\`).
 
 **Key Features:**
-• Instant transactions (< 1 second)
-• Ultra-low fees (< $0.01)
-• Fully backed 1:1 with U.S. Treasury bills
-• Fully regulated (GENIUS Act compliant)
+• Instant transactions - Settlement time < 1 second with instant confirmations globally
+• Ultra-low fees - Transaction cost < 1¢
+• Fully backed & regulated - Fully collateralized with U.S. Treasury bills (GENIUS Act compliant)
+• Highly scalable - Built for enterprise-scale transactions
 • Multi-chain (Ethereum & 1Sat Ordinals)
+
+**Market Metrics:**
+• Fully Diluted Valuation: $101,895,598.68
+• 24 Hour Trading Volume: $164,591.37
+• Settlement Time: < 1 second
+• Transaction Cost: < 1¢
 
 **Use Cases:** Payroll automation, VAT refunds, AI agent payments, commerce, and financial automation.
 
