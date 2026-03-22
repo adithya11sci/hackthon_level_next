@@ -144,7 +144,7 @@ const EnhancedFooter = React.forwardRef<HTMLElement, EnhancedFooterProps>(
                   Resources
                 </h4>
                 <div className="flex flex-col gap-2">
-                  <a href="https://docs.gemetra.com" target="_blank" rel="noopener noreferrer" className="text-neutral-600 hover:text-neutral-900 transition-colors text-sm flex items-center gap-1">
+                  <a href="https://docs.google.com/presentation/d/1CV3kaE1mY7rgmB9bTwZTBLGR6BdLryRtaHD4F3MK4M8/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="text-neutral-600 hover:text-neutral-900 transition-colors text-sm flex items-center gap-1">
                     <span>Documentation</span>
                     <ExternalLink size={12} />
                   </a>
