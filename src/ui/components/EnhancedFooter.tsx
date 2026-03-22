@@ -226,8 +226,8 @@ const EnhancedFooter = React.forwardRef<HTMLElement, EnhancedFooterProps>(
               <div className="flex items-center gap-2">
                 <span className="text-neutral-600 text-sm">Powered by</span>
                 <img
-                  src="/supabase.webp"
-                  alt="Supabase logo"
+                  src="/mnee.png"
+                  alt="MNEE logo"
                   className="h-4 object-contain"
                 />
               </div>
