@@ -89,7 +89,6 @@ export interface ScheduledPayment {
   end_date?: string; // Optional end date for recurring payments
   status: 'active' | 'paused' | 'completed' | 'cancelled';
   created_at: string;
-  vat_refund_details?: VATRefundDetails; // JSONB field for VAT refund form data
   updated_at: string;
   last_processed?: string; // Last time this payment was processed
   processed_count?: number; // Number of times this has been processed

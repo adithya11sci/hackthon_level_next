@@ -16,6 +16,20 @@ interface VATRefundAdmin {
   transaction_hash?: string;
   payment_date: string;
   created_at: string;
+  vat_refund_details?: {
+    vatRegNo?: string;
+    receiptNo?: string;
+    billAmount?: string;
+    vatAmount?: string;
+    passportNo?: string;
+    flightNo?: string;
+    nationality?: string;
+    dob?: string;
+    purchaseDate?: string;
+    merchantName?: string;
+    merchantAddress?: string;
+    receiverWalletAddress?: string;
+  };
 }
 
 export const VATAdminPage: React.FC = () => {
@@ -81,6 +95,7 @@ export const VATAdminPage: React.FC = () => {
           transaction_hash: payment.transaction_hash,
           payment_date: payment.payment_date,
           created_at: payment.created_at,
+          vat_refund_details: payment.vat_refund_details,
         }));
 
         setRefunds(vatRefunds);
