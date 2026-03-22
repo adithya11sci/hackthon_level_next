@@ -268,43 +268,9 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
             });
             console.log('✅ Created completed VAT refund record:', completedPayment.id);
             
-            // Also ensure it's saved to Supabase directly
-            try {
-              const { data: supabaseData, error: supabaseError } = await supabase
-                .from('payments')
-                .insert([{
-                  id: completedPayment.id,
-                  employee_id: "vat-refund",
-                  user_id: address,
-                  amount: refundAmount,
-                  token: "MNEE",
-                  transaction_hash: tx,
-                  status: "completed",
-                  payment_date: new Date().toISOString(),
-                }])
-                .select();
-              
-              if (supabaseError) {
-                console.error('❌ Supabase insert error (completed in handleApprove):', supabaseError);
-                console.error('❌ Error code:', supabaseError.code);
-                console.error('❌ Error message:', supabaseError.message);
-                console.error('❌ Error details:', supabaseError.details);
-                console.error('❌ Error hint:', supabaseError.hint);
-                console.error('❌ Data attempted:', {
-                  id: completedPayment.id,
-                  employee_id: "vat-refund",
-                  user_id: address,
-                  amount: refundAmount,
-                  token: "MNEE",
-                  transaction_hash: tx,
-                  status: "completed",
-                });
-              } else {
-                console.log('✅ Also saved completed payment to Supabase:', supabaseData);
-              }
-            } catch (supabaseErr) {
-              console.error('❌ Exception saving to Supabase (non-critical):', supabaseErr);
-            }
+            // Note: Payment is already saved to Supabase via createPayment hook
+            // The update below will handle updating the status to completed
+            console.log('✅ Payment saved via createPayment hook, updating status to completed');
           }
         
         // Award points for VAT refund (15 points)
@@ -411,43 +377,9 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
             });
             console.log('✅ Created completed VAT refund record:', completedPayment.id);
             
-            // Also ensure it's saved to Supabase directly
-            try {
-              const { data: supabaseData, error: supabaseError } = await supabase
-                .from('payments')
-                .insert([{
-                  id: completedPayment.id,
-                  employee_id: 'vat-refund',
-                  user_id: address || '',
-                  amount: refundAmount,
-                  token: selectedToken,
-                  transaction_hash: result.txHash,
-                  status: 'completed',
-                  payment_date: new Date().toISOString(),
-                }])
-                .select();
-              
-              if (supabaseError) {
-                console.error('❌ Supabase insert error (completed in handleSign):', supabaseError);
-                console.error('❌ Error code:', supabaseError.code);
-                console.error('❌ Error message:', supabaseError.message);
-                console.error('❌ Error details:', supabaseError.details);
-                console.error('❌ Error hint:', supabaseError.hint);
-                console.error('❌ Data attempted:', {
-                  id: completedPayment.id,
-                  employee_id: 'vat-refund',
-                  user_id: address || '',
-                  amount: refundAmount,
-                  token: selectedToken,
-                  transaction_hash: result.txHash,
-                  status: 'completed',
-                });
-              } else {
-                console.log('✅ Also saved completed payment to Supabase:', supabaseData);
-              }
-            } catch (supabaseErr) {
-              console.error('❌ Exception saving to Supabase (non-critical):', supabaseErr);
-            }
+            // Note: Payment is already saved to Supabase via createPayment hook
+            // The update above will handle updating the status to completed
+            console.log('✅ Payment saved via createPayment hook, updating status to completed');
           }
         } catch (dbError) {
           console.error('Failed to record VAT refund payment in database:', dbError);

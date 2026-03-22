@@ -92,27 +92,36 @@ export const usePayments = () => {
       });
       
       // Try to also save to Supabase for backward compatibility
+      // Use upsert to handle duplicate keys gracefully (insert or update)
       try {
         const { data, error } = await supabase
           .from('payments')
-          .insert([{
+          .upsert([{
             ...paymentData,
             id: newPayment.id,
             user_id: walletAddress,
-          }])
+          }], {
+            onConflict: 'id', // If ID exists, update instead of insert
+            ignoreDuplicates: false // Update existing records
+          })
           .select();
         
         if (error) {
-          console.error('❌ Failed to save payment to Supabase:', error);
-          console.error('❌ Error code:', error.code);
-          console.error('❌ Error message:', error.message);
-          console.error('❌ Error details:', error.details);
-          console.error('❌ Error hint:', error.hint);
-          console.error('❌ Payment data attempted:', {
-            ...paymentData,
-            id: newPayment.id,
-            user_id: walletAddress,
-          });
+          // If it's a duplicate key error, that's okay - the record already exists
+          if (error.code === '23505') {
+            console.log('ℹ️ Payment already exists in Supabase (duplicate key):', newPayment.id);
+          } else {
+            console.error('❌ Failed to save payment to Supabase:', error);
+            console.error('❌ Error code:', error.code);
+            console.error('❌ Error message:', error.message);
+            console.error('❌ Error details:', error.details);
+            console.error('❌ Error hint:', error.hint);
+            console.error('❌ Payment data attempted:', {
+              ...paymentData,
+              id: newPayment.id,
+              user_id: walletAddress,
+            });
+          }
         } else {
           console.log('✅ Successfully saved payment to Supabase:', data);
         }
