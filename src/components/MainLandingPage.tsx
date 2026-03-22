@@ -1180,10 +1180,18 @@ function GemetraLandingPage() {
       </div>
 
       {/* CTA Section */}
-      <div id="pricing-section" className="flex w-full flex-col items-center justify-center gap-6 bg-gradient-to-br from-brand-900 to-brand-800 px-6 py-32 mobile:flex relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-700 rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-800 rounded-full opacity-20 blur-3xl"></div>
+      <div id="pricing-section" className="flex w-full flex-col items-center justify-center gap-6 bg-default-background px-6 py-32 mobile:flex relative overflow-hidden">
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
+
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
 
         <div className="flex w-full max-w-[1280px] flex-col items-center justify-center gap-8 rounded-[32px] bg-default-background px-6 pt-24 pb-16 shadow-2xl relative z-10 overflow-hidden">
           {/* Squares Background */}
