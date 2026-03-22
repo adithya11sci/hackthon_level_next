@@ -12,7 +12,6 @@ import {
   Wallet,
   ArrowRight
 } from 'lucide-react';
-import { Bolt } from './Icons'
 import ConnectButton from "../utils/connect-wallet";
 function GemetraLandingPage() {
   return (
@@ -140,13 +139,13 @@ function GemetraLandingPage() {
           {/* AI Intelligence Layer */}
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col gap-6">
             <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
                 <Bot size={24} className="text-brand-800" />
               </div>
               <h3 className="font-['Montserrat'] text-[24px] font-[700]">AI Intelligence</h3>
             </div>
             <p className="text-subtext-color font-['Montserrat'] text-[16px] leading-[24px]">
-              AI-driven orchestration for parsing, compliance reasoning, and automation across multiple jurisdictions, powered by Bolt and Gemini.
+              AI-driven orchestration for parsing, compliance reasoning, and automation across multiple jurisdictions, powered by Google Gemini.
             </p>
             <div className="flex flex-wrap gap-2 mt-auto">
               <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Tax Compliance</span>
@@ -154,23 +153,31 @@ function GemetraLandingPage() {
               <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">Smart Reasoning</span>
             </div>
             <div className="flex items-center gap-4 mt-4">
-              <div className="flex items-center gap-2">
-                <Bolt />
-                <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-default-font">Bolt AI</span>
-              </div>
-              <div className="flex items-center gap-2 ml-4">
-                <Bot size={20} />
-                <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-default-font">Gemini AI</span>
-              </div>
+              <img
+                className="h-8 object-contain"
+                src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg"
+                alt="Google Gemini logo"
+                onError={(e) => {
+                  // Fallback to emoji if image fails to load
+                  e.currentTarget.style.display = 'none';
+                  if (!e.currentTarget.nextElementSibling) {
+                    const fallback = document.createElement('span');
+                    fallback.className = 'text-2xl';
+                    fallback.textContent = '✨';
+                    e.currentTarget.parentElement?.appendChild(fallback);
+                  }
+                }}
+              />
+              <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-default-font">Google Gemini</span>
             </div>
           </div>
 
           {/* Data & Storage Layer */}
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col gap-6">
             <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center">
                 <img
-                  className="h-6 object-contain"
+                  className="h-8 object-contain"
                   alt="Supabase logo"
                   src="/supabase.webp"
                 />
