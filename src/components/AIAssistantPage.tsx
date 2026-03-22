@@ -301,10 +301,26 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
     const isNewChat = messages.length <= 1;
     
     if (isNewChat && displayedQuestions.length === 0) {
-      // Initialize with default questions only if not already set
+      // Initialize with a mix of questions from all categories
       const initialQuestions = isMobile 
-        ? allAvailableQuestions.slice(0, 3)
-        : allAvailableQuestions.slice(0, 10);
+        ? [
+            allAvailableQuestions[0], // MNEE question
+            allAvailableQuestions[20], // Ethereum question
+            allAvailableQuestions[35], // Company question
+          ]
+        : [
+            // Mix of MNEE, Ethereum, Company, and Payment questions
+            allAvailableQuestions[0], // "What is MNEE?"
+            allAvailableQuestions[2], // "What is the current price of Ethereum"
+            allAvailableQuestions[35], // "How many employees do we have?"
+            allAvailableQuestions[36], // "Who is our highest paid employee?"
+            allAvailableQuestions[52], // "When was the last payment made?"
+            allAvailableQuestions[1], // "Tell me about MNEE token"
+            allAvailableQuestions[37], // "List all employees"
+            allAvailableQuestions[38], // "Company overview please"
+            allAvailableQuestions[53], // "Show me payment statistics"
+            allAvailableQuestions[3], // "How many employees do we have?" (duplicate check)
+          ];
       setDisplayedQuestions(initialQuestions);
       setUsedQuestions(new Set());
     }
