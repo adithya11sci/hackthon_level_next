@@ -265,16 +265,25 @@ export const ScheduledPayments: React.FC<ScheduledPaymentsProps> = ({
                 List
               </button>
             </div>
-            {duePayments.length > 0 && (
-              <button
-                onClick={handleProcessDuePayments}
-                disabled={isProcessing || !isWalletConnected}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base flex items-center justify-center space-x-2"
-              >
-                <Clock className="w-4 h-4" />
-                <span>Process {duePayments.length} Due Payment{duePayments.length > 1 ? 's' : ''}</span>
-              </button>
-            )}
+            {(() => {
+              const totalDueAmount = duePayments.reduce((sum, p) => sum + p.amount, 0);
+              const isWithinLimit = preApprovalLimit !== null && preApprovalLimit > 0 && totalDueAmount <= preApprovalLimit;
+              
+              // Only show button if payments exceed limit or no pre-approval set
+              if (duePayments.length > 0 && !isWithinLimit) {
+                return (
+                  <button
+                    onClick={handleProcessDuePayments}
+                    disabled={isProcessing || !isWalletConnected}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base flex items-center justify-center space-x-2"
+                  >
+                    <Clock className="w-4 h-4" />
+                    <span>Process {duePayments.length} Due Payment{duePayments.length > 1 ? 's' : ''}</span>
+                  </button>
+                );
+              }
+              return null;
+            })()}
             <button
               onClick={() => setShowPreApprovalModal(true)}
               disabled={!isWalletConnected}
@@ -306,7 +315,7 @@ export const ScheduledPayments: React.FC<ScheduledPaymentsProps> = ({
                     Pre-approved Spending Limit: ${preApprovalLimit.toLocaleString()} MNEE
                   </p>
                   <p className="text-purple-700 text-sm mt-1">
-                    Payments within this limit will process automatically at scheduled time without MetaMask popups.
+                    Payments within this limit will process automatically at scheduled time. MetaMask confirmation is still required for security.
                   </p>
                 </div>
               </div>
@@ -344,24 +353,47 @@ export const ScheduledPayments: React.FC<ScheduledPaymentsProps> = ({
         )}
 
         {/* Due Payments Alert */}
-        {duePayments.length > 0 && (
-          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <div className="flex items-center space-x-2">
-              <AlertCircle className="w-5 h-5 text-yellow-600" />
-              <div className="flex-1">
-                <p className="text-yellow-800 font-medium">
-                  ⏰ {duePayments.length} payment{duePayments.length > 1 ? 's' : ''} due for processing
-                </p>
-                <p className="text-yellow-700 text-sm mt-1">
-                  Click "Process Due Payments" to execute. <strong>MetaMask will open {duePayments.length > 1 ? `${duePayments.length} popup${duePayments.length > 1 ? 's' : ''}` : 'a popup'} for confirmation</strong>.
-                </p>
-                <div className="mt-2 text-xs text-yellow-600">
-                  💡 <strong>Note:</strong> Each payment requires a separate MetaMask confirmation for security. You'll need to approve each transaction in MetaMask.
+        {duePayments.length > 0 && (() => {
+          const totalDueAmount = duePayments.reduce((sum, p) => sum + p.amount, 0);
+          const isWithinLimit = preApprovalLimit !== null && preApprovalLimit > 0 && totalDueAmount <= preApprovalLimit;
+          
+          return (
+            <div className={`mb-6 p-4 border rounded-lg ${
+              isWithinLimit 
+                ? 'bg-blue-50 border-blue-200' 
+                : 'bg-yellow-50 border-yellow-200'
+            }`}>
+              <div className="flex items-center space-x-2">
+                <AlertCircle className={`w-5 h-5 ${isWithinLimit ? 'text-blue-600' : 'text-yellow-600'}`} />
+                <div className="flex-1">
+                  <p className={`font-medium ${isWithinLimit ? 'text-blue-800' : 'text-yellow-800'}`}>
+                    ⏰ {duePayments.length} payment{duePayments.length > 1 ? 's' : ''} due for processing
+                    {isWithinLimit && ' (within pre-approved limit)'}
+                  </p>
+                  {isWithinLimit ? (
+                    <>
+                      <p className="text-blue-700 text-sm mt-1">
+                        ✅ Payments will process automatically. <strong>MetaMask will open {duePayments.length > 1 ? `${duePayments.length} popup${duePayments.length > 1 ? 's' : ''}` : 'a popup'} for confirmation</strong>.
+                      </p>
+                      <div className="mt-2 text-xs text-blue-600">
+                        💡 <strong>Note:</strong> Pre-approval enables automatic triggering, but MetaMask confirmation is still required for security. Each payment needs your approval.
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-yellow-700 text-sm mt-1">
+                        ⚠️ Total amount (${totalDueAmount.toLocaleString()} MNEE) exceeds your pre-approved limit (${preApprovalLimit?.toLocaleString() || 0} MNEE). Click "Process Due Payments" to execute manually.
+                      </p>
+                      <div className="mt-2 text-xs text-yellow-600">
+                        💡 <strong>Note:</strong> Each payment requires a separate MetaMask confirmation for security. You'll need to approve each transaction in MetaMask.
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Wallet Connection Warning */}
         {!isWalletConnected && (
@@ -594,7 +626,7 @@ export const ScheduledPayments: React.FC<ScheduledPaymentsProps> = ({
               >
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Pre-approve Spending Limit</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Set a spending limit that will be pre-approved for automatic payments. Payments within this limit will process automatically at scheduled time without MetaMask popups.
+                  Set a spending limit for automatic payment processing. Payments within this limit will be automatically triggered at scheduled time. <strong>Note:</strong> MetaMask confirmation is still required for each transaction for security.
                 </p>
                 
                 <div className="mb-4">
@@ -617,7 +649,7 @@ export const ScheduledPayments: React.FC<ScheduledPaymentsProps> = ({
 
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
                   <p className="text-xs text-yellow-800">
-                    ⚠️ <strong>Security Note:</strong> This will require one MetaMask approval now to set the limit. After that, payments within this limit will process automatically.
+                    ⚠️ <strong>How it works:</strong> Pre-approval enables automatic triggering of payments within the limit. Each payment will still require MetaMask confirmation for security. This feature helps you track and manage your spending limits.
                   </p>
                 </div>
 
@@ -638,13 +670,15 @@ export const ScheduledPayments: React.FC<ScheduledPaymentsProps> = ({
                         return;
                       }
                       
-                      // TODO: Implement ERC20 approve() call here
-                      // For now, just store the limit locally
+                      // Store the limit locally
+                      // Note: In a production environment with a payment processor contract,
+                      // we would call ERC20 approve() here to grant the contract permission
+                      // to spend tokens on your behalf. For now, this is a tracking limit.
                       const limit = parseFloat(preApprovalAmount);
                       setPreApprovalLimit(limit);
                       localStorage.setItem(`gemetra_preapproval_limit_${walletAddress}`, limit.toString());
                       
-                      alert(`Pre-approval limit set to $${limit.toLocaleString()} MNEE. In production, this would require a MetaMask approval to set the ERC20 allowance.`);
+                      alert(`Pre-approval limit set to $${limit.toLocaleString()} MNEE. Payments within this limit will be automatically triggered.`);
                       
                       setShowPreApprovalModal(false);
                       setPreApprovalAmount('');
