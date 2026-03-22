@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Upload, FileCheck, QrCode, CheckCircle, AlertCircle, Search, Clock, FileText, FileUp, FormInput, ExternalLink } from 'lucide-react';
-import { getConnectedAccount, sendMneePayment, isValidEthereumAddress } from '../utils/ethereum';
+import { QRCodeSVG } from 'qrcode.react';
+import { getConnectedAccount, sendMneePayment, isValidEthereumAddress, MNEE_CONTRACT_ADDRESS_MAINNET } from '../utils/ethereum';
 import { usePayments } from '../hooks/usePayments';
 import { usePoints } from '../hooks/usePoints';
 import { useAccount, useSendTransaction } from "wagmi";
-import { parseEther } from "viem";
+import { parseEther, parseUnits } from "viem";
 
 
 interface VATRefundPageProps {
@@ -185,6 +186,7 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
       }
 
       setTransactionHash(tx);
+      // Update QR code to show transaction hash after confirmation
       setQrValue(`ethereum://tx/${tx}`);
       setTransactionStatus("confirmed");
     } catch (error) {
