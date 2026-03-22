@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, CheckCircle, Clock, AlertCircle, Search, Download, ExternalLink, FileText, User, Calendar, DollarSign } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { supabase } from '../lib/supabase';
@@ -524,9 +525,23 @@ export const VATAdminPage: React.FC = () => {
       </div>
 
       {/* Details Modal */}
-      {showDetailsModal && selectedRefund && selectedRefund.vat_refund_details && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowDetailsModal(false)}>
-          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <AnimatePresence>
+        {showDetailsModal && selectedRefund && selectedRefund.vat_refund_details && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={() => setShowDetailsModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
             <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-xl flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold">VAT Refund Details</h2>
@@ -543,8 +558,56 @@ export const VATAdminPage: React.FC = () => {
             </div>
             
             <div className="p-8 space-y-6 bg-gradient-to-br from-gray-50 to-white">
+              {/* Summary Card */}
+              <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-6 text-white mb-6 shadow-lg">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-4">
+                    {selectedRefund.status === 'completed' ? (
+                      <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                        <CheckCircle className="w-8 h-8 text-white" />
+                      </div>
+                    ) : selectedRefund.status === 'pending' ? (
+                      <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+                        <Clock className="w-8 h-8 text-white" />
+                      </div>
+                    ) : (
+                      <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
+                        <AlertCircle className="w-8 h-8 text-white" />
+                      </div>
+                    )}
+                    <div>
+                      <div className="text-sm text-gray-300 mb-1">Refund Status</div>
+                      <div className="text-2xl font-bold">
+                        {selectedRefund.status === 'completed' ? 'Completed' : selectedRefund.status === 'pending' ? 'Pending Review' : 'Failed'}
+                      </div>
+                      <div className="text-sm text-gray-400 mt-1">
+                        Submitted: {new Date(selectedRefund.created_at).toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-gray-300 mb-1">Refund Amount</div>
+                    <div className="text-3xl font-bold flex items-center gap-2">
+                      <img src="/mnee.png" alt="MNEE" className="h-8 w-8" />
+                      {selectedRefund.amount.toFixed(2)} {selectedRefund.token}
+                    </div>
+                    {selectedRefund.transaction_hash && (
+                      <a
+                        href={`https://etherscan.io/tx/${selectedRefund.transaction_hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 mt-2 text-sm text-blue-300 hover:text-blue-100 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        View Transaction
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               {/* Status Badge at Top */}
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 hidden">
                 <div className="flex items-center gap-3">
                   {selectedRefund.status === 'completed' ? (
                     <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-200">
@@ -592,23 +655,23 @@ export const VATAdminPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">VAT Registration No.</label>
-                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.vatRegNo || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.vatRegNo ? selectedRefund.vat_refund_details.vatRegNo : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Receipt/Invoice No.</label>
-                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.receiptNo || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.receiptNo ? selectedRefund.vat_refund_details.receiptNo : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Total Bill Amount</label>
-                    <p className="text-gray-900 text-base font-bold mt-1">{selectedRefund.vat_refund_details.billAmount || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 text-base font-bold mt-1">{selectedRefund.vat_refund_details.billAmount ? selectedRefund.vat_refund_details.billAmount : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">VAT Amount</label>
-                    <p className="text-gray-900 font-semibold text-green-600">{selectedRefund.vat_refund_details.vatAmount || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 font-semibold text-green-600">{selectedRefund.vat_refund_details.vatAmount ? selectedRefund.vat_refund_details.vatAmount : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Purchase Date</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.purchaseDate || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.purchaseDate ? selectedRefund.vat_refund_details.purchaseDate : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                 </div>
               </div>
@@ -626,19 +689,19 @@ export const VATAdminPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Passport Number</label>
-                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.passportNo || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.passportNo ? selectedRefund.vat_refund_details.passportNo : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Flight Number</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.flightNo || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.flightNo ? selectedRefund.vat_refund_details.flightNo : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Country of Nationality</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.nationality || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.nationality ? selectedRefund.vat_refund_details.nationality : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Date of Birth</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.dob || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.dob ? selectedRefund.vat_refund_details.dob : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                 </div>
               </div>
@@ -656,11 +719,11 @@ export const VATAdminPage: React.FC = () => {
                 <div className="space-y-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Merchant Name</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantName || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantName ? selectedRefund.vat_refund_details.merchantName : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Merchant Address</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantAddress || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantAddress ? selectedRefund.vat_refund_details.merchantAddress : <span className='text-gray-400 italic'>Not provided</span>}</p>
                   </div>
                 </div>
               </div>
@@ -678,7 +741,25 @@ export const VATAdminPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Receiver Wallet Address</label>
-                    <p className="text-gray-900 font-mono text-xs break-all">{selectedRefund.vat_refund_details.receiverWalletAddress || <span className='text-gray-400 italic'>Not provided</span>}</p>
+                    {selectedRefund.vat_refund_details.receiverWalletAddress ? (
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-gray-900 font-mono text-xs break-all flex-1">{selectedRefund.vat_refund_details.receiverWalletAddress}</p>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(selectedRefund.vat_refund_details.receiverWalletAddress || '');
+                            // You could add a toast notification here
+                          }}
+                          className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Copy address"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-gray-400 italic mt-1">Not provided</p>
+                    )}
                   </div>
                   <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
                     <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Refund Amount</label>
@@ -722,9 +803,10 @@ export const VATAdminPage: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Footer Info */}
       <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
