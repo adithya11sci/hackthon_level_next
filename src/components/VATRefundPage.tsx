@@ -167,46 +167,7 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
         refundId = pendingPayment.id;
         setPendingRefundId(refundId);
         console.log('✅ Created pending VAT refund record:', refundId);
-        
-        // Also ensure it's saved to Supabase directly for admin access
-        try {
-          const { data: supabaseData, error: supabaseError } = await supabase
-            .from('payments')
-            .insert([{
-              id: pendingPayment.id,
-              employee_id: "vat-refund",
-              user_id: address,
-              amount: refundAmount,
-              token: "MNEE",
-              transaction_hash: null,
-              status: "pending",
-              payment_date: new Date().toISOString(),
-            }])
-            .select()
-            .single();
-          
-          if (supabaseError) {
-            console.error('❌ Supabase insert error:', supabaseError);
-            console.error('❌ Error code:', supabaseError.code);
-            console.error('❌ Error message:', supabaseError.message);
-            console.error('❌ Error details:', supabaseError.details);
-            console.error('❌ Error hint:', supabaseError.hint);
-            // Log the data we tried to insert
-            console.error('❌ Data attempted:', {
-              id: pendingPayment.id,
-              employee_id: "vat-refund",
-              user_id: address,
-              amount: refundAmount,
-              token: "MNEE",
-              transaction_hash: null,
-              status: "pending",
-            });
-          } else {
-            console.log('✅ Also saved to Supabase for admin access:', supabaseData);
-          }
-        } catch (supabaseErr) {
-          console.error('Failed to save to Supabase (non-critical):', supabaseErr);
-        }
+        // Note: Payment is already saved to Supabase via createPayment hook (using upsert)
       } catch (dbError) {
         console.error("Failed to create pending VAT refund record:", dbError);
         // Continue anyway - we'll try to create it later
