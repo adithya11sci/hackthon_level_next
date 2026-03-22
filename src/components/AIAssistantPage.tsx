@@ -346,34 +346,37 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
   useEffect(() => {
     if (messages.length > 1) {
       const lastUserMessage = [...messages].reverse().find(msg => msg.type === 'user');
-      if (lastUserMessage && displayedQuestions.includes(lastUserMessage.content)) {
+      if (lastUserMessage) {
         // Use functional update to avoid stale closure
-        setUsedQuestions(prev => {
-          const newUsed = new Set(prev).add(lastUserMessage.content);
-          
-          // Get available questions that haven't been used
-          const available = allAvailableQuestions.filter(q => 
-            !newUsed.has(q) && !displayedQuestions.includes(q)
-          );
-          
-          if (available.length > 0) {
-            // Replace the used question with a random new one
-            const newQuestion = available[Math.floor(Math.random() * available.length)];
-            setDisplayedQuestions(prevQuestions => 
-              prevQuestions.map(q => q === lastUserMessage.content ? newQuestion : q)
+        setUsedQuestions(prevUsed => {
+          setDisplayedQuestions(prevDisplayed => {
+            // Check if the question is in the displayed list
+            if (!prevDisplayed.includes(lastUserMessage.content)) {
+              return prevDisplayed; // Question not in list, no change needed
+            }
+            
+            const newUsed = new Set(prevUsed).add(lastUserMessage.content);
+            
+            // Get available questions that haven't been used and aren't currently displayed
+            const available = allAvailableQuestions.filter(q => 
+              !newUsed.has(q) && !prevDisplayed.includes(q)
             );
-          } else {
-            // If no more questions available, just remove the used one
-            setDisplayedQuestions(prevQuestions => 
-              prevQuestions.filter(q => q !== lastUserMessage.content)
-            );
-          }
+            
+            if (available.length > 0) {
+              // Replace the used question with a random new one
+              const newQuestion = available[Math.floor(Math.random() * available.length)];
+              return prevDisplayed.map(q => q === lastUserMessage.content ? newQuestion : q);
+            } else {
+              // If no more questions available, just remove the used one
+              return prevDisplayed.filter(q => q !== lastUserMessage.content);
+            }
+          });
           
-          return newUsed;
+          return new Set(prevUsed).add(lastUserMessage.content);
         });
       }
     }
-  }, [messages.length, displayedQuestions]);
+  }, [messages.length]);
 
   const quickQuestions = displayedQuestions;
 
