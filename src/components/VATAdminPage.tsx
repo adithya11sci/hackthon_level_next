@@ -54,6 +54,7 @@ export const VATAdminPage: React.FC = () => {
 
       try {
         setIsLoading(true);
+        console.log('🔍 Fetching VAT refunds from Supabase...');
         const { data, error } = await supabase
           .from('payments')
           .select('*')
@@ -61,8 +62,14 @@ export const VATAdminPage: React.FC = () => {
           .order('created_at', { ascending: false });
 
         if (error) {
-          console.error('Error fetching VAT refunds:', error);
+          console.error('❌ Error fetching VAT refunds:', error);
+          console.error('Error details:', JSON.stringify(error, null, 2));
           return;
+        }
+
+        console.log(`✅ Found ${data?.length || 0} VAT refund records in Supabase`);
+        if (data && data.length > 0) {
+          console.log('Sample records:', data.slice(0, 3));
         }
 
         const vatRefunds: VATRefundAdmin[] = (data || []).map((payment: Payment) => ({

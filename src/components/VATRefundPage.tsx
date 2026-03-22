@@ -6,6 +6,7 @@ import { usePayments } from '../hooks/usePayments';
 import { usePoints } from '../hooks/usePoints';
 import { useAccount, useSendTransaction } from "wagmi";
 import { parseEther, parseUnits } from "viem";
+import { supabase } from '../lib/supabase';
 
 
 interface VATRefundPageProps {
@@ -166,6 +167,32 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
         refundId = pendingPayment.id;
         setPendingRefundId(refundId);
         console.log('✅ Created pending VAT refund record:', refundId);
+        
+        // Also ensure it's saved to Supabase directly for admin access
+        try {
+          const { data: supabaseData, error: supabaseError } = await supabase
+            .from('payments')
+            .insert([{
+              id: pendingPayment.id,
+              employee_id: "vat-refund",
+              user_id: address,
+              amount: refundAmount,
+              token: "MNEE",
+              transaction_hash: null,
+              status: "pending",
+              payment_date: new Date().toISOString(),
+            }])
+            .select()
+            .single();
+          
+          if (supabaseError) {
+            console.error('Supabase insert error:', supabaseError);
+          } else {
+            console.log('✅ Also saved to Supabase for admin access:', supabaseData);
+          }
+        } catch (supabaseErr) {
+          console.error('Failed to save to Supabase (non-critical):', supabaseErr);
+        }
       } catch (dbError) {
         console.error("Failed to create pending VAT refund record:", dbError);
         // Continue anyway - we'll try to create it later
@@ -189,33 +216,68 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
 
       console.log("Transaction sent:", tx);
 
-      // Update pending refund record to completed, or create new one if pending wasn't created
-      try {
-        if (pendingRefundId) {
-          // Update the existing pending record
-          const { updatePaymentStatus } = usePayments();
-          // We need to update via Supabase directly since updatePaymentStatus might not be available
-          await supabase
-            .from('payments')
-            .update({
+        // Update pending refund record to completed, or create new one if pending wasn't created
+        try {
+          if (pendingRefundId) {
+            // Update the existing pending record in Supabase
+            const { error: updateError } = await supabase
+              .from('payments')
+              .update({
+                transaction_hash: tx,
+                status: 'completed',
+                payment_date: new Date().toISOString()
+              })
+              .eq('id', pendingRefundId);
+            
+            if (updateError) {
+              console.error('Error updating payment in Supabase:', updateError);
+            } else {
+              console.log('✅ Updated pending VAT refund to completed in Supabase:', pendingRefundId);
+            }
+            
+            // Also update via usePayments hook for localStorage
+            const { updatePaymentStatus } = usePayments();
+            try {
+              await updatePaymentStatus(pendingRefundId, 'completed', tx);
+            } catch (hookError) {
+              console.error('Error updating via hook (non-critical):', hookError);
+            }
+          } else {
+            // Create new completed record if pending wasn't created
+            const completedPayment = await createPayment({
+              employee_id: "vat-refund",
+              amount: refundAmount,
+              token: "MNEE",
               transaction_hash: tx,
-              status: 'completed',
-              payment_date: new Date().toISOString()
-            })
-            .eq('id', pendingRefundId);
-          console.log('✅ Updated pending VAT refund to completed:', pendingRefundId);
-        } else {
-          // Create new completed record if pending wasn't created
-          await createPayment({
-            employee_id: "vat-refund",
-            amount: refundAmount,
-            token: "MNEE",
-            transaction_hash: tx,
-            status: "completed",
-            payment_date: new Date().toISOString(),
-          });
-          console.log('✅ Created completed VAT refund record');
-        }
+              status: "completed",
+              payment_date: new Date().toISOString(),
+            });
+            console.log('✅ Created completed VAT refund record:', completedPayment.id);
+            
+            // Also ensure it's saved to Supabase directly
+            try {
+              const { error: supabaseError } = await supabase
+                .from('payments')
+                .insert([{
+                  id: completedPayment.id,
+                  employee_id: "vat-refund",
+                  user_id: address,
+                  amount: refundAmount,
+                  token: "MNEE",
+                  transaction_hash: tx,
+                  status: "completed",
+                  payment_date: new Date().toISOString(),
+                }]);
+              
+              if (supabaseError) {
+                console.error('Supabase insert error:', supabaseError);
+              } else {
+                console.log('✅ Also saved completed payment to Supabase');
+              }
+            } catch (supabaseErr) {
+              console.error('Failed to save to Supabase (non-critical):', supabaseErr);
+            }
+          }
         
         // Award points for VAT refund (15 points)
         try {
@@ -288,7 +350,7 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
         // Update pending refund record to completed, or create new one
         try {
           if (pendingRefundId) {
-            await supabase
+            const { error: updateError } = await supabase
               .from('payments')
               .update({
                 transaction_hash: result.txHash,
@@ -296,9 +358,22 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
                 payment_date: new Date().toISOString()
               })
               .eq('id', pendingRefundId);
-            console.log('✅ Updated pending VAT refund to completed:', pendingRefundId);
+            
+            if (updateError) {
+              console.error('Error updating payment in Supabase:', updateError);
+            } else {
+              console.log('✅ Updated pending VAT refund to completed in Supabase:', pendingRefundId);
+            }
+            
+            // Also update via usePayments hook
+            const { updatePaymentStatus } = usePayments();
+            try {
+              await updatePaymentStatus(pendingRefundId, 'completed', result.txHash);
+            } catch (hookError) {
+              console.error('Error updating via hook (non-critical):', hookError);
+            }
           } else {
-            await createPayment({
+            const completedPayment = await createPayment({
               employee_id: 'vat-refund',
               amount: refundAmount,
               token: selectedToken,
@@ -306,7 +381,31 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
               status: 'completed',
               payment_date: new Date().toISOString()
             });
-            console.log('✅ Created completed VAT refund record');
+            console.log('✅ Created completed VAT refund record:', completedPayment.id);
+            
+            // Also ensure it's saved to Supabase directly
+            try {
+              const { error: supabaseError } = await supabase
+                .from('payments')
+                .insert([{
+                  id: completedPayment.id,
+                  employee_id: 'vat-refund',
+                  user_id: address || '',
+                  amount: refundAmount,
+                  token: selectedToken,
+                  transaction_hash: result.txHash,
+                  status: 'completed',
+                  payment_date: new Date().toISOString(),
+                }]);
+              
+              if (supabaseError) {
+                console.error('Supabase insert error:', supabaseError);
+              } else {
+                console.log('✅ Also saved completed payment to Supabase');
+              }
+            } catch (supabaseErr) {
+              console.error('Failed to save to Supabase (non-critical):', supabaseErr);
+            }
           }
         } catch (dbError) {
           console.error('Failed to record VAT refund payment in database:', dbError);
@@ -319,13 +418,26 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
         // Handle payment failure - update pending refund to failed
         if (pendingRefundId) {
           try {
-            await supabase
+            const { error: updateError } = await supabase
               .from('payments')
               .update({
                 status: 'failed'
               })
               .eq('id', pendingRefundId);
-            console.log('❌ Updated pending VAT refund to failed:', pendingRefundId);
+            
+            if (updateError) {
+              console.error('Error updating to failed in Supabase:', updateError);
+            } else {
+              console.log('❌ Updated pending VAT refund to failed in Supabase:', pendingRefundId);
+            }
+            
+            // Also update via usePayments hook
+            const { updatePaymentStatus } = usePayments();
+            try {
+              await updatePaymentStatus(pendingRefundId, 'failed');
+            } catch (hookError) {
+              console.error('Error updating via hook (non-critical):', hookError);
+            }
           } catch (dbError) {
             console.error('Failed to update VAT refund to failed:', dbError);
           }
