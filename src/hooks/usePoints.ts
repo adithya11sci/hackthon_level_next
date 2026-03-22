@@ -262,15 +262,19 @@ export const usePoints = () => {
         return updatedTransactions;
       });
 
-      // Try to send MNEE (this would be from a treasury wallet in production)
-      // For MVP, we'll just record the conversion
-      // In production, you'd have a treasury wallet that sends MNEE
+      // NOTE: In production, this would trigger an actual MNEE token transfer
+      // Options for production implementation:
+      // 1. Backend API that uses a treasury wallet to send MNEE tokens
+      // 2. Smart contract that mints/releases MNEE tokens from a treasury
+      // 3. Manual process where admins batch-process conversions
+      // 
+      // For MVP/demo: We record the conversion and mark it as completed
+      // The actual token transfer would happen via one of the above methods
       try {
-        // NOTE: In production, this would be handled by a backend service or smart contract
-        // For now, we'll just mark it as completed
         conversion.status = 'completed';
         conversion.completed_at = new Date().toISOString();
-        conversion.transaction_hash = `simulated_${generateUUID()}`;
+        // In production, this would be the actual blockchain transaction hash
+        conversion.transaction_hash = `pending_${generateUUID()}`; // Placeholder for production tx hash
 
         // Save to Supabase
         await supabase

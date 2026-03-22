@@ -46,9 +46,22 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
 
     try {
       const result = await convertPointsToMnee(points);
-      alert(`✅ Successfully converted ${points} points to ${result.mneeAmount.toFixed(6)} MNEE!\n\nNote: In production, MNEE tokens would be sent to your wallet.`);
+      
+      // Show success message with details
+      const successMessage = `✅ Successfully converted ${points} points to ${result.mneeAmount.toFixed(6)} MNEE!\n\n` +
+        `📊 Conversion Details:\n` +
+        `• Points Converted: ${points}\n` +
+        `• MNEE Received: ${result.mneeAmount.toFixed(6)} MNEE\n` +
+        `• Remaining Points: ${result.remainingPoints}\n\n` +
+        `💡 Note: In production, MNEE tokens would be automatically sent to your wallet address.\n` +
+        `For this demo, the conversion has been recorded in the system.`;
+      
+      alert(successMessage);
       setShowConversionModal(false);
       setPointsToConvert('');
+      
+      // Refresh points display by triggering a re-render
+      window.dispatchEvent(new Event('pointsUpdated'));
     } catch (error) {
       setConversionError(error instanceof Error ? error.message : 'Conversion failed');
     } finally {
