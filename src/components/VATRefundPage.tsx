@@ -152,6 +152,11 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
 
       setStep("sign");
 
+      // Generate QR code for payment using EIP-681 format for ERC-20 token transfer
+      const mneeAmount = parseUnits(amount, 18); // MNEE has 18 decimals
+      const qrData = `ethereum:${MNEE_CONTRACT_ADDRESS_MAINNET}@1/transfer?address=${recipientAddress}&uint256=${mneeAmount.toString()}`;
+      setQrValue(qrData);
+
       // Send MNEE transaction
       const result = await sendMneePayment(recipientAddress as `0x${string}`, parseFloat(amount));
       
@@ -846,12 +851,26 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
                     If you don't see it, scan this QR code with your EVM Wallet app
                   </p>
 
-                  <div className="bg-white border-2 border-gray-300 rounded-lg p-6 w-[200px] h-[200px] flex items-center justify-center mb-4">
-                    <div className="text-center">
-                      <QrCode className="w-16 h-16 mx-auto mb-3 text-gray-700" />
-                      <div className="text-sm text-gray-600">Scan QR Code</div>
-                      <div className="text-xs text-gray-500 mt-1">ID: {qrValue.slice(-8)}</div>
-                    </div>
+                  <div className="bg-white border-2 border-gray-300 rounded-lg p-6 w-[280px] h-[280px] flex items-center justify-center mb-4 shadow-lg">
+                    {qrValue && qrValue.startsWith('ethereum:') ? (
+                      <div className="flex flex-col items-center">
+                        <QRCodeSVG
+                          value={qrValue}
+                          size={240}
+                          level="H"
+                          includeMargin={true}
+                          className="mb-2"
+                        />
+                        <div className="text-xs text-gray-500 mt-2 text-center">
+                          Scan with your wallet app
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <QrCode className="w-16 h-16 mx-auto mb-3 text-gray-400" />
+                        <div className="text-sm text-gray-500">Generating QR Code...</div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="w-full max-w-md bg-blue-50 border border-blue-100 rounded-lg p-4 mt-2">
