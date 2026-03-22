@@ -1,64 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, User, Building, Save, Edit3, Check, X, Download } from 'lucide-react';
+import { ArrowLeft, User, Building, Save, Edit3, Check, X, Download, Wallet, Copy, Bell, Globe, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAuth } from '../hooks/useAuth';
+import { useAccount, useChainId } from 'wagmi';
 import { supabase } from '../lib/supabase';
+import { formatAddress } from '../utils/ethereum';
+import { useEmployees } from '../hooks/useEmployees';
+import { usePayments } from '../hooks/usePayments';
 
 interface SettingsPageProps {
   onBack: () => void;
 }
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
-  const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const { address, isConnected } = useAccount();
+  const chainId = useChainId();
+  const { employees } = useEmployees();
+  const { getAllPayments } = usePayments();
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [userProfile, setUserProfile] = useState({
-    email: '',
-    company_name: '',
-    created_at: '',
+  const [copiedAddress, setCopiedAddress] = useState(false);
+  const [companyName, setCompanyName] = useState(() => {
+    if (address) {
+      return localStorage.getItem(`gemetra_company_name_${address}`) || 'My Company';
+    }
+    return 'My Company';
   });
   const [editForm, setEditForm] = useState({
-    company_name: '',
+    company_name: companyName,
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    return localStorage.getItem('gemetra_notifications_enabled') !== 'false';
+  });
 
+  // Load company name from localStorage when wallet address changes
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (!user) return;
-
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (error) throw error;
-
-        if (data) {
-          setUserProfile({
-            email: data.email || user.email || '',
-            company_name: data.company_name || '',
-            created_at: data.created_at || '',
-          });
-          setEditForm({
-            company_name: data.company_name || '',
-          });
-        }
-      } catch (err) {
-        console.error('Failed to fetch user profile:', err);
-        setError('Failed to load user profile');
-      } finally {
-        setLoading(false);
+    if (address) {
+      const saved = localStorage.getItem(`gemetra_company_name_${address}`);
+      if (saved) {
+        setCompanyName(saved);
+        setEditForm({ company_name: saved });
       }
-    };
+    }
+  }, [address]);
 
-    fetchUserProfile();
-  }, [user]);
+  // Sync editForm when companyName changes
+  useEffect(() => {
+    setEditForm({ company_name: companyName });
+  }, [companyName]);
 
   const handleEditToggle = () => {
     if (isEditing) {
@@ -80,7 +72,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
   };
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!address) {
+      setError('Wallet not connected');
+      return;
+    }
 
     if (!editForm.company_name.trim()) {
       setError('Company name is required');
@@ -91,64 +86,100 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
     setError('');
 
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({
-          company_name: editForm.company_name.trim(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id);
-
-      if (error) throw error;
-
-      // Update local state
-      setUserProfile(prev => ({
-        ...prev,
-        company_name: editForm.company_name.trim(),
-      }));
+      const newName = editForm.company_name.trim();
+      
+      // Save to localStorage
+      localStorage.setItem(`gemetra_company_name_${address}`, newName);
+      setCompanyName(newName);
 
       setIsEditing(false);
-      setSuccess('Settings updated successfully');
+      setSuccess('Company name updated successfully');
       
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      console.error('Failed to update profile:', err);
+      console.error('Failed to update company name:', err);
       setError('Failed to update settings. Please try again.');
     } finally {
       setSaving(false);
     }
   };
 
+  const handleCopyAddress = async () => {
+    if (address) {
+      try {
+        await navigator.clipboard.writeText(address);
+        setCopiedAddress(true);
+        setTimeout(() => setCopiedAddress(false), 2000);
+      } catch (error) {
+        console.error('Failed to copy address:', error);
+      }
+    }
+  };
+
+  const handleToggleNotifications = () => {
+    const newValue = !notificationsEnabled;
+    setNotificationsEnabled(newValue);
+    localStorage.setItem('gemetra_notifications_enabled', String(newValue));
+    setSuccess(newValue ? 'Notifications enabled' : 'Notifications disabled');
+    setTimeout(() => setSuccess(''), 3000);
+  };
+
   const handleExportData = async () => {
-    if (!user) return;
+    if (!address) {
+      setError('Wallet not connected');
+      return;
+    }
 
     setExporting(true);
     setError('');
 
     try {
-      // Fetch all user data
-      const [userResponse, employeesResponse, paymentsResponse] = await Promise.all([
-        supabase.from('users').select('*').eq('id', user.id).single(),
-        supabase.from('employees').select('*').eq('user_id', user.id),
-        supabase.from('payments').select('*').eq('user_id', user.id)
-      ]);
-
-      if (userResponse.error) throw userResponse.error;
+      // Fetch all user data based on wallet address
+      const allPayments = await getAllPayments();
+      
+      // Get employees from hook
+      const userEmployees = employees || [];
 
       const exportData = {
         exportInfo: {
           exportDate: new Date().toISOString(),
-          exportedBy: user.email,
-          dataVersion: '1.0'
+          exportedBy: address,
+          walletAddress: address,
+          dataVersion: '1.0',
+          network: chainId === 1 ? 'Ethereum Mainnet' : chainId === 11155111 ? 'Sepolia Testnet' : `Chain ${chainId}`
         },
-        userProfile: userResponse.data,
-        employees: employeesResponse.data || [],
-        payments: paymentsResponse.data || [],
+        companyInfo: {
+          companyName: companyName,
+          walletAddress: address,
+        },
+        employees: userEmployees.map(emp => ({
+          id: emp.id,
+          name: emp.name,
+          email: emp.email,
+          designation: emp.designation,
+          department: emp.department,
+          salary: emp.salary,
+          wallet_address: emp.wallet_address,
+          join_date: emp.join_date,
+          status: emp.status,
+          created_at: emp.created_at
+        })),
+        payments: allPayments.map(payment => ({
+          id: payment.id,
+          employee_id: payment.employee_id,
+          amount: payment.amount,
+          token: payment.token,
+          transaction_hash: payment.transaction_hash,
+          status: payment.status,
+          payment_date: payment.payment_date,
+          created_at: payment.created_at
+        })),
         summary: {
-          totalEmployees: employeesResponse.data?.length || 0,
-          totalPayments: paymentsResponse.data?.length || 0,
-          accountCreated: userResponse.data?.created_at
+          totalEmployees: userEmployees.length,
+          totalPayments: allPayments.length,
+          totalPaid: allPayments.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0),
+          pendingPayments: allPayments.filter(p => p.status === 'pending').length
         }
       };
 
@@ -159,7 +190,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
       const jsonUrl = URL.createObjectURL(jsonBlob);
       const jsonLink = document.createElement('a');
       jsonLink.href = jsonUrl;
-      jsonLink.download = `gemetra-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      jsonLink.download = `gemetra-data-export-${address?.slice(0, 8)}-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(jsonLink);
       jsonLink.click();
       document.body.removeChild(jsonLink);
@@ -206,13 +237,14 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
     }
   };
 
-  if (loading) {
+  if (!isConnected || !address) {
     return (
       <div className="min-h-screen bg-white">
         <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
           <div className="text-center py-8 sm:py-12">
-            <div className="w-8 h-8 sm:w-12 sm:h-12 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <div className="text-gray-900 font-medium text-sm sm:text-base">Loading settings...</div>
+            <Wallet className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Wallet Not Connected</h2>
+            <p className="text-gray-600">Please connect your wallet to access settings.</p>
           </div>
         </div>
       </div>
@@ -328,41 +360,54 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
                       onChange={handleInputChange}
                       placeholder="Enter your company name"
                       className="bg-gray-100 border border-gray-300 text-gray-900 rounded-lg px-3 py-2 sm:px-4 sm:py-3 w-full focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                      maxLength={50}
                     />
                   ) : (
                     <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-3 text-gray-900 text-sm sm:text-base">
-                      {userProfile.company_name || 'Not set'}
+                      {companyName || 'My Company'}
                     </div>
                   )}
                 </div>
 
-                {/* Email (Read-only) */}
+                {/* Wallet Address */}
                 <div>
                   <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                    Email Address
+                    Wallet Address
                   </label>
-                  <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-3 text-gray-500 text-sm sm:text-base">
-                    {userProfile.email}
-                    <div className="text-xs text-gray-400 mt-1">Email cannot be changed</div>
+                  <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <Wallet className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                      <span className="text-gray-900 font-mono text-xs sm:text-sm truncate">{address}</span>
+                    </div>
+                    <button
+                      onClick={handleCopyAddress}
+                      className="ml-2 p-1.5 hover:bg-gray-200 rounded transition-colors flex-shrink-0"
+                      title="Copy address"
+                    >
+                      {copiedAddress ? (
+                        <Check className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <Copy className="w-4 h-4 text-gray-500" />
+                      )}
+                    </button>
                   </div>
                 </div>
 
-                {/* Account Created */}
+                {/* Network */}
                 <div>
                   <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                    Account Created
+                    Network
                   </label>
-                  <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-3 text-gray-500 text-sm sm:text-base">
-                    {userProfile.created_at 
-                      ? new Date(userProfile.created_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })
-                      : 'Unknown'
-                    }
+                  <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-3 flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-gray-500" />
+                    <span className="text-gray-900 text-sm sm:text-base">
+                      {chainId === 1 ? 'Ethereum Mainnet' : chainId === 11155111 ? 'Sepolia Testnet' : `Chain ${chainId}`}
+                    </span>
+                    {chainId === 1 && (
+                      <span className="ml-auto px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">
+                        Production
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -385,30 +430,62 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
               <div className="space-y-3 sm:space-y-4">
                 {/* Profile Avatar */}
                 <div className="text-center">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                    <span className="text-lg sm:text-2xl font-bold text-white">
-                      {userProfile.company_name 
-                        ? userProfile.company_name.substring(0, 2).toUpperCase()
-                        : userProfile.email.substring(0, 2).toUpperCase()
-                      }
-                    </span>
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-gray-200 mx-auto mb-2 sm:mb-3">
+                    <img
+                      src={`https://noun.pics/${address ? parseInt(address.slice(2, 10), 16) % 1000 : 1}.svg`}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${address || 'default'}`;
+                      }}
+                    />
                   </div>
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900">
-                    {userProfile.company_name || 'My Company'}
+                    {companyName || 'My Company'}
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-600">{userProfile.email}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 font-mono">{formatAddress(address || '')}</p>
                 </div>
 
                 {/* Quick Stats */}
                 <div className="border-t border-gray-200 pt-3 sm:pt-4">
                   <div className="space-y-2 sm:space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 text-xs sm:text-sm">Account Type</span>
-                      <span className="text-gray-900 text-xs sm:text-sm font-medium">Standard</span>
+                      <span className="text-gray-600 text-xs sm:text-sm">Network</span>
+                      <span className="text-gray-900 text-xs sm:text-sm font-medium">
+                        {chainId === 1 ? 'Mainnet' : chainId === 11155111 ? 'Sepolia' : `Chain ${chainId}`}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600 text-xs sm:text-sm">Status</span>
-                      <span className="text-green-600 text-xs sm:text-sm font-medium">Active</span>
+                      <span className="text-green-600 text-xs sm:text-sm font-medium">Connected</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 text-xs sm:text-sm">Employees</span>
+                      <span className="text-gray-900 text-xs sm:text-sm font-medium">{employees.length}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Preferences */}
+                <div className="border-t border-gray-200 pt-3 sm:pt-4">
+                  <div className="space-y-2 sm:space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Bell className="w-4 h-4 text-gray-500" />
+                        <span className="text-gray-700 text-xs sm:text-sm">Notifications</span>
+                      </div>
+                      <button
+                        onClick={handleToggleNotifications}
+                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+                          notificationsEnabled ? 'bg-blue-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                            notificationsEnabled ? 'translate-x-5' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -416,9 +493,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
                 {/* Account Actions */}
                 <div className="border-t border-gray-200 pt-3 sm:pt-4">
                   <div className="space-y-1 sm:space-y-2">
-                    <button className="w-full text-left px-2 py-2 sm:px-3 sm:py-2 text-xs sm:text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
-                      Change Password
-                    </button>
                     <button 
                       onClick={handleExportData}
                       disabled={exporting}
@@ -432,12 +506,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
                       ) : (
                         <>
                           <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span>Export Data</span>
+                          <span>Export All Data</span>
                         </>
                       )}
-                    </button>
-                    <button className="w-full text-left px-2 py-2 sm:px-3 sm:py-2 text-xs sm:text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                      Delete Account
                     </button>
                   </div>
                 </div>
@@ -446,10 +517,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
 
             {/* Security Notice */}
             <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="text-center">
-                <div className="text-blue-800 font-medium text-xs sm:text-sm mb-1">Security Notice</div>
-                <div className="text-blue-700 text-xs">
-                  Your data is encrypted and secure. We never share your information with third parties.
+              <div className="flex items-start gap-2">
+                <Shield className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-blue-800 font-medium text-xs sm:text-sm mb-1">Security & Privacy</div>
+                  <div className="text-blue-700 text-xs">
+                    Your wallet data is stored locally. All transactions are on-chain and transparent. We never store your private keys.
+                  </div>
                 </div>
               </div>
             </div>
