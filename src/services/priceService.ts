@@ -54,8 +54,6 @@ const cryptoIds: { [key: string]: string } = {
   'mnee': 'mnee',
   'bitcoin': 'bitcoin',
   'btc': 'bitcoin',
-  'ethereum': 'ethereum',
-  'eth': 'ethereum',
   'usdc': 'usd-coin',
   'usdt': 'tether',
   'bnb': 'binancecoin',
