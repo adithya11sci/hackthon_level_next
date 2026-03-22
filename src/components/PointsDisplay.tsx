@@ -62,15 +62,16 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
         `• MNEE Amount: ${result.mneeAmount.toFixed(6)} MNEE\n` +
         `• Remaining Points: ${result.remainingPoints}\n`;
       
+      const recipient = recipientAddress.trim() || walletAddress;
       if (result.transactionHash && result.transactionHash.startsWith('0x')) {
         // Real blockchain transaction
         successMessage += `\n🔗 Transaction Hash: ${result.transactionHash}\n` +
-          `✅ MNEE tokens have been sent to your wallet!\n` +
-          `Check your wallet balance to see the tokens.`;
+          `✅ MNEE tokens have been sent to: ${formatAddress(recipient)}\n` +
+          `Check the wallet balance to see the tokens.`;
       } else if (result.transactionHash?.includes('pending')) {
         // Pending conversion (requires treasury wallet)
         successMessage += `\n⏳ Status: Pending\n` +
-          `💡 Note: In production, a treasury wallet would send ${result.mneeAmount.toFixed(6)} MNEE to your wallet.\n` +
+          `💡 Note: In production, a treasury wallet would send ${result.mneeAmount.toFixed(6)} MNEE to ${formatAddress(recipient)}.\n` +
           `For this demo, the conversion has been recorded and will be processed.`;
       } else {
         // Conversion recorded but no transfer
