@@ -400,14 +400,14 @@ function GemetraLandingPage() {
 
               <div className="p-8">
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">0.001 MNEE</span>
-                  <span className="px-3 py-1 bg-green-50 rounded-full text-sm font-medium text-green-700">95% SAVINGS</span>
+                  <span className="px-3 py-1 bg-brand-50 rounded-full text-sm font-medium text-brand-800">&lt;1¢</span>
+                  <span className="px-3 py-1 bg-green-50 rounded-full text-sm font-medium text-green-700">FULLY BACKED & REGULATED</span>
                 </div>
                 <h3 className="font-['Montserrat'] text-[28px] font-[800] mb-4 text-default-font group-hover:text-brand-800 transition-colors">
                   Ultra-Low Transaction Fees
                 </h3>
                 <p className="text-subtext-color font-['Montserrat'] text-[16px] leading-[24px] mb-6">
-                  Microtransactions become feasible for VAT refunds with just 0.001 MNEE per transaction, saving up to 95% compared to traditional banking.
+                  Transaction cost &lt;1¢ per transaction. MNEE is fully backed & regulated, highly scalable, and saves up to 95% compared to traditional banking.
                 </p>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
