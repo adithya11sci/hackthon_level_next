@@ -35,8 +35,20 @@ function GemetraLandingPage() {
 
         {/* Content */}
         <div className="flex w-full flex-col items-center justify-center gap-8 z-10">
-          <div className="inline-block px-4 py-2 bg-brand-50 rounded-full mb-2">
-            <span className="font-['Montserrat'] text-[14px] font-[700] text-brand-800">BUILT ON ETHEREUM WITH MNEE</span>
+          <div className="inline-flex items-center gap-3 px-4 py-2 bg-brand-50 rounded-full mb-2">
+            <img
+              src="/ethereum.png"
+              alt="Ethereum logo"
+              className="h-5 w-5 object-contain"
+            />
+            <span className="font-['Montserrat'] text-[14px] font-[700] text-brand-800">BUILT ON ETHEREUM</span>
+            <span className="text-brand-600">WITH</span>
+            <img
+              src="/mnee.png"
+              alt="MNEE logo"
+              className="h-5 w-5 object-contain"
+            />
+            <span className="font-['Montserrat'] text-[14px] font-[700] text-brand-800">MNEE</span>
           </div>
           <span className="w-full max-w-[1024px] whitespace-pre-wrap font-['Montserrat'] text-[96px] font-[900] leading-[84px] text-brand-800 text-center -tracking-[0.04em] mobile:font-['Montserrat'] mobile:text-[52px] mobile:font-[900] mobile:leading-[68px] mobile:tracking-normal">
             {"Global Remittance"} <br /> <span className="bg-gradient-to-r from-brand-800 to-brand-600 bg-clip-text text-transparent">Infrastructure</span>
@@ -115,7 +127,7 @@ function GemetraLandingPage() {
               <div className="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center">
                 <img
                   className="h-8 object-cover"
-                  src="https://ethereum.org/static/eth-diamond-rainbow.png"
+                  src="/ethereum.png"
                   alt="Ethereum logo"
                 />
               </div>
@@ -152,7 +164,11 @@ function GemetraLandingPage() {
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col gap-6">
             <div className="flex items-center gap-4 mb-2">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-                <span className="text-2xl">🤖</span>
+                <img
+                  className="h-8 w-8 object-contain rounded-full"
+                  src="/ai_logo.png"
+                  alt="AI Intelligence logo"
+                />
               </div>
               <h3 className="font-['Montserrat'] text-[24px] font-[700]">AI Intelligence</h3>
             </div>
@@ -175,7 +191,6 @@ function GemetraLandingPage() {
                     e.currentTarget.outerHTML = '<span class="text-xl">⚡</span>';
                   }}
                 />
-                <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-default-font">Bolt.new</span>
               </div>
               <div className="flex items-center gap-2">
                 <img
@@ -187,7 +202,6 @@ function GemetraLandingPage() {
                     e.currentTarget.outerHTML = '<span class="text-xl">✨</span>';
                   }}
                 />
-                <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-default-font">Google Gemini</span>
               </div>
             </div>
           </div>
