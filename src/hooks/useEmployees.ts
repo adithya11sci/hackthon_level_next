@@ -99,6 +99,17 @@ export const useEmployees = () => {
     if (!walletAddress) throw new Error('Wallet not connected');
 
     try {
+      // Check for duplicate email in existing employees
+      const existingEmployee = employees.find(
+        emp => emp.email.toLowerCase() === employeeData.email.toLowerCase()
+      );
+      
+      if (existingEmployee) {
+        const errorMsg = `Employee with email ${employeeData.email} already exists`;
+        console.warn(`⚠️ ${errorMsg}`);
+        throw new Error(errorMsg);
+      }
+
       // Create a new employee with generated ID and timestamps
       const now = new Date().toISOString();
       const newEmployee: Employee = {
@@ -109,6 +120,8 @@ export const useEmployees = () => {
         updated_at: now
       };
 
+      console.log(`✅ Adding employee: ${newEmployee.name} (${newEmployee.email})`);
+
       // Add to state
       const updatedEmployees = [newEmployee, ...employees];
       setEmployees(updatedEmployees);
@@ -117,11 +130,11 @@ export const useEmployees = () => {
       const localStorageKey = `gemetra_employees_${walletAddress}`;
       localStorage.setItem(localStorageKey, JSON.stringify(updatedEmployees));
 
-      console.log('Added employee to localStorage:', newEmployee);
+      console.log('✅ Added employee to localStorage:', newEmployee.name);
 
       // Try to also save to Supabase for backward compatibility
       try {
-        await supabase
+        const { error: supabaseError } = await supabase
           .from('employees')
           .insert([
             {
@@ -130,13 +143,21 @@ export const useEmployees = () => {
               user_id: walletAddress,
             },
           ]);
+        
+        if (supabaseError) {
+          console.error('⚠️ Failed to save employee to Supabase (continuing anyway):', supabaseError);
+          // Don't throw - localStorage is the primary storage
+        } else {
+          console.log('✅ Saved employee to Supabase:', newEmployee.name);
+        }
       } catch (supabaseError) {
-        console.error('Failed to save employee to Supabase (continuing anyway):', supabaseError);
+        console.error('⚠️ Supabase error (continuing anyway):', supabaseError);
+        // Don't throw - localStorage is the primary storage
       }
 
       return newEmployee;
     } catch (error) {
-      console.error('Error adding employee:', error);
+      console.error(`❌ Error adding employee ${employeeData.name || employeeData.email}:`, error);
       throw error;
     }
   };

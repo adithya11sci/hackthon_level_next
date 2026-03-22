@@ -209,20 +209,37 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
   };
 
   const handleUpload = async () => {
-    if (parsedData.length > 0 && errors.length === 0) {
+    if (parsedData.length > 0) {
       setIsUploading(true);
       try {
+        console.log(`📤 Uploading ${parsedData.length} employees...`);
+        console.log('Employees to upload:', parsedData.map(e => `${e.name} (${e.email})`));
+        
         const result = await onBulkUpload(parsedData);
+        
+        console.log(`📊 Upload result: ${result.successful} successful, ${result.failed} failed`);
+        
         if (onUploadSuccess) {
           onUploadSuccess(result.successful, result.failed);
         }
+        
+        // Show errors if any failed
+        if (result.failed > 0) {
+          setErrors([`${result.failed} employee(s) failed to upload. Check console for details.`]);
+        }
+        
         handleClose();
       } catch (error) {
-        console.error('Upload failed:', error);
-        setErrors(['Upload failed. Please try again.']);
+        console.error('❌ Upload failed:', error);
+        setErrors(['Upload failed. Please try again. Check console for details.']);
       } finally {
         setIsUploading(false);
       }
+    } else if (errors.length > 0) {
+      // Don't upload if there are validation errors
+      console.warn('⚠️ Cannot upload: validation errors present');
+    } else {
+      console.warn('⚠️ No data to upload');
     }
   };
 
