@@ -339,53 +339,38 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
         );
         
         if (available.length > 0) {
-          // Try to maintain balance: prefer questions from categories not currently well-represented
+          // Count current category distribution
           const currentCategories = {
-            mnee: prevDisplayed.filter(q => allAvailableQuestions.indexOf(q) < 20).length,
-            ethereum: prevDisplayed.filter(q => {
-              const idx = allAvailableQuestions.indexOf(q);
-              return idx >= 20 && idx < 35;
-            }).length,
             company: prevDisplayed.filter(q => {
               const idx = allAvailableQuestions.indexOf(q);
               return idx >= 35 && idx < 50;
             }).length,
-            payment: prevDisplayed.filter(q => {
-              const idx = allAvailableQuestions.indexOf(q);
-              return idx >= 50;
-            }).length,
           };
           
-          // Find the category with the least representation
-          const minCategory = Math.min(
-            currentCategories.mnee,
-            currentCategories.ethereum,
-            currentCategories.company,
-            currentCategories.payment
-          );
+          const totalDisplayed = prevDisplayed.length;
+          const targetCompanyCount = Math.ceil(totalDisplayed * 0.7); // 70% target
+          const currentCompanyCount = currentCategories.company;
           
-          // Prefer questions from underrepresented categories
+          // Prioritize company questions to maintain 70% ratio
           let preferredQuestions = available;
-          if (currentCategories.company === minCategory) {
-            preferredQuestions = available.filter(q => {
+          if (currentCompanyCount < targetCompanyCount) {
+            // Need more company questions - prioritize them
+            const companyQuestions = available.filter(q => {
               const idx = allAvailableQuestions.indexOf(q);
               return idx >= 35 && idx < 50;
             });
-          } else if (currentCategories.payment === minCategory) {
-            preferredQuestions = available.filter(q => {
+            if (companyQuestions.length > 0) {
+              preferredQuestions = companyQuestions;
+            }
+          } else {
+            // Company questions are at or above target - prefer other categories
+            const otherQuestions = available.filter(q => {
               const idx = allAvailableQuestions.indexOf(q);
-              return idx >= 50;
+              return idx < 35 || idx >= 50; // MNEE, Ethereum, or Payment
             });
-          } else if (currentCategories.ethereum === minCategory) {
-            preferredQuestions = available.filter(q => {
-              const idx = allAvailableQuestions.indexOf(q);
-              return idx >= 20 && idx < 35;
-            });
-          } else if (currentCategories.mnee === minCategory) {
-            preferredQuestions = available.filter(q => {
-              const idx = allAvailableQuestions.indexOf(q);
-              return idx < 20;
-            });
+            if (otherQuestions.length > 0) {
+              preferredQuestions = otherQuestions;
+            }
           }
           
           // Use preferred questions if available, otherwise use all available
