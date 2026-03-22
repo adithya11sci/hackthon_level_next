@@ -319,7 +319,7 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
             allAvailableQuestions[37], // "List all employees"
             allAvailableQuestions[38], // "Company overview please"
             allAvailableQuestions[53], // "Show me payment statistics"
-            allAvailableQuestions[3], // "How many employees do we have?" (duplicate check)
+            allAvailableQuestions[20], // "What is Ethereum?"
           ];
       setDisplayedQuestions(initialQuestions);
       setUsedQuestions(new Set());
