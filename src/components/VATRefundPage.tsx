@@ -186,7 +186,21 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
             .single();
           
           if (supabaseError) {
-            console.error('Supabase insert error:', supabaseError);
+            console.error('❌ Supabase insert error:', supabaseError);
+            console.error('❌ Error code:', supabaseError.code);
+            console.error('❌ Error message:', supabaseError.message);
+            console.error('❌ Error details:', supabaseError.details);
+            console.error('❌ Error hint:', supabaseError.hint);
+            // Log the data we tried to insert
+            console.error('❌ Data attempted:', {
+              id: pendingPayment.id,
+              employee_id: "vat-refund",
+              user_id: address,
+              amount: refundAmount,
+              token: "MNEE",
+              transaction_hash: null,
+              status: "pending",
+            });
           } else {
             console.log('✅ Also saved to Supabase for admin access:', supabaseData);
           }
