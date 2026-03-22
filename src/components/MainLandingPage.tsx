@@ -140,7 +140,7 @@ function GemetraLandingPage() {
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col gap-6">
             <div className="flex items-center gap-4 mb-2">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-                <Bot size={24} className="text-brand-800" />
+                <span className="text-2xl">🤖</span>
               </div>
               <h3 className="font-['Montserrat'] text-[24px] font-[700]">AI Intelligence</h3>
             </div>
