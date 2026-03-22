@@ -3,6 +3,7 @@ import { Calendar, Clock, Repeat, Trash2, Play, Pause, Plus, AlertCircle, CheckC
 import { motion, AnimatePresence } from 'framer-motion';
 import { useScheduledPayments } from '../hooks/useScheduledPayments';
 import { usePayments } from '../hooks/usePayments';
+import { usePoints } from '../hooks/usePoints';
 import { processDuePayments } from '../services/paymentScheduler';
 import { PaymentCalendar } from './PaymentCalendar';
 import type { Employee } from '../lib/supabase';
@@ -33,6 +34,7 @@ export const ScheduledPayments: React.FC<ScheduledPaymentsProps> = ({
   } = useScheduledPayments();
   
   const { createPayment } = usePayments();
+  const { earnPoints } = usePoints();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [scheduleType, setScheduleType] = useState<'one-time' | 'recurring'>('one-time');
@@ -177,6 +179,17 @@ export const ScheduledPayments: React.FC<ScheduledPaymentsProps> = ({
         success: result.processed,
         failed: result.failed
       });
+
+      // Award points for scheduled payments (3 points per payment)
+      if (result.processed > 0) {
+        try {
+          const pointsEarned = result.processed * 3;
+          await earnPoints(pointsEarned, 'scheduled_payment', undefined, `Processed ${result.processed} scheduled payment(s)`);
+          console.log(`🎉 Earned ${pointsEarned} points for scheduled payments!`);
+        } catch (pointsError) {
+          console.error('Failed to award points (non-critical):', pointsError);
+        }
+      }
 
       if (onPaymentSuccess) {
         onPaymentSuccess();

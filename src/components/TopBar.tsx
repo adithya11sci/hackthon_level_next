@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Bell, Search } from 'lucide-react';
 import { NotificationDropdown } from './NotificationDropdown';
+import { PointsDisplay } from './PointsDisplay';
 import { useNotifications } from '../hooks/useNotifications';
+import { useAccount } from 'wagmi';
 
 interface TopBarProps {
   activeTab: string;
@@ -9,6 +11,7 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({ activeTab }) => {
   const { notifications} = useNotifications();
+  const { address, isConnected } = useAccount();
   const [showNotifications, setShowNotifications] = useState(false);
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
@@ -75,6 +78,11 @@ export const TopBar: React.FC<TopBarProps> = ({ activeTab }) => {
 
         {/* Actions */}
         <div className="flex items-center space-x-2 sm:space-x-4">
+          {/* Points Display */}
+          {isConnected && address && (
+            <PointsDisplay walletAddress={address} isWalletConnected={isConnected} />
+          )}
+
           {/* Search */}
           <div className="relative hidden md:block">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />

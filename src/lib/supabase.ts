@@ -102,3 +102,36 @@ export interface Notification {
   is_read: boolean;
   created_at: string;
 }
+
+// Points System Interfaces
+export interface UserPoints {
+  id: string;
+  user_id: string;
+  total_points: number;
+  lifetime_points: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PointTransaction {
+  id: string;
+  user_id: string;
+  points: number;
+  transaction_type: 'earned' | 'converted' | 'expired';
+  source: 'payment' | 'bulk_payment' | 'scheduled_payment' | 'vat_refund' | 'conversion' | 'bonus';
+  source_id?: string;
+  description?: string;
+  created_at: string;
+}
+
+export interface PointConversion {
+  id: string;
+  user_id: string;
+  points: number;
+  mnee_amount: number;
+  conversion_rate: number;
+  transaction_hash?: string;
+  status: 'pending' | 'completed' | 'failed';
+  created_at: string;
+  completed_at?: string;
+}

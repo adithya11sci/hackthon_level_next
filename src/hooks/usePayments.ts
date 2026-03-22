@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Payment } from '../lib/supabase';
 import { useAccount } from 'wagmi';
+import { usePoints } from './usePoints';
 
 // Helper function to generate a UUID
 function generateUUID() {

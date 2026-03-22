@@ -3,6 +3,7 @@ import { X, Send, Users, DollarSign, Clock, Shield, CheckCircle, AlertCircle } f
 import { motion } from 'framer-motion';
 import { sendBulkMneePayments, isWalletConnected, getConnectedAccount, formatAddress, MNEE_CONTRACT_ADDRESS_MAINNET } from '../utils/ethereum';
 import { usePayments } from '../hooks/usePayments';
+import { usePoints } from '../hooks/usePoints';
 import { sendBulkPaymentEmails, PaymentEmailData } from '../utils/emailService';
 import { useChainId } from 'wagmi';
 
@@ -31,6 +32,7 @@ export const PaymentPreviewModal: React.FC<PaymentPreviewModalProps> = ({
   onPaymentSuccess
 }) => {
   const { createPayment } = usePayments();
+  const { earnPoints } = usePoints();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentResult, setPaymentResult] = useState<{
     success: boolean;
@@ -155,6 +157,21 @@ export const PaymentPreviewModal: React.FC<PaymentPreviewModalProps> = ({
           }
           
           console.log(`✅ Finished recording payments for ${employeesToPay.length} employees`);
+          
+          // Award points for bulk payment
+          try {
+            if (employeesToPay.length > 1) {
+              const points = employeesToPay.length * 5; // 5 points per employee in bulk
+              await earnPoints(points, 'bulk_payment', undefined, `Bulk payment to ${employeesToPay.length} employees`);
+              console.log(`🎉 Earned ${points} points for bulk payment!`);
+            } else {
+              await earnPoints(10, 'payment', undefined, `Payment to ${employeesToPay[0]?.name || 'employee'}`);
+              console.log(`🎉 Earned 10 points for payment!`);
+            }
+          } catch (pointsError) {
+            console.error('Failed to award points (non-critical):', pointsError);
+            // Don't fail the payment if points fail
+          }
         } catch (dbError) {
           console.error('Failed to record payments in database:', dbError);
           // Continue with success flow even if database recording fails

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Upload, FileCheck, QrCode, CheckCircle, AlertCircle, Search, Clock, FileText, FileUp, FormInput, ExternalLink } from 'lucide-react';
 import { getConnectedAccount, sendMneePayment, isValidEthereumAddress } from '../utils/ethereum';
 import { usePayments } from '../hooks/usePayments';
+import { usePoints } from '../hooks/usePoints';
 import { useAccount, useSendTransaction } from "wagmi";
 import { parseEther } from "viem";
 
@@ -12,6 +13,7 @@ interface VATRefundPageProps {
 
 export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
   const { createPayment, getAllPayments } = usePayments();
+  const { earnPoints } = usePoints();
   const [activeTab, setActiveTab] = useState<'upload' | 'history'>('upload');
   const [step, setStep] = useState<'upload' | 'review' | 'sign' | 'confirmation' | 'error'>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -170,6 +172,14 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
           status: "completed",
           payment_date: new Date().toISOString(),
         });
+        
+        // Award points for VAT refund (15 points)
+        try {
+          await earnPoints(15, 'vat_refund', tx, `VAT refund of $${refundAmount.toFixed(2)} MNEE`);
+          console.log('🎉 Earned 15 points for VAT refund!');
+        } catch (pointsError) {
+          console.error('Failed to award points (non-critical):', pointsError);
+        }
       } catch (dbError) {
         console.error("Failed to record VAT refund payment:", dbError);
       }
