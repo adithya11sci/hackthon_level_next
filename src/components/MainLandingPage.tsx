@@ -83,8 +83,20 @@ function GemetraLandingPage() {
       </div>
 
       {/* Core Components Section */}
-      <div id="features-section" className="flex w-full flex-col items-center justify-center gap-16 bg-neutral-100 px-6 py-32">
-        <div className="flex w-full max-w-[1280px] flex-col items-center gap-4">
+      <div id="features-section" className="flex w-full flex-col items-center justify-center gap-16 bg-default-background px-6 py-32 relative overflow-hidden">
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
+
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
+
+        <div className="flex w-full max-w-[1280px] flex-col items-center gap-4 relative z-10">
           <span className="inline-block px-4 py-1 bg-brand-50 rounded-full mb-2">
             <span className="font-['Montserrat'] text-[12px] font-[700] text-brand-800">POWERED BY</span>
           </span>
@@ -96,7 +108,7 @@ function GemetraLandingPage() {
           </p>
         </div>
 
-        <div className="w-full max-w-[1280px] grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="w-full max-w-[1280px] grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
           {/* Blockchain Layer */}
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col gap-6">
             <div className="flex items-center gap-4 mb-2">
@@ -212,8 +224,20 @@ function GemetraLandingPage() {
       </div>
 
       {/* Main Feature Section */}
-      <div className="flex w-full flex-col items-center justify-center gap-16 bg-default-background px-6 py-32">
-        <div className="flex w-full max-w-[1280px] flex-col items-center gap-6">
+      <div className="flex w-full flex-col items-center justify-center gap-16 bg-default-background px-6 py-32 relative overflow-hidden">
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
+
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
+
+        <div className="flex w-full max-w-[1280px] flex-col items-center gap-6 relative z-10">
           <span className="inline-block px-4 py-1 bg-brand-50 rounded-full">
             <span className="font-['Montserrat'] text-[12px] font-[700] text-brand-800">UNIFIED PLATFORM</span>
           </span>
@@ -225,7 +249,7 @@ function GemetraLandingPage() {
           </p>
         </div>
 
-        <div className="w-full max-w-[1280px] flex flex-col gap-12">
+        <div className="w-full max-w-[1280px] flex flex-col gap-12 relative z-10">
           {/* Main Feature Card */}
           <div className="flex flex-col md:flex-row min-h-[500px] w-full rounded-[32px] bg-neutral-100 overflow-hidden shadow-xl">
             <div className="flex-1 relative overflow-hidden">
@@ -336,13 +360,20 @@ function GemetraLandingPage() {
       </div>
 
       {/* Key Benefits Section */}
-      <div id="benefits-section" className="flex w-full flex-col items-center justify-center gap-16 bg-neutral-100 px-6 py-32 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-        </div>
+      <div id="benefits-section" className="flex w-full flex-col items-center justify-center gap-16 bg-default-background px-6 py-32 relative overflow-hidden">
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
 
-        <div className="flex w-full max-w-[1280px] flex-col items-center gap-6 z-10">
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
+
+        <div className="flex w-full max-w-[1280px] flex-col items-center gap-6 relative z-10">
           <span className="inline-block px-4 py-1 bg-brand-50 rounded-full">
             <span className="font-['Montserrat'] text-[12px] font-[700] text-brand-800">WHY GEMETRA</span>
           </span>
@@ -354,7 +385,7 @@ function GemetraLandingPage() {
           </p>
         </div>
 
-        <div className="w-full max-w-[1280px] flex flex-col gap-12 z-10">
+        <div className="w-full max-w-[1280px] flex flex-col gap-12 relative z-10">
           {/* Main Benefits Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* 4-Second Finality */}
@@ -519,8 +550,20 @@ function GemetraLandingPage() {
       </div>
 
       {/* Use Cases Section */}
-      <div className="flex w-full flex-col items-center justify-center gap-16 bg-default-background px-6 py-32">
-        <div className="flex w-full max-w-[1280px] flex-col items-center gap-6">
+      <div className="flex w-full flex-col items-center justify-center gap-16 bg-default-background px-6 py-32 relative overflow-hidden">
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
+
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
+
+        <div className="flex w-full max-w-[1280px] flex-col items-center gap-6 relative z-10">
           <span className="inline-block px-4 py-1 bg-brand-50 rounded-full">
             <span className="font-['Montserrat'] text-[12px] font-[700] text-brand-800">USE CASES</span>
           </span>
@@ -532,7 +575,7 @@ function GemetraLandingPage() {
           </p>
         </div>
 
-        <div className="w-full max-w-[1280px]">
+        <div className="w-full max-w-[1280px] relative z-10">
           {/* VAT Refunds Use Case */}
           <div className="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden shadow-xl mb-12">
             <div className="md:w-1/2 bg-brand-900 p-12 relative">
@@ -748,13 +791,24 @@ function GemetraLandingPage() {
       </div>
 
       {/* How It Works Section */}
-      <div id="about-section" className="flex w-full flex-col items-center justify-center gap-16 bg-neutral-100 px-6 py-32 relative overflow-hidden">
+      <div id="about-section" className="flex w-full flex-col items-center justify-center gap-16 bg-default-background px-6 py-32 relative overflow-hidden">
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
+
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
         </div>
 
-        <div className="flex w-full max-w-[1280px] flex-col items-center gap-6 z-10">
+        <div className="flex w-full max-w-[1280px] flex-col items-center gap-6 relative z-10">
           <span className="inline-block px-4 py-1 bg-brand-50 rounded-full">
             <span className="font-['Montserrat'] text-[12px] font-[700] text-brand-800">HOW IT WORKS</span>
           </span>
@@ -1024,8 +1078,20 @@ function GemetraLandingPage() {
       </div>
 
       {/* Testimonials Section */}
-      <div className="flex w-full flex-col items-center justify-center gap-12 bg-default-background px-6 py-32">
-        <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-8">
+      <div className="flex w-full flex-col items-center justify-center gap-12 bg-default-background px-6 py-32 relative overflow-hidden">
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
+
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
+
+        <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-8 relative z-10">
           <span className="w-full whitespace-pre-wrap font-['Montserrat'] text-[62px] font-[900] leading-[58px] text-brand-900 text-center -tracking-[0.04em] mobile:font-['Montserrat'] mobile:text-[40px] mobile:font-[900] mobile:leading-[40px] mobile:tracking-normal">
             {" CHOOSE GEMETRA FOR BORDERLESS PAYMENTS"}
           </span>
