@@ -300,8 +300,8 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
     // Only show questions in new chats (when there's only the initial message or no messages)
     const isNewChat = messages.length <= 1;
     
-    if (isNewChat) {
-      // Initialize with default questions
+    if (isNewChat && displayedQuestions.length === 0) {
+      // Initialize with default questions only if not already set
       const initialQuestions = isMobile 
         ? allAvailableQuestions.slice(0, 3)
         : allAvailableQuestions.slice(0, 10);
@@ -475,8 +475,8 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Fixed Quick Questions - Always visible in new chats */}
-      {messages.length <= 1 && quickQuestions.length > 0 && (
+      {/* Fixed Quick Questions - Always visible in new chats, stay visible after first question */}
+      {messages.length <= 2 && quickQuestions.length > 0 && (
         <div className="flex-shrink-0 bg-white border-t border-gray-200 px-3 py-3 sm:px-6 sm:py-4">
           <div className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 flex items-center space-x-2">
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
