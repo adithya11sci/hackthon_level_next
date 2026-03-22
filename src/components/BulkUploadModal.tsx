@@ -176,7 +176,7 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
     
     const sampleData = [
       'John Doe', 'john@company.com', 'Senior Developer', 'Engineering', '5000',
-      'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWXWUB3OCJP72CH3V2VJRQBQ7K5REV4',
+      '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
       '2025-01-15', 'active'
     ];
 
