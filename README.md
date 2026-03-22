@@ -428,47 +428,6 @@ flowchart TD
 
 ---
 
-## 👤 User Journey
-
-```mermaid
-journey
-    title User Journey: From Onboarding to Payment
-    section Onboarding
-      Visit Landing Page: 5: User
-      Connect Wallet: 5: User
-      View Dashboard: 4: User
-    section Employee Management
-      Add Employee: 4: User
-      Upload CSV: 5: User
-      Review Employees: 4: User
-    section Payment Processing
-      Select Employees: 4: User
-      Preview Payment: 5: User
-      Approve Transaction: 5: User
-      Confirm in MetaMask: 4: User
-      View Transaction: 5: User
-    section Scheduled Payments
-      Schedule Payment: 5: User
-      Set Pre-Approval: 4: User
-      View Calendar: 5: User
-      Auto-Process: 5: User
-    section VAT Refund
-      Upload Receipt: 4: User
-      Enter Details: 3: User
-      Review Refund: 4: User
-      Receive MNEE: 5: User
-    section Points & Rewards
-      Earn Points: 5: User
-      View Balance: 4: User
-      Convert to MNEE: 5: User
-    section AI Assistant
-      Ask Question: 5: User
-      Get Instant Answer: 5: User
-      View History: 4: User
-```
-
----
-
 ## 🏗️ Component Architecture
 
 ```mermaid
@@ -831,9 +790,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Email**: amaansayyad2001@gmail.com
 - **GitHub**: [@AmaanSayyad](https://github.com/AmaanSayyad)
-
----
-
-**Built with ❤️ for the MNEE Hackathon**
-
-*Transforming global payments, one transaction at a time.*
