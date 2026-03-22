@@ -240,11 +240,11 @@ export const usePoints = () => {
         const userBalance = await getMneeBalance(walletAddress);
         
         if (userBalance >= mneeAmount) {
-          // For demo: User can send tokens to themselves if they have balance
-          // In production, this would be a treasury wallet sending to user
-          console.log(`💰 Sending ${mneeAmount} MNEE to ${walletAddress}...`);
+          // For demo: User can send tokens if they have balance
+          // In production, this would be a treasury wallet sending to recipient
+          console.log(`💰 Sending ${mneeAmount} MNEE to ${finalRecipientAddress}...`);
           
-          const transferResult = await sendMneePayment(walletAddress as `0x${string}`, mneeAmount);
+          const transferResult = await sendMneePayment(finalRecipientAddress as `0x${string}`, mneeAmount);
           
           if (transferResult.success && transferResult.txHash) {
             actualTxHash = transferResult.txHash;
