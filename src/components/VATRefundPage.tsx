@@ -1110,91 +1110,157 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
 
   const renderHistoryTab = () => {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-gray-900">VAT Refund History</h2>
-          <div className="relative">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-6 sm:p-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+          <div className="flex items-center gap-3">
+            <img
+              src="/mnee.png"
+              alt="MNEE logo"
+              className="h-7 w-7 object-contain"
+            />
+            <h2 className="text-2xl font-bold text-gray-900">VAT Refund History</h2>
+          </div>
+          <div className="relative w-full sm:w-auto">
             <input
               type="text"
               placeholder="Search refunds..."
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full sm:w-64 pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             />
             <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
           </div>
         </div>
 
         {isHistoryLoading ? (
-          <div className="flex justify-center items-center py-12">
-            <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-            <span className="ml-3 text-gray-600">Loading refund history...</span>
+          <div className="flex flex-col justify-center items-center py-16">
+            <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+            <span className="text-gray-600 font-medium">Loading refund history...</span>
           </div>
         ) : refundHistory.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 mb-2">No VAT refund history found</div>
-            <p className="text-gray-400 text-sm">
-              Submit a VAT refund to see it in your history
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FileText className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">No VAT refund history found</h3>
+            <p className="text-gray-500 text-sm max-w-md mx-auto">
+              Submit a VAT refund to see it appear in your history. All refunds are processed on the Ethereum blockchain using MNEE stablecoin.
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-600">ID</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-600">Date</th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-600">Amount</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-600">Token</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-600">Status</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-600">Transaction</th>
-                </tr>
-              </thead>
-              <tbody>
-                {refundHistory.map((refund) => (
-                  <tr key={refund.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 px-4 text-gray-800">
-                      {refund.id.slice(0, 8)}...
-                    </td>
-                    <td className="py-3 px-4 text-gray-800">
-                      {new Date(refund.date).toLocaleDateString()}
-                    </td>
-                    <td className="py-3 px-4 text-right text-gray-800">
-                      {refund.amount.toFixed(2)}
-                    </td>
-                    <td className="py-3 px-4 text-center text-gray-800">
-                      {refund.token || 'MNEE'}
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex justify-center">
-                        {refund.status === 'completed' ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <CheckCircle className="w-3 h-3 mr-1" /> Completed
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <Clock className="w-3 h-3 mr-1" /> Pending
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      {refund.transaction_hash ? (
-                        <a
-                          href={`https://etherscan.io/tx/${refund.transaction_hash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 font-mono flex items-center justify-center space-x-1 hover:underline"
-                        >
-                          <span className="truncate max-w-28">{refund.transaction_hash.slice(0, 8)}...</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      ) : (
-                        <span className="text-gray-400">-</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="overflow-x-auto -mx-2 sm:mx-0">
+            <div className="inline-block min-w-full align-middle">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                    <tr>
+                      <th className="px-4 sm:px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        ID
+                      </th>
+                      <th className="px-4 sm:px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Date
+                      </th>
+                      <th className="px-4 sm:px-6 py-3.5 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Amount
+                      </th>
+                      <th className="px-4 sm:px-6 py-3.5 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Token
+                      </th>
+                      <th className="px-4 sm:px-6 py-3.5 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-4 sm:px-6 py-3.5 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Transaction
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {refundHistory.map((refund, index) => (
+                      <tr 
+                        key={refund.id} 
+                        className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}
+                      >
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-2">
+                              <span className="text-xs font-mono text-gray-600">#{index + 1}</span>
+                            </div>
+                            <span className="text-sm font-medium text-gray-900 font-mono">
+                              {refund.id.slice(0, 8)}...
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {new Date(refund.date).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {new Date(refund.date).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </div>
+                        </td>
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <img
+                              src="/mnee.png"
+                              alt="MNEE"
+                              className="h-5 w-5 object-contain"
+                            />
+                            <span className="text-sm font-semibold text-gray-900">
+                              {refund.amount.toFixed(2)}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center">
+                          <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            <img
+                              src="/mnee.png"
+                              alt="MNEE"
+                              className="h-3.5 w-3.5 object-contain"
+                            />
+                            {refund.token || 'MNEE'}
+                          </div>
+                        </td>
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center">
+                          {refund.status === 'completed' ? (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-200">
+                              <CheckCircle className="w-3.5 h-3.5" />
+                              Completed
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200">
+                              <Clock className="w-3.5 h-3.5" />
+                              Pending
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center">
+                          {refund.transaction_hash ? (
+                            <a
+                              href={`https://etherscan.io/tx/${refund.transaction_hash}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-mono text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200 transition-all hover:shadow-sm"
+                            >
+                              <span className="truncate max-w-24 sm:max-w-32">
+                                {refund.transaction_hash.slice(0, 8)}...{refund.transaction_hash.slice(-6)}
+                              </span>
+                              <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                            </a>
+                          ) : (
+                            <span className="text-gray-400 text-sm">-</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         )}
       </div>
