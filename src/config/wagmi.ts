@@ -2,8 +2,14 @@ import { createConfig, http } from 'wagmi'
 import { mainnet, sepolia } from 'wagmi/chains'
 import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors'
 
-// WalletConnect Project ID (from environment or use the existing one)
-const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '684cdccc0de232f65a62603583571f5e'
+// WalletConnect Project ID (from environment - REQUIRED)
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID;
+
+if (!projectId) {
+  const errorMessage = 'Missing required WalletConnect Project ID. Please set VITE_WALLETCONNECT_PROJECT_ID in your .env file.';
+  console.error('❌', errorMessage);
+  throw new Error(errorMessage);
+}
 
 // Create Wagmi config following official pattern
 // Mainnet is prioritized for production use with real MNEE tokens

@@ -1,12 +1,33 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder-url.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Log a warning instead of throwing an error
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  console.warn('Missing Supabase environment variables. Using placeholder values for development.');
+// Validate that Supabase credentials are provided
+if (!supabaseUrl || !supabaseAnonKey) {
+  const errorMessage = 'Missing required Supabase environment variables. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.';
+  console.error('❌', errorMessage);
+  throw new Error(errorMessage);
 }
+
+// Validate URL format
+if (!supabaseUrl.startsWith('https://') || !supabaseUrl.includes('.supabase.co')) {
+  const errorMessage = 'Invalid Supabase URL format. URL must start with https:// and contain .supabase.co';
+  console.error('❌', errorMessage);
+  throw new Error(errorMessage);
+}
+
+// Validate key format (JWT tokens start with eyJ)
+if (!supabaseAnonKey.startsWith('eyJ')) {
+  const errorMessage = 'Invalid Supabase anon key format. Key should be a JWT token starting with eyJ';
+  console.error('❌', errorMessage);
+  throw new Error(errorMessage);
+}
+
+console.log('✅ Supabase client initialized with:', {
+  url: supabaseUrl,
+  keyPrefix: supabaseAnonKey.substring(0, 20) + '...'
+});
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

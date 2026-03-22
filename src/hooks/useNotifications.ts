@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import { useAuth } from './useAuth';
+import { useAccount } from 'wagmi';
 import type { Notification } from '../lib/supabase';
 
 export const useNotifications = () => {
-  const { user } = useAuth();
+  const { address, isConnected } = useAccount();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchNotifications = useCallback(async () => {
-    if (!user?.id) {
+    if (!isConnected || !address) {
       setNotifications([]);
       setUnreadCount(0);
       setLoading(false);
@@ -22,10 +22,11 @@ export const useNotifications = () => {
       setLoading(true);
       setError(null);
       
+      // Use wallet address as user_id for wallet-based authentication
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', address)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -35,10 +36,12 @@ export const useNotifications = () => {
     } catch (err) {
       console.error('Error fetching notifications:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch notifications');
+      // Fallback to empty array on error
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [address, isConnected]);
 
   useEffect(() => {
     fetchNotifications();
@@ -56,8 +59,8 @@ export const useNotifications = () => {
   }, [notifications]);
 
   const addNotification = useCallback(async (message: string): Promise<Notification | null> => {
-    if (!user) {
-      setError('User not authenticated');
+    if (!isConnected || !address) {
+      setError('Wallet not connected');
       return null;
     }
 
@@ -68,7 +71,7 @@ export const useNotifications = () => {
         .from('notifications')
         .insert([
           {
-            user_id: user.id,
+            user_id: address, // Use wallet address as user_id
             message,
             is_read: false
           }
@@ -86,11 +89,11 @@ export const useNotifications = () => {
       setError(err instanceof Error ? err.message : 'Failed to add notification');
       return null;
     }
-  }, [user]);
+  }, [address, isConnected]);
 
   const markAsRead = useCallback(async (notificationId: string): Promise<boolean> => {
-    if (!user) {
-      setError('User not authenticated');
+    if (!isConnected || !address) {
+      setError('Wallet not connected');
       return false;
     }
 
@@ -101,7 +104,7 @@ export const useNotifications = () => {
         .from('notifications')
         .update({ is_read: true })
         .eq('id', notificationId)
-        .eq('user_id', user.id);
+        .eq('user_id', address);
 
       if (error) throw error;
       
@@ -120,11 +123,11 @@ export const useNotifications = () => {
       setError(err instanceof Error ? err.message : 'Failed to update notification');
       return false;
     }
-  }, [user]);
+  }, [address, isConnected]);
 
   const markAllAsRead = useCallback(async (): Promise<boolean> => {
-    if (!user) {
-      setError('User not authenticated');
+    if (!isConnected || !address) {
+      setError('Wallet not connected');
       return false;
     }
 
@@ -134,7 +137,7 @@ export const useNotifications = () => {
       const { error } = await supabase
         .from('notifications')
         .update({ is_read: true })
-        .eq('user_id', user.id)
+        .eq('user_id', address)
         .eq('is_read', false);
 
       if (error) throw error;
@@ -150,11 +153,11 @@ export const useNotifications = () => {
       setError(err instanceof Error ? err.message : 'Failed to update notifications');
       return false;
     }
-  }, [user]);
+  }, [address, isConnected]);
 
   const deleteNotification = useCallback(async (notificationId: string): Promise<boolean> => {
-    if (!user) {
-      setError('User not authenticated');
+    if (!isConnected || !address) {
+      setError('Wallet not connected');
       return false;
     }
 
@@ -165,12 +168,11 @@ export const useNotifications = () => {
         .from('notifications')
         .delete()
         .eq('id', notificationId)
-        .eq('user_id', user.id);
+        .eq('user_id', address);
 
       if (error) throw error;
       
       // Update local state
-     
       setNotifications(prev => prev.filter(n => n.id !== notificationId));
       
       return true;
@@ -179,11 +181,11 @@ export const useNotifications = () => {
       setError(err instanceof Error ? err.message : 'Failed to delete notification');
       return false;
     }
-  }, [user, notifications]);
+  }, [address, isConnected, notifications]);
 
   const clearAllNotifications = useCallback(async (): Promise<boolean> => {
-    if (!user) {
-      setError('User not authenticated');
+    if (!isConnected || !address) {
+      setError('Wallet not connected');
       return false;
     }
 
@@ -193,7 +195,7 @@ export const useNotifications = () => {
       const { error } = await supabase
         .from('notifications')
         .delete()
-        .eq('user_id', user.id);
+        .eq('user_id', address);
 
       if (error) throw error;
       
@@ -206,7 +208,7 @@ export const useNotifications = () => {
       setError(err instanceof Error ? err.message : 'Failed to clear notifications');
       return false;
     }
-  }, [user]);
+  }, [address, isConnected]);
 
   return {
     notifications,
