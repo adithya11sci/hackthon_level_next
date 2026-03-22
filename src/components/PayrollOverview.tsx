@@ -80,7 +80,14 @@ export const PayrollOverview: React.FC<PayrollOverviewProps> = ({ employees, set
   return (
     <div className="stat-card">
       <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Payroll Overview</h3>
+        <div className="flex items-center gap-2">
+          <img
+            src="/mnee.png"
+            alt="MNEE logo"
+            className="h-5 w-5 object-contain"
+          />
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900">Payroll Overview</h3>
+        </div>
       </div>
 
       <div className="space-y-4 sm:space-y-6 mb-4 sm:mb-6">

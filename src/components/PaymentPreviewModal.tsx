@@ -298,7 +298,11 @@ export const PaymentPreviewModal: React.FC<PaymentPreviewModalProps> = ({
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center">
-              <Send className="w-6 h-6 text-white" />
+              <img
+                src="/mnee.png"
+                alt="MNEE logo"
+                className="w-8 h-8 object-contain"
+              />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Confirm Bulk Payment</h2>

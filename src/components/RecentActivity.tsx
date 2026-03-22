@@ -126,7 +126,14 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 lg:p-6 shadow-sm">
       <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Recent Activity</h3>
+        <div className="flex items-center gap-2">
+          <img
+            src="/mnee.png"
+            alt="MNEE logo"
+            className="h-5 w-5 object-contain"
+          />
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900">Recent Activity</h3>
+        </div>
         <div className="text-xs sm:text-sm text-gray-600">Last 30 days</div>
       </div>
 

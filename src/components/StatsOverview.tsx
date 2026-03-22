@@ -99,7 +99,11 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ companyName, emplo
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div className="flex items-center space-x-2 sm:space-x-3">
           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-black rounded-lg flex items-center justify-center">
-            <Building className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            <img
+              src="/mnee.png"
+              alt="MNEE logo"
+              className="h-5 w-5 sm:h-6 sm:w-6 object-contain"
+            />
           </div>
           <div>
             <h3 className="text-base sm:text-lg font-semibold text-gray-900">{companyName || 'My Company'}</h3>
