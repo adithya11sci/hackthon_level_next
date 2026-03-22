@@ -390,6 +390,21 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
               console.error('Error updating via hook (non-critical):', hookError);
             }
           } else {
+            const vatRefundDetails = {
+              vatRegNo: formData.vatRegNo || undefined,
+              receiptNo: formData.receiptNo || undefined,
+              billAmount: formData.billAmount || undefined,
+              vatAmount: formData.vatAmount || undefined,
+              passportNo: formData.passportNo || undefined,
+              flightNo: formData.flightNo || undefined,
+              nationality: formData.nationality || undefined,
+              dob: formData.dob || undefined,
+              purchaseDate: formData.purchaseDate || undefined,
+              merchantName: formData.merchantName || undefined,
+              merchantAddress: formData.merchantAddress || undefined,
+              receiverWalletAddress: formData.receiverWalletAddress || recipientAddress,
+            };
+
             const completedPayment = await createPayment({
               employee_id: 'vat-refund',
               amount: refundAmount,
@@ -400,9 +415,23 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
             });
             console.log('✅ Created completed VAT refund record:', completedPayment.id);
             
-            // Note: Payment is already saved to Supabase via createPayment hook
-            // The update above will handle updating the status to completed
-            console.log('✅ Payment saved via createPayment hook, updating status to completed');
+            // Save VAT refund details
+            try {
+              const { error: detailsError } = await supabase
+                .from('payments')
+                .update({
+                  vat_refund_details: vatRefundDetails
+                })
+                .eq('id', completedPayment.id);
+              
+              if (detailsError) {
+                console.error('Error saving VAT refund details:', detailsError);
+              } else {
+                console.log('✅ Saved VAT refund details to Supabase');
+              }
+            } catch (detailsErr) {
+              console.error('Failed to save VAT refund details (non-critical):', detailsErr);
+            }
           }
         } catch (dbError) {
           console.error('Failed to record VAT refund payment in database:', dbError);
