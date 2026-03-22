@@ -122,3 +122,23 @@
 - Passport numbers follow realistic formats for each country
 - Flight numbers use real airline codes (EK=Emirates, BA=British Airways, AF=Air France, QR=Qatar Airways, LH=Lufthansa)
 - Merchant names and addresses are realistic for major shopping destinations
+
+---
+
+## File Format Recommendations
+
+### Best Format: PDF ⭐
+- **Why**: Structured, OCR-friendly, tamper-resistant, professional
+- **Specs**: PDF 1.7+, 300 DPI minimum, searchable text
+- **Size**: Max 10 MB
+
+### Acceptable Formats: JPG, PNG
+- **Why**: Quick mobile uploads, easy to capture
+- **Specs**: 1200x1600 pixels minimum, high quality
+- **Size**: Max 5 MB
+
+### See Also:
+- **Document Format Guide**: `VAT_REFUND_DOCUMENT_FORMAT_GUIDE.md`
+- **JSON Sample**: `samples/vat_receipt_sample.json`
+- **CSV Bulk Format**: `samples/vat_receipts_bulk.csv`
+- **Receipt Template**: `samples/receipt_template.txt`
