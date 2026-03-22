@@ -4,6 +4,7 @@ import React from "react";
 import * as SubframeUtils from "../utils";
 import { LinkButton } from "./LinkButton";
 import { IconButton } from "./IconButton";
+import Squares from "../../components/Squares";
 import { 
   Twitter, 
   Github, 
@@ -29,12 +30,24 @@ const EnhancedFooter = React.forwardRef<HTMLElement, EnhancedFooterProps>(
     return (
       <footer
         className={SubframeUtils.twClassNames(
-          "w-full bg-white border-t border-neutral-200 text-neutral-900 relative",
+          "w-full bg-white border-t border-neutral-200 text-neutral-900 relative overflow-hidden",
           className
         )}
         ref={ref as any}
         {...otherProps}
       >
+        {/* Squares Background */}
+        <Squares
+          speed={0.5}
+          squareSize={40}
+          direction='diagonal'
+          borderColor="#f1f1f1"
+          hoverFillColor="#F1F1F1"
+        />
+
+        {/* Animated Gradient Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
+
         <div className="relative z-10">
           {/* Main Footer Content */}
           <div className="max-w-[1280px] mx-auto px-6 py-10">
