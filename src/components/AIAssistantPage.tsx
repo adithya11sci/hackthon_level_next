@@ -338,8 +338,58 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
         );
         
         if (available.length > 0) {
-          // Replace the used question with a random new one
-          const newQuestion = available[Math.floor(Math.random() * available.length)];
+          // Try to maintain balance: prefer questions from categories not currently well-represented
+          const currentCategories = {
+            mnee: prevDisplayed.filter(q => allAvailableQuestions.indexOf(q) < 20).length,
+            ethereum: prevDisplayed.filter(q => {
+              const idx = allAvailableQuestions.indexOf(q);
+              return idx >= 20 && idx < 35;
+            }).length,
+            company: prevDisplayed.filter(q => {
+              const idx = allAvailableQuestions.indexOf(q);
+              return idx >= 35 && idx < 50;
+            }).length,
+            payment: prevDisplayed.filter(q => {
+              const idx = allAvailableQuestions.indexOf(q);
+              return idx >= 50;
+            }).length,
+          };
+          
+          // Find the category with the least representation
+          const minCategory = Math.min(
+            currentCategories.mnee,
+            currentCategories.ethereum,
+            currentCategories.company,
+            currentCategories.payment
+          );
+          
+          // Prefer questions from underrepresented categories
+          let preferredQuestions = available;
+          if (currentCategories.company === minCategory) {
+            preferredQuestions = available.filter(q => {
+              const idx = allAvailableQuestions.indexOf(q);
+              return idx >= 35 && idx < 50;
+            });
+          } else if (currentCategories.payment === minCategory) {
+            preferredQuestions = available.filter(q => {
+              const idx = allAvailableQuestions.indexOf(q);
+              return idx >= 50;
+            });
+          } else if (currentCategories.ethereum === minCategory) {
+            preferredQuestions = available.filter(q => {
+              const idx = allAvailableQuestions.indexOf(q);
+              return idx >= 20 && idx < 35;
+            });
+          } else if (currentCategories.mnee === minCategory) {
+            preferredQuestions = available.filter(q => {
+              const idx = allAvailableQuestions.indexOf(q);
+              return idx < 20;
+            });
+          }
+          
+          // Use preferred questions if available, otherwise use all available
+          const questionsToChooseFrom = preferredQuestions.length > 0 ? preferredQuestions : available;
+          const newQuestion = questionsToChooseFrom[Math.floor(Math.random() * questionsToChooseFrom.length)];
           return prevDisplayed.map(q => q === usedQuestion ? newQuestion : q);
         } else {
           // If no more questions available, just remove the used one
