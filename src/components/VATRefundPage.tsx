@@ -535,7 +535,7 @@ export const VATRefundPage: React.FC<VATRefundPageProps> = () => {
                         value={formData.receiverWalletAddress}
                         onChange={handleInputChange}
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="e.g. XBYLS2E6YI6XXL5BWCAMOA4GTWHXWXWUB3OCJP72CH3V2VJRQBQ7K5REV4"
+                        placeholder="e.g. 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
                         required
                       />
                     </div>
