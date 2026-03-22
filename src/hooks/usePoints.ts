@@ -100,14 +100,15 @@ export const usePoints = () => {
     source: PointTransaction['source'],
     sourceId?: string,
     description?: string
-  ) => {
+  ): Promise<PointTransaction | null> => {
     if (!walletAddress) {
-      throw new Error('Wallet not connected');
+      console.warn('Cannot earn points: wallet not connected');
+      return null;
     }
 
     if (points <= 0) {
       console.warn('Cannot earn zero or negative points');
-      return;
+      return null;
     }
 
     try {
