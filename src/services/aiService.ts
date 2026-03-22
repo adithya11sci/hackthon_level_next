@@ -218,13 +218,34 @@ const intelligentThinking = (message: string): { shouldAnswer: boolean, directAn
     };
   }
   
-  // Price questions - include MNEE and catch "current price of"
-  if (analysis.topics.includes('pricing') || 
-      /(current|what is|what's).*(price|pricing).*(of|for)/i.test(message) ||
-      /price.*(of|for).*(ethereum|eth|bitcoin|btc|mnee|cardano|solana)/i.test(message)) {
-    const targetCrypto = analysis.entities.find(e => ['bitcoin', 'ethereum', 'eth', 'mnee', 'cardano', 'solana'].includes(e)) || 
-                         (message.match(/(ethereum|eth|bitcoin|btc|mnee|cardano|solana)/i)?.[0]?.toLowerCase()) || 
-                         thinkingContext.primaryCrypto;
+  // Price questions - include MNEE and catch "current price of" - CHECK BEFORE OTHER CHECKS
+  // Make regex more flexible to catch variations
+  const pricePatterns = [
+    /(current|what is|what's|tell me).*(price|pricing|cost|value).*(of|for)/i,
+    /price.*(of|for).*(ethereum|eth|bitcoin|btc|mnee|cardano|solana)/i,
+    /(ethereum|eth|bitcoin|btc|mnee|cardano|solana).*price/i,
+    /how much.*(ethereum|eth|bitcoin|btc|mnee|cardano|solana)/i
+  ];
+  
+  if (analysis.topics.includes('pricing') || pricePatterns.some(pattern => pattern.test(message))) {
+    // Extract crypto from message - check entities first, then message match
+    let targetCrypto = analysis.entities.find(e => ['bitcoin', 'ethereum', 'eth', 'mnee', 'cardano', 'solana'].includes(e));
+    
+    // If not in entities, try to extract from message directly
+    if (!targetCrypto) {
+      const cryptoMatch = message.match(/(ethereum|eth|bitcoin|btc|mnee|cardano|solana)/i);
+      if (cryptoMatch) {
+        targetCrypto = cryptoMatch[0].toLowerCase();
+        // Normalize 'eth' to 'ethereum'
+        if (targetCrypto === 'eth') targetCrypto = 'ethereum';
+      }
+    }
+    
+    // Default to ethereum if in Ethereum/MNEE app context
+    targetCrypto = targetCrypto || thinkingContext.primaryCrypto || 'ethereum';
+    
+    console.log('💰 Price question detected:', { message, targetCrypto, entities: analysis.entities, topics: analysis.topics });
+    
     return {
       shouldAnswer: true,
       directAnswer: 'price',
