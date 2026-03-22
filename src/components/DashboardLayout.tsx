@@ -198,6 +198,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ companyName: initialC
             setActiveTab={setActiveTab}
             refreshKey={refreshKey}
             onEmployeePayment={handleEmployeePayment}
+            onCompanyNameChange={setCompanyName}
           />
         );
       case 'employees':
@@ -246,6 +247,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ companyName: initialC
             setActiveTab={setActiveTab}
             refreshKey={refreshKey}
             onEmployeePayment={handleEmployeePayment}
+            onCompanyNameChange={setCompanyName}
           />
         );
     }
