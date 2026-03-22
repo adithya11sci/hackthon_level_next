@@ -1154,7 +1154,7 @@ function GemetraLandingPage() {
             <Button
               size="large"
               variant="neutral-secondary"
-              onClick={() => window.open('https://docs.gemetra.com', '_blank')}
+              onClick={() => window.open('https://github.com/AmaanSayyad/Gemetra-mnee', '_blank')}
               icon={<ArrowRight size={20} />}
               className="px-10 py-6 hover:bg-brand-50 transition-all duration-300 text-lg"
             >

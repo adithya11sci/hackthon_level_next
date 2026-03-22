@@ -74,7 +74,7 @@ const EnhancedFooter = React.forwardRef<HTMLElement, EnhancedFooterProps>(
                     <Twitter size={16} className="text-neutral-600 group-hover:text-purple-600 transition-colors" />
                   </a>
                   <a
-                    href="https://github.com/gemetra"
+                    href="https://github.com/AmaanSayyad/Gemetra-mnee"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-9 h-9 rounded-lg bg-neutral-100 hover:bg-purple-100 transition-all duration-300 flex items-center justify-center group"
@@ -166,20 +166,20 @@ const EnhancedFooter = React.forwardRef<HTMLElement, EnhancedFooterProps>(
                 </h4>
                 <div className="flex flex-col gap-3">
                   <a 
-                    href="mailto:hello@gemetra.com" 
+                    href="mailto:amaansayyad2001@gmail.com" 
                     className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900 transition-colors"
                   >
                     <Mail size={14} />
-                    <span className="text-sm">hello@gemetra.com</span>
+                    <span className="text-sm">amaansayyad2001@gmail.com</span>
                   </a>
                   <a 
-                    href="https://gemetra.com" 
+                    href="https://gemetra-mnee.vercel.app/" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900 transition-colors"
                   >
                     <Globe size={14} />
-                    <span className="text-sm">gemetra.com</span>
+                    <span className="text-sm">gemetra-mnee.vercel.app</span>
                   </a>
                 </div>
               </div>

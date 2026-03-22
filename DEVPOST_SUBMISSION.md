@@ -388,8 +388,8 @@ This project aligns with **all three tracks** of the MNEE Hackathon:
 6. **Process Payments**: Manual or automatic - your choice
 7. **Track Everything**: Every transaction verifiable on blockchain
 
-**Live Demo**: [Your Demo URL]  
-**GitHub**: https://github.com/AmaanSayyad/Gemetra-Mnee
+**Live Demo**: https://gemetra-mnee.vercel.app/  
+**GitHub**: https://github.com/AmaanSayyad/Gemetra-mnee
 
 ---
 
