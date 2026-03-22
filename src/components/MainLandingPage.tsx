@@ -1197,11 +1197,11 @@ function GemetraLandingPage() {
 
           {/* Animated Gradient Overlay */}
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-brand-50/10 to-transparent animate-pulse-slow z-0"></div>
-          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-brand-900 text-white px-8 py-4 rounded-full shadow-lg">
+          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-brand-900 text-white px-8 py-4 rounded-full shadow-lg z-20">
             <span className="font-['Montserrat'] text-[18px] font-[700]">Ready to Transform Your Financial Operations?</span>
           </div>
 
-          <div className="flex w-full flex-col items-center justify-center gap-6">
+          <div className="flex w-full flex-col items-center justify-center gap-6 relative z-10">
             <span className="w-full max-w-[768px] whitespace-pre-wrap font-['Montserrat'] text-[72px] font-[900] leading-[68px] text-brand-900 text-center -tracking-[0.04em] mobile:font-['Montserrat'] mobile:text-[48px] mobile:font-[900] mobile:leading-[44px] mobile:tracking-normal">
               {"START TODAY"}
             </span>
