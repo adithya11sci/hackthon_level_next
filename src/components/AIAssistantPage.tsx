@@ -215,8 +215,8 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
     }
   };
 
-  // Mobile gets fewer suggestions to save space
-  const allQuestions = [
+  // Pool of all available questions
+  const allAvailableQuestions = [
     "What is MNEE?",
     "Tell me about MNEE token",
     "What is the current price of Ethereum",
@@ -227,9 +227,76 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
     "Employee salary breakdown",
     "What is MNEE's contract address?",
     "How do I get MNEE tokens?",
+    "What are the benefits of using MNEE?",
+    "Show me payment statistics",
+    "What is Ethereum?",
+    "How does blockchain work?",
+    "What is the total payroll amount?",
+    "List all employees",
+    "What is MNEE's market cap?",
+    "How do I connect my wallet?",
+    "Explain smart contracts",
+    "What are the transaction fees?",
   ];
 
-  const quickQuestions = isMobile ? allQuestions.slice(0, 3) : allQuestions;
+  // State to track displayed questions and used questions
+  const [displayedQuestions, setDisplayedQuestions] = useState<string[]>([]);
+  const [usedQuestions, setUsedQuestions] = useState<Set<string>>(new Set());
+
+  // Initialize displayed questions when starting a new chat
+  useEffect(() => {
+    // Only show questions in new chats (when there's only the initial message or no messages)
+    const isNewChat = messages.length <= 1;
+    
+    if (isNewChat) {
+      // Initialize with default questions
+      const initialQuestions = isMobile 
+        ? allAvailableQuestions.slice(0, 3)
+        : allAvailableQuestions.slice(0, 10);
+      setDisplayedQuestions(initialQuestions);
+      setUsedQuestions(new Set());
+    }
+  }, [messages.length, isMobile, initialSessionId]);
+
+  // Function to replace a used question with a new one
+  const replaceQuestion = (usedQuestion: string) => {
+    setUsedQuestions(prev => new Set(prev).add(usedQuestion));
+    
+    // Get available questions that haven't been used
+    const available = allAvailableQuestions.filter(q => 
+      !usedQuestions.has(q) && !displayedQuestions.includes(q)
+    );
+    
+    if (available.length > 0) {
+      // Replace the used question with a random new one
+      const newQuestion = available[Math.floor(Math.random() * available.length)];
+      setDisplayedQuestions(prev => 
+        prev.map(q => q === usedQuestion ? newQuestion : q)
+      );
+    } else {
+      // If no more questions available, just remove the used one
+      setDisplayedQuestions(prev => prev.filter(q => q !== usedQuestion));
+    }
+  };
+
+  // Handle question click
+  const handleQuestionClick = (question: string) => {
+    setInputValue(question);
+    // Replace the question after it's been selected
+    replaceQuestion(question);
+  };
+
+  // Replace question when it's sent
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.type === 'user' && displayedQuestions.includes(lastMessage.content)) {
+        replaceQuestion(lastMessage.content);
+      }
+    }
+  }, [messages]);
+
+  const quickQuestions = displayedQuestions;
 
   return (
     <div className="h-full flex flex-col">
@@ -333,8 +400,8 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Fixed Quick Questions - Responsive */}
-      {messages.length <= 1 && (
+      {/* Fixed Quick Questions - Always visible in new chats */}
+      {messages.length <= 1 && quickQuestions.length > 0 && (
         <div className="flex-shrink-0 bg-white border-t border-gray-200 px-3 py-3 sm:px-6 sm:py-4">
           <div className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 flex items-center space-x-2">
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -343,19 +410,14 @@ export const AIAssistantPage: React.FC<AIAssistantPageProps> = ({
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {quickQuestions.map((question, index) => (
               <button
-                key={index}
-                onClick={() => setInputValue(question)}
+                key={`${question}-${index}`}
+                onClick={() => handleQuestionClick(question)}
                 className="text-xs sm:text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg transition-colors leading-tight"
               >
                 {question}
               </button>
             ))}
           </div>
-          {isMobile && allQuestions.length > quickQuestions.length && (
-            <div className="text-xs text-gray-500 mt-2">
-              {allQuestions.length - quickQuestions.length} more suggestions available on desktop
-            </div>
-          )}
         </div>
       )}
 
