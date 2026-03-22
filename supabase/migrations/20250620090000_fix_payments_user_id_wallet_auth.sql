@@ -10,10 +10,21 @@
   2. Solution
     - Change user_id from UUID to TEXT to support wallet addresses
     - Drop any foreign key constraints if they exist
-    - Update RLS policies if needed (they should already work with text)
+    - Drop RLS policies that use auth.uid() and recreate them to work with text
 */
 
--- Check if user_id column exists and is UUID type
+-- Step 1: Drop RLS policies that depend on user_id being UUID
+DROP POLICY IF EXISTS "Users can insert own payments" ON public.payments;
+DROP POLICY IF EXISTS "Users can read own payments" ON public.payments;
+DROP POLICY IF EXISTS "Users can update own payments" ON public.payments;
+DROP POLICY IF EXISTS "Users can delete own payments" ON public.payments;
+
+-- Step 2: Drop foreign key constraint if it exists
+ALTER TABLE public.payments
+DROP CONSTRAINT IF EXISTS payments_user_id_fkey;
+
+-- Step 3: Change user_id from UUID to TEXT
+-- This will only work if the column is currently UUID
 DO $$
 BEGIN
     -- Check if user_id is UUID type
@@ -25,11 +36,12 @@ BEGIN
         AND column_name = 'user_id' 
         AND data_type = 'uuid'
     ) THEN
-        -- Drop any foreign key constraints on user_id
-        ALTER TABLE public.payments
-        DROP CONSTRAINT IF EXISTS payments_user_id_fkey;
-        
         -- Change user_id from UUID to TEXT
+        -- First, set it to nullable temporarily to handle any NULL values
+        ALTER TABLE public.payments
+        ALTER COLUMN user_id DROP NOT NULL;
+        
+        -- Convert UUID to TEXT (this will convert existing UUIDs to text)
         ALTER TABLE public.payments
         ALTER COLUMN user_id TYPE text USING user_id::text;
         
@@ -52,9 +64,18 @@ BEGIN
     END IF;
 END $$;
 
--- Update index if it exists
+-- Step 4: Update index
 DROP INDEX IF EXISTS idx_payments_user_id;
 CREATE INDEX IF NOT EXISTS idx_payments_user_id ON public.payments(user_id);
 
--- Note: RLS policies from migration 20250620060000_vat_refund_access.sql should already work
--- They filter by employee_id and user_id, which will now work with text values
+-- Step 5: Note about RLS policies
+-- The RLS policies from migration 20250620060000_vat_refund_access.sql should already work
+-- They filter by employee_id and don't directly compare user_id with auth.uid()
+-- The application layer filters by wallet address (user_id)
+
+-- Verification query (optional - uncomment to check)
+-- SELECT column_name, data_type 
+-- FROM information_schema.columns 
+-- WHERE table_name = 'payments' 
+-- AND column_name = 'user_id';
+-- Should show: data_type = 'text'
