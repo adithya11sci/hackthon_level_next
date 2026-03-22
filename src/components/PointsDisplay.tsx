@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Coins, Gift, History, ArrowRight, X, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePoints } from '../hooks/usePoints';
-import { formatAddress } from '../utils/ethereum';
+import { formatAddress, isValidEthereumAddress } from '../utils/ethereum';
 
 interface PointsDisplayProps {
   walletAddress: string;
@@ -17,6 +17,7 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
   const [showConversionModal, setShowConversionModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [pointsToConvert, setPointsToConvert] = useState('');
+  const [recipientAddress, setRecipientAddress] = useState('');
   const [isConverting, setIsConverting] = useState(false);
   const [conversionError, setConversionError] = useState<string | null>(null);
 
@@ -41,11 +42,18 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
       return;
     }
 
+    // Validate recipient address if provided
+    const finalRecipientAddress = recipientAddress.trim() || walletAddress;
+    if (recipientAddress.trim() && !isValidEthereumAddress(recipientAddress.trim())) {
+      setConversionError('Invalid recipient address. Please enter a valid Ethereum address.');
+      return;
+    }
+
     setIsConverting(true);
     setConversionError(null);
 
     try {
-      const result = await convertPointsToMnee(points);
+      const result = await convertPointsToMnee(points, finalRecipientAddress);
       
       // Show success message with details
       let successMessage = `✅ Successfully converted ${points} points to ${result.mneeAmount.toFixed(6)} MNEE!\n\n` +
@@ -174,6 +182,28 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
                       = {(parseFloat(pointsToConvert) / conversionRate).toFixed(6)} MNEE
                     </p>
                   )}
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Recipient Address (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={recipientAddress}
+                    onChange={(e) => {
+                      setRecipientAddress(e.target.value);
+                      setConversionError(null);
+                    }}
+                    placeholder={walletAddress || "Enter Ethereum address (defaults to your wallet)"}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm font-mono"
+                  />
+                  <p className="mt-2 text-xs text-gray-500">
+                    {recipientAddress.trim() 
+                      ? `Tokens will be sent to: ${formatAddress(recipientAddress.trim())}`
+                      : `Tokens will be sent to your connected wallet: ${formatAddress(walletAddress)}`
+                    }
+                  </p>
                 </div>
 
                 {conversionError && (

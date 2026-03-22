@@ -195,7 +195,7 @@ export const usePoints = () => {
     }
   }, [walletAddress, userPoints]);
 
-  const convertPointsToMnee = useCallback(async (pointsToConvert: number) => {
+  const convertPointsToMnee = useCallback(async (pointsToConvert: number, recipientAddress?: string) => {
     if (!walletAddress) {
       throw new Error('Wallet not connected');
     }
@@ -207,6 +207,9 @@ export const usePoints = () => {
     if (pointsToConvert < CONVERSION_RATE) {
       throw new Error(`Minimum ${CONVERSION_RATE} points required for conversion`);
     }
+
+    // Use provided recipient address or default to connected wallet
+    const finalRecipientAddress = recipientAddress || walletAddress;
 
     try {
       setLoading(true);
