@@ -23,7 +23,33 @@ interface DashboardLayoutProps {
   companyName: string;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ companyName }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ companyName: initialCompanyName }) => {
+  const { address } = useAccount();
+  const [companyName, setCompanyName] = useState(() => {
+    // Try to load from localStorage first
+    if (address) {
+      const saved = localStorage.getItem(`gemetra_company_name_${address}`);
+      if (saved) return saved;
+    }
+    return initialCompanyName || 'My Company';
+  });
+
+  // Update localStorage when company name changes
+  useEffect(() => {
+    if (address && companyName) {
+      localStorage.setItem(`gemetra_company_name_${address}`, companyName);
+    }
+  }, [companyName, address]);
+
+  // Load company name from localStorage when wallet address changes
+  useEffect(() => {
+    if (address) {
+      const saved = localStorage.getItem(`gemetra_company_name_${address}`);
+      if (saved) {
+        setCompanyName(saved);
+      }
+    }
+  }, [address]);
   const { employees, refetch: refreshEmployees } = useEmployees();
   const { addNotification } = useNotifications();
   const {address, isConnected} = useAccount();

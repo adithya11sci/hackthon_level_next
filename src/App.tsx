@@ -29,7 +29,11 @@ function App() {
 
   const renderActiveComponent = () => {
     if (isConnected && ["dashboard", "employees", "bulk-transfer", "ai-assistant-chat", "ai-assistant-history", "settings"].includes(activeTab)) {
-      return <DashboardLayout companyName={"My Company"} />;
+      // Load company name from localStorage if available
+      const savedCompanyName = address 
+        ? localStorage.getItem(`gemetra_company_name_${address}`) || 'My Company'
+        : 'My Company';
+      return <DashboardLayout companyName={savedCompanyName} />;
     }
     return <LandingPage />;
   };
