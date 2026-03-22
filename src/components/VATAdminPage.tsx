@@ -581,96 +581,112 @@ export const VATAdminPage: React.FC = () => {
 
               {/* Receipt Information */}
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-blue-600" />
-                  Receipt Information
-                </h3>
+                <div className="flex items-center justify-between mb-6 pb-3 border-b-2 border-blue-200">
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-blue-600" />
+                    </div>
+                    Receipt Information
+                  </h3>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">VAT Registration No.</label>
-                    <p className="text-gray-900 font-mono">{selectedRefund.vat_refund_details.vatRegNo || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">VAT Registration No.</label>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.vatRegNo || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Receipt/Invoice No.</label>
-                    <p className="text-gray-900 font-mono">{selectedRefund.vat_refund_details.receiptNo || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Receipt/Invoice No.</label>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.receiptNo || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Total Bill Amount</label>
-                    <p className="text-gray-900 font-semibold">{selectedRefund.vat_refund_details.billAmount || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Total Bill Amount</label>
+                    <p className="text-gray-900 text-base font-bold mt-1">{selectedRefund.vat_refund_details.billAmount || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">VAT Amount</label>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">VAT Amount</label>
                     <p className="text-gray-900 font-semibold text-green-600">{selectedRefund.vat_refund_details.vatAmount || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Purchase Date</label>
-                    <p className="text-gray-900">{selectedRefund.vat_refund_details.purchaseDate || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Purchase Date</label>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.purchaseDate || 'N/A'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Personal Information */}
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <User className="w-5 h-5 text-blue-600" />
-                  Personal Information
-                </h3>
+                <div className="flex items-center justify-between mb-6 pb-3 border-b-2 border-purple-200">
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <User className="w-5 h-5 text-purple-600" />
+                    </div>
+                    Personal Information
+                  </h3>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Passport Number</label>
-                    <p className="text-gray-900 font-mono">{selectedRefund.vat_refund_details.passportNo || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Passport Number</label>
+                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.passportNo || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Flight Number</label>
-                    <p className="text-gray-900">{selectedRefund.vat_refund_details.flightNo || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Flight Number</label>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.flightNo || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Country of Nationality</label>
-                    <p className="text-gray-900">{selectedRefund.vat_refund_details.nationality || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Country of Nationality</label>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.nationality || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Date of Birth</label>
-                    <p className="text-gray-900">{selectedRefund.vat_refund_details.dob || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Date of Birth</label>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.dob || 'N/A'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Merchant Information */}
               <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border-2 border-amber-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-blue-600" />
-                  Merchant Information
-                </h3>
+                <div className="flex items-center justify-between mb-6 pb-3 border-b-2 border-amber-200">
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                      <DollarSign className="w-5 h-5 text-amber-600" />
+                    </div>
+                    Merchant Information
+                  </h3>
+                </div>
                 <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Merchant Name</label>
-                    <p className="text-gray-900">{selectedRefund.vat_refund_details.merchantName || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Merchant Name</label>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantName || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Merchant Address</label>
-                    <p className="text-gray-900">{selectedRefund.vat_refund_details.merchantAddress || 'N/A'}</p>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Merchant Address</label>
+                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantAddress || 'N/A'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Payment Information */}
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-blue-600" />
-                  Payment Information
-                </h3>
+                <div className="flex items-center justify-between mb-6 pb-3 border-b-2 border-green-200">
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <DollarSign className="w-5 h-5 text-green-600" />
+                    </div>
+                    Payment Information
+                  </h3>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Receiver Wallet Address</label>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Receiver Wallet Address</label>
                     <p className="text-gray-900 font-mono text-xs break-all">{selectedRefund.vat_refund_details.receiverWalletAddress || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Refund Amount</label>
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Refund Amount</label>
                     <p className="text-gray-900 font-semibold text-lg">{selectedRefund.amount.toFixed(2)} {selectedRefund.token}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Status</label>
-                    <p className="text-gray-900">
+                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
+                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Status</label>
+                    <p className="text-gray-900 text-base font-medium mt-1">
                       {selectedRefund.status === 'completed' ? (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
                           <CheckCircle className="w-3.5 h-3.5" />
