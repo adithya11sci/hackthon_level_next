@@ -487,35 +487,22 @@ export const VATAdminPage: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    {refund.vat_refund_details && (
-                      <button
-                        onClick={() => {
-                          const details = refund.vat_refund_details;
-                          alert(`VAT Refund Details:\n\n` +
-                            `Receipt Info:\n` +
-                            `- VAT Reg No: ${details.vatRegNo || 'N/A'}\n` +
-                            `- Receipt No: ${details.receiptNo || 'N/A'}\n` +
-                            `- Bill Amount: ${details.billAmount || 'N/A'}\n` +
-                            `- VAT Amount: ${details.vatAmount || 'N/A'}\n` +
-                            `- Purchase Date: ${details.purchaseDate || 'N/A'}\n\n` +
-                            `Personal Info:\n` +
-                            `- Passport: ${details.passportNo || 'N/A'}\n` +
-                            `- Flight: ${details.flightNo || 'N/A'}\n` +
-                            `- Nationality: ${details.nationality || 'N/A'}\n` +
-                            `- DOB: ${details.dob || 'N/A'}\n\n` +
-                            `Merchant:\n` +
-                            `- Name: ${details.merchantName || 'N/A'}\n` +
-                            `- Address: ${details.merchantAddress || 'N/A'}\n\n` +
-                            `Wallet: ${details.receiverWalletAddress || 'N/A'}`
-                          );
-                        }}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                      >
-                        View Details
-                      </button>
-                    )}
-                  </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-center">
+                      {refund.vat_refund_details ? (
+                        <button
+                          onClick={() => {
+                            setSelectedRefund(refund);
+                            setShowDetailsModal(true);
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all hover:shadow-sm"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                          View Details
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 text-xs">No details</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -651,21 +638,29 @@ export const VATAdminPage: React.FC = () => {
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Passport Number</label>
-                    <p className="text-gray-900 font-mono text-base font-semibold mt-1">{selectedRefund.vat_refund_details.passportNo ? selectedRefund.vat_refund_details.passportNo : <span className='text-gray-400 italic'>Not provided</span>}</p>
+                  <div className="bg-white rounded-lg p-4 border border-purple-100 hover:shadow-md transition-all hover:border-purple-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Passport Number</label>
+                    <p className="text-gray-900 font-mono text-base font-semibold">
+                      {selectedRefund.vat_refund_details.passportNo || <span className="text-gray-400 italic">Not provided</span>}
+                    </p>
                   </div>
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Flight Number</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.flightNo ? selectedRefund.vat_refund_details.flightNo : <span className='text-gray-400 italic'>Not provided</span>}</p>
+                  <div className="bg-white rounded-lg p-4 border border-purple-100 hover:shadow-md transition-all hover:border-purple-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Flight Number</label>
+                    <p className="text-gray-900 text-base font-medium">
+                      {selectedRefund.vat_refund_details.flightNo || <span className="text-gray-400 italic">Not provided</span>}
+                    </p>
                   </div>
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Country of Nationality</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.nationality ? selectedRefund.vat_refund_details.nationality : <span className='text-gray-400 italic'>Not provided</span>}</p>
+                  <div className="bg-white rounded-lg p-4 border border-purple-100 hover:shadow-md transition-all hover:border-purple-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Country of Nationality</label>
+                    <p className="text-gray-900 text-base font-medium">
+                      {selectedRefund.vat_refund_details.nationality || <span className="text-gray-400 italic">Not provided</span>}
+                    </p>
                   </div>
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Date of Birth</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.dob ? selectedRefund.vat_refund_details.dob : <span className='text-gray-400 italic'>Not provided</span>}</p>
+                  <div className="bg-white rounded-lg p-4 border border-purple-100 hover:shadow-md transition-all hover:border-purple-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Date of Birth</label>
+                    <p className="text-gray-900 text-base font-medium">
+                      {selectedRefund.vat_refund_details.dob || <span className="text-gray-400 italic">Not provided</span>}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -681,13 +676,17 @@ export const VATAdminPage: React.FC = () => {
                   </h3>
                 </div>
                 <div className="space-y-4">
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Merchant Name</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantName ? selectedRefund.vat_refund_details.merchantName : <span className='text-gray-400 italic'>Not provided</span>}</p>
+                  <div className="bg-white rounded-lg p-4 border border-amber-100 hover:shadow-md transition-all hover:border-amber-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Merchant Name</label>
+                    <p className="text-gray-900 text-base font-medium">
+                      {selectedRefund.vat_refund_details.merchantName || <span className="text-gray-400 italic">Not provided</span>}
+                    </p>
                   </div>
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Merchant Address</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">{selectedRefund.vat_refund_details.merchantAddress ? selectedRefund.vat_refund_details.merchantAddress : <span className='text-gray-400 italic'>Not provided</span>}</p>
+                  <div className="bg-white rounded-lg p-4 border border-amber-100 hover:shadow-md transition-all hover:border-amber-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Merchant Address</label>
+                    <p className="text-gray-900 text-sm leading-relaxed">
+                      {selectedRefund.vat_refund_details.merchantAddress || <span className="text-gray-400 italic">Not provided</span>}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -703,17 +702,16 @@ export const VATAdminPage: React.FC = () => {
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Receiver Wallet Address</label>
+                  <div className="bg-white rounded-lg p-4 border border-green-100 hover:shadow-md transition-all hover:border-green-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Receiver Wallet Address</label>
                     {selectedRefund.vat_refund_details.receiverWalletAddress ? (
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-start gap-2">
                         <p className="text-gray-900 font-mono text-xs break-all flex-1">{selectedRefund.vat_refund_details.receiverWalletAddress}</p>
                         <button
                           onClick={() => {
                             navigator.clipboard.writeText(selectedRefund.vat_refund_details.receiverWalletAddress || '');
-                            // You could add a toast notification here
                           }}
-                          className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex-shrink-0"
                           title="Copy address"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -722,44 +720,47 @@ export const VATAdminPage: React.FC = () => {
                         </button>
                       </div>
                     ) : (
-                      <p className="text-gray-400 italic mt-1">Not provided</p>
+                      <p className="text-gray-400 italic">Not provided</p>
                     )}
                   </div>
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Refund Amount</label>
-                    <p className="text-gray-900 font-semibold text-lg">{selectedRefund.amount.toFixed(2)} {selectedRefund.token}</p>
+                  <div className="bg-white rounded-lg p-4 border border-green-100 hover:shadow-md transition-all hover:border-green-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Refund Amount</label>
+                    <div className="flex items-center gap-2">
+                      <img src="/mnee.png" alt="MNEE" className="h-6 w-6" />
+                      <p className="text-gray-900 font-bold text-xl">{selectedRefund.amount.toFixed(2)} {selectedRefund.token}</p>
+                    </div>
                   </div>
-                  <div className="bg-white/70 rounded-lg p-4 border border-white/90 hover:shadow-md transition-shadow">
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">Status</label>
-                    <p className="text-gray-900 text-base font-medium mt-1">
+                  <div className="bg-white rounded-lg p-4 border border-green-100 hover:shadow-md transition-all hover:border-green-300">
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Status</label>
+                    <div className="mt-1">
                       {selectedRefund.status === 'completed' ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
-                          <CheckCircle className="w-3.5 h-3.5" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-200">
+                          <CheckCircle className="w-4 h-4" />
                           Completed
                         </span>
                       ) : selectedRefund.status === 'pending' ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
-                          <Clock className="w-3.5 h-3.5" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200">
+                          <Clock className="w-4 h-4" />
                           Pending
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
-                          <AlertCircle className="w-3.5 h-3.5" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
+                          <AlertCircle className="w-4 h-4" />
                           Failed
                         </span>
                       )}
-                    </p>
+                    </div>
                   </div>
                   {selectedRefund.transaction_hash && (
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Transaction Hash</label>
+                    <div className="bg-white rounded-lg p-4 border border-green-100 hover:shadow-md transition-all hover:border-green-300">
+                      <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 block">Transaction Hash</label>
                       <a
                         href={`https://etherscan.io/tx/${selectedRefund.transaction_hash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 font-mono text-xs flex items-center gap-1"
+                        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-mono text-xs mt-1"
                       >
-                        {selectedRefund.transaction_hash.slice(0, 10)}...{selectedRefund.transaction_hash.slice(-8)}
+                        <span>{selectedRefund.transaction_hash.slice(0, 10)}...{selectedRefund.transaction_hash.slice(-8)}</span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     </div>
