@@ -125,12 +125,14 @@ erDiagram
 
     PAYMENTS {
         uuid id PK
-        uuid employee_id FK
+        text employee_id FK
+        text user_id
         decimal amount
         text token
         text transaction_hash
         text status
         timestamptz payment_date
+        jsonb vat_refund_details
         timestamptz created_at
     }
 
@@ -272,7 +274,7 @@ sequenceDiagram
     VAT Page->>Review Step: Show Review Screen
     Tourist->>Review Step: Approve Refund
     
-    Review Step->>Supabase: Create Pending Record
+    Review Step->>Supabase: Create Pending Record<br/>(with VAT details in JSONB)
     Review Step->>QR Code: Generate Payment QR
     Review Step->>Wallet: Request Transaction
     Wallet->>Tourist: Show MetaMask Popup
@@ -285,6 +287,8 @@ sequenceDiagram
     Review Step->>Points System: Award 15 Points
     Points System->>Supabase: Store Point Transaction
     Review Step-->>Tourist: Refund Success + QR Code
+    
+    Note over Supabase: VAT Admin can view<br/>all refunds with full details
 ```
 
 ---
@@ -450,6 +454,7 @@ graph TB
         PAYMENTS[BulkTransfer]
         SCHEDULED[ScheduledPayments]
         VAT[VATRefundPage]
+        VATADMIN[VATAdminPage]
         AI[AIAssistantPage]
         SETTINGS[SettingsPage]
     end
@@ -485,6 +490,7 @@ graph TB
     LAYOUT --> PAYMENTS
     LAYOUT --> SCHEDULED
     LAYOUT --> VAT
+    LAYOUT --> VATADMIN
     LAYOUT --> AI
     LAYOUT --> SETTINGS
     
@@ -516,6 +522,12 @@ graph TB
 
 - **Wallet-Native UX**: Connect any Ethereum wallet → confirm → receive MNEE.
 - **Tourism-Grade Simplicity**: Refunds in 3 steps → Upload → Review → Confirm.
+- **VAT Admin Dashboard**: 
+  - Wallet-based access control for authorized government employees
+  - View all VAT refunds with complete details (receipt, personal, merchant, payment info)
+  - Filter by status, date, and search by address/ID/transaction
+  - Export all data to CSV for compliance and reporting
+  - Real-time updates with auto-refresh every 5 seconds
 - **Enterprise Payroll**: AI-driven salary parsing and bulk MNEE payouts.
 - **Scheduled & Recurring Payments**: 
   - Schedule one-time or recurring payments (daily, weekly, bi-weekly, monthly)
@@ -533,6 +545,7 @@ graph TB
   - Chat history persistence
 - **Transparency**: All transactions on Ethereum blockchain with public audit trail.
 - **Compliance Ready**: Supabase logs + JSON/CSV exports for regulators and finance teams.
+- **VAT Refund Details Storage**: All form data (VAT reg number, receipt number, passport, flight, merchant info, etc.) stored in JSONB column for complete audit trail.
 - **MNEE Integration**: Built specifically for MNEE stablecoin on Ethereum.
 
 ---
