@@ -269,10 +269,10 @@ function GemetraLandingPage() {
                     <div className="flex items-center gap-2">
                       <IconWithBackground size="small" variant="brand" icon={<Clock />} />
                       <span className="font-['Montserrat'] text-[14px] font-[600] leading-[20px] text-default-font">
-                        4-SECOND FINALITY
+                        &lt;1s SETTLEMENT
                       </span>
                     </div>
-                    <p className="text-sm text-subtext-color">No waiting for payments to clear or settle</p>
+                    <p className="text-sm text-subtext-color">Instant confirmations globally, no waiting</p>
                   </div>
 
                   <div className="flex flex-col gap-2 p-4 rounded-xl bg-white shadow-sm">
@@ -1114,7 +1114,7 @@ function GemetraLandingPage() {
                   <Clock size={24} className="text-green-700" />
                 </div>
                 <h3 className="font-['Montserrat'] text-[18px] font-[700] text-brand-900 mb-2">Save Time</h3>
-                <p className="text-subtext-color text-sm">Near-instant transactions with 4-second finality</p>
+                <p className="text-subtext-color text-sm">Instant transactions with &lt;1s settlement time</p>
               </div>
 
               <div className="bg-neutral-50 rounded-xl p-6 flex flex-col items-center text-center">
