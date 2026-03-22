@@ -74,9 +74,12 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
   };
 
   const parseCSV = (csvText: string): { data: Omit<Employee, 'id' | 'user_id' | 'created_at' | 'updated_at'>[]; errors: string[] } => {
-    const lines = csvText.trim().split('\n');
+    // Handle both Windows (\r\n) and Unix (\n) line endings
+    const lines = csvText.trim().split(/\r?\n/).filter(line => line.trim() !== '');
     const errors: string[] = [];
     const data: Omit<Employee, 'id' | 'user_id' | 'created_at' | 'updated_at'>[] = [];
+    
+    console.log(`📄 Parsing CSV: ${lines.length} lines found`);
 
     if (lines.length < 2) {
       errors.push('CSV file must contain at least a header row and one data row');
@@ -127,12 +130,31 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
     }
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim());
+      // Handle CSV values that might contain commas (basic CSV parsing)
+      const values: string[] = [];
+      let currentValue = '';
+      let inQuotes = false;
+      
+      for (let j = 0; j < lines[i].length; j++) {
+        const char = lines[i][j];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          values.push(currentValue.trim());
+          currentValue = '';
+        } else {
+          currentValue += char;
+        }
+      }
+      values.push(currentValue.trim()); // Add the last value
       
       if (values.length !== headers.length) {
-        errors.push(`Row ${i + 1}: Column count mismatch`);
+        errors.push(`Row ${i + 1}: Column count mismatch (expected ${headers.length}, got ${values.length})`);
+        console.error(`Row ${i + 1} parsing error:`, { line: lines[i], values, headers });
         continue;
       }
+      
+      console.log(`Row ${i + 1} parsed:`, values);
 
       try {
         const employee: Omit<Employee, 'id' | 'user_id' | 'created_at' | 'updated_at'> = {
