@@ -64,7 +64,7 @@ function GemetraLandingPage() {
           <Button
             size="large"
             variant="neutral-secondary"
-            onClick={() => document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => window.open('https://docs.google.com/presentation/d/1CV3kaE1mY7rgmB9bTwZTBLGR6BdLryRtaHD4F3MK4M8/edit?usp=sharing', '_blank')}
             icon={<ArrowRight size={20} />}
             className="px-8 py-6 hover:bg-brand-50 transition-all duration-300"
           >
