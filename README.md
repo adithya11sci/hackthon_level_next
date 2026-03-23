@@ -5,7 +5,9 @@ Wallet-native. AI-powered. Borderless. Built on Ethereum with MNEE stablecoin.
 
 ## 🎥 Demo Video
 
-[![Demo Video](https://img.youtube.com/vi/FEmaygRs1gs/0.jpg)](https://youtu.be/FEmaygRs1gs)
+<p align="center">
+  <img src="public/Landingpage.png" alt="Gemetra-MNEE Landing Page Demo" width="720"/>
+</p>
 
 *Click the thumbnail above to watch the demo video on YouTube*
 
@@ -832,10 +834,10 @@ See `MNEE_SETUP.md` for detailed instructions on getting MNEE tokens.
 ---
 
 ## 🌐 Live Demo
-
-**Live Application**: https://gemetra-mnee.vercel.app/  
-**GitHub Repository**: https://github.com/AmaanSayyad/Gemetra-mnee  
-**Documentation**: https://docs.google.com/presentation/d/1CV3kaE1mY7rgmB9bTwZTBLGR6BdLryRtaHD4F3MK4M8/edit?usp=sharing
+- **Demo Video:** https://youtu.be/FEmaygRs1gs
+- **Live Application**: https://gemetra-mnee.vercel.app/  
+- **GitHub Repository**: https://github.com/AmaanSayyad/Gemetra-mnee  
+- **Documentation**: https://docs.google.com/presentation/d/1CV3kaE1mY7rgmB9bTwZTBLGR6BdLryRtaHD4F3MK4M8/edit?usp=sharing
 
 ---
 
@@ -848,6 +850,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👥 Contact
 
 - **Email**: amaansayyad2001@gmail.com
-
+- **Telegram**: @amaan029
 - **GitHub**: [@AmaanSayyad](https://github.com/AmaanSayyad)
-
