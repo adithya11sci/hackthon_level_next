@@ -10,7 +10,8 @@ import {
   Shield,
   Bot,
   Wallet,
-  ArrowRight
+  ArrowRight,
+  Play
 } from 'lucide-react';
 import ConnectButton from "../utils/connect-wallet";
 function GemetraLandingPage() {
@@ -61,6 +62,15 @@ function GemetraLandingPage() {
         </div>
         <div className="flex flex-wrap items-center justify-center gap-6 z-10">
           <ConnectButton />
+          <Button
+            size="large"
+            variant="primary"
+            onClick={() => window.open('https://youtu.be/FEmaygRs1gs', '_blank')}
+            icon={<Play size={20} />}
+            className="px-8 py-6 bg-brand-600 hover:bg-brand-700 text-white transition-all duration-300"
+          >
+            Watch Demo
+          </Button>
           <Button
             size="large"
             variant="neutral-secondary"
@@ -1150,6 +1160,16 @@ function GemetraLandingPage() {
             <ConnectButton />
 
             <span className="text-subtext-color">or</span>
+
+            <Button
+              size="large"
+              variant="primary"
+              onClick={() => window.open('https://youtu.be/FEmaygRs1gs', '_blank')}
+              icon={<Play size={20} />}
+              className="px-10 py-6 bg-brand-600 hover:bg-brand-700 text-white transition-all duration-300 text-lg"
+            >
+              Watch Demo
+            </Button>
 
             <Button
               size="large"

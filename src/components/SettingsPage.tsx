@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, User, Building, Save, Edit3, Check, X, Download, Wallet, Copy, Bell, Globe, Shield } from 'lucide-react';
+import { ArrowLeft, User, Building, Save, Edit3, Check, X, Download, Wallet, Copy, Bell, Globe, Shield, Play, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAccount, useChainId } from 'wagmi';
 import { supabase } from '../lib/supabase';
@@ -510,6 +510,33 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
                         </>
                       )}
                     </button>
+                  </div>
+                </div>
+
+                {/* Help & Resources */}
+                <div className="border-t border-gray-200 pt-3 sm:pt-4">
+                  <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-2 sm:mb-3">Help & Resources</h4>
+                  <div className="space-y-1 sm:space-y-2">
+                    <a
+                      href="https://youtu.be/FEmaygRs1gs"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center space-x-2 px-2 py-2 sm:px-3 sm:py-2 text-xs sm:text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                      <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span>Watch Demo Video</span>
+                      <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 ml-auto" />
+                    </a>
+                    <a
+                      href="https://docs.google.com/presentation/d/1CV3kaE1mY7rgmB9bTwZTBLGR6BdLryRtaHD4F3MK4M8/edit?usp=sharing"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center space-x-2 px-2 py-2 sm:px-3 sm:py-2 text-xs sm:text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                      <Globe className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span>Documentation</span>
+                      <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 ml-auto" />
+                    </a>
                   </div>
                 </div>
               </div>
