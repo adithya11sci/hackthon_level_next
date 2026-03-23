@@ -6,10 +6,13 @@ Wallet-native. AI-powered. Borderless. Built on Ethereum with MNEE stablecoin.
 ## 🎥 Demo Video
 
 <p align="center">
-  <img src="public/Landingpage.png" alt="Gemetra-MNEE Landing Page Demo" width="720"/>
+  <a href="https://youtu.be/FEmaygRs1gs" target="_blank" rel="noopener noreferrer">
+    <img src="public/Landingpage.png" alt="Gemetra-MNEE Landing Page Demo" width="720"/>
+  </a>
 </p>
 
 *Click the thumbnail above to watch the demo video on YouTube*
+
 
 ---
 
