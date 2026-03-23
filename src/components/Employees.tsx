@@ -196,7 +196,7 @@ export const Employees: React.FC<EmployeesProps> = ({
   const totalEmployees = employees.length;
   const activeEmployees = employees.filter(e => e.status === 'active').length;
   const totalPayroll = employees.reduce((sum, emp) => sum + emp.salary, 0);
-  const avgSalary = totalEmployees > 0 ? Math.round(totalPayroll / totalEmployees) : 0;
+  const avgSalary = totalEmployees > 0 ? Math.round((totalPayroll / totalEmployees) * 100) / 100 : 0;
 
   useEffect(() => {
     const handleClickOutside = () => {

@@ -18,7 +18,7 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ companyName, emplo
   const activeEmployees = employees.filter(emp => emp.status === 'active').length;
   const activePercentage = totalEmployees > 0 ? Math.round((activeEmployees / totalEmployees) * 100) : 0;
   const totalPayroll = employees.reduce((sum, emp) => sum + emp.salary, 0);
-  const avgSalary = totalEmployees > 0 ? Math.round(totalPayroll / totalEmployees) : 0;
+  const avgSalary = totalEmployees > 0 ? Math.round((totalPayroll / totalEmployees) * 100) / 100 : 0;
 
   // Sync editValue when companyName prop changes
   useEffect(() => {
