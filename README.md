@@ -853,5 +853,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👥 Contact
 
 - **Email**: amaansayyad2001@gmail.com
-- **Telegram**: @amaan029
+- **Telegram**: [@amaan029](https://t.me/amaan029)
 - **GitHub**: [@AmaanSayyad](https://github.com/AmaanSayyad)
