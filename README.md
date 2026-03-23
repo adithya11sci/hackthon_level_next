@@ -828,7 +828,6 @@ See `MNEE_SETUP.md` for detailed instructions on getting MNEE tokens.
 ## 🌐 Live Demo
 
 **Live Application**: https://gemetra-mnee.vercel.app/  
-**Demo Video**: https://youtu.be/FEmaygRs1gs  
 **GitHub Repository**: https://github.com/AmaanSayyad/Gemetra-mnee  
 **Documentation**: https://docs.google.com/presentation/d/1CV3kaE1mY7rgmB9bTwZTBLGR6BdLryRtaHD4F3MK4M8/edit?usp=sharing
 
@@ -843,4 +842,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👥 Contact
 
 - **Email**: amaansayyad2001@gmail.com
+
 - **GitHub**: [@AmaanSayyad](https://github.com/AmaanSayyad)
+
