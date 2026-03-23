@@ -1,4 +1,4 @@
-# 🌍 Gemetra-MNEE
+﻿# 🌍 Gemetra-MNEE
 
 **Global Remittance Infrastructure for VAT Refunds & Payroll**  
 Wallet-native. AI-powered. Borderless. Built on Ethereum with MNEE stablecoin.
