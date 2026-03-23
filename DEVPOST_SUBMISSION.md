@@ -389,6 +389,7 @@ This project aligns with **all three tracks** of the MNEE Hackathon:
 7. **Track Everything**: Every transaction verifiable on blockchain
 
 **Live Demo**: https://gemetra-mnee.vercel.app/  
+**Demo Video**: https://youtu.be/FEmaygRs1gs  
 **GitHub**: https://github.com/AmaanSayyad/Gemetra-mnee
 
 ---
